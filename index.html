@@ -1,0 +1,1522 @@
+<title>Fastighetstillsyn i Languedoc för skandinaviska husägare | Duco Maison</title>
+<meta name="description"
+  content="Vi håller koll på ert hus i Languedoc när ni inte är där. Regelbunden tillsyn, koordinering av lokala hantverkare, allt på svenska. Från 85 EUR/mån.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://ducomaison.fr">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Fastighetstillsyn i Languedoc för skandinaviska husägare | Duco Maison">
+<meta property="og:description"
+  content="Vi håller koll på ert hus i Languedoc när ni inte är där. Regelbunden tillsyn, koordinering av lokala hantverkare, allt på svenska.">
+<meta property="og:image"
+  content="https://assets.cdn.filesafe.space/gICWK2jkSh3P8r1cOppf/media/19491123-457a-4278-8e90-465ee96029f2.jpg">
+<meta property="og:url" content="https://ducomaison.fr">
+<meta property="og:locale" content="sv_SE">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Fastighetstillsyn i Languedoc för skandinaviska husägare | Duco Maison">
+<meta name="twitter:description"
+  content="Vi håller koll på ert hus i Languedoc när ni inte är där, på svenska.">
+
+<!-- Font Awesome, för ikonerna i sidan. Blockeras av Artifact-sandboxens CSP i förhandsvisningen (syns inte här),
+     men laddas normalt när koden klistras in i GHL, samma mönster som bilderna och bokningswidgeten. -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "serviceType": "Fastighetstillsyn och koordinering av hantverkare",
+  "provider": {
+    "@type": "Organization",
+    "name": "Duco Maison"
+  },
+  "areaServed": {
+    "@type": "GeoCircle",
+    "geoMidpoint": {
+      "@type": "GeoCoordinates",
+      "latitude": 43.1839,
+      "longitude": 3.0041
+    },
+    "geoRadius": "80000"
+  },
+  "priceRange": "€€",
+  "inLanguage": "sv"
+}
+</script>
+
+<style>
+  :root {
+    --limestone: #efe8da;
+    --limestone-2: #e3dac8;
+    --ink: #2b2a24;
+    --shutter: #4a6b78;
+    --shutter-dark: #33505c;
+    --gold: #c98a2e;
+    --line: rgba(43, 42, 36, .16);
+    --card: #f7f3ea;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--limestone);
+    color: var(--ink);
+    overflow-x: hidden;
+  }
+
+  body {
+    font-family: ui-sans-serif, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.55;
+  }
+
+  h1, h2, h3 {
+    font-family: ui-serif, "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+    font-weight: 600;
+    color: var(--ink);
+    margin: 0 0 .5em;
+    letter-spacing: -.01em;
+    text-wrap: balance;
+  }
+
+  a { color: inherit; }
+
+  .wrap {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* --- full-bleed: bryt ut ur GHL:s rad/sektion-container (som ofta har
+     egen max-bredd/padding) sa sidan fyller hela bredden aven nar snippeten
+     ligger nastlad i en centrerad container. Fungerar inte om GHL renderar
+     blocket i en egen, smalare iframe eller satter overflow:hidden pa en
+     forfader, da maste bredden istallet fixas i GHL:s sektionsinstallningar
+     (Full Width / 0 padding). Samma losning som redan anvands pa
+     volets-france.html. --- */
+  .full-bleed {
+    width: 100vw;
+    max-width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    background: var(--limestone);
+  }
+
+  /* --- tacker eventuell vit kant ovanfor/nedanfor blocket (GHL-sektionens
+     egen padding/hojd), samma farg som resten av sidan. Fungerar inte om
+     GHL renderar blocket i en egen iframe, da maste sektionens bakgrunds-
+     farg istallet sattas till samma farg direkt i GHL. --- */
+  .viewport-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: var(--limestone);
+  }
+
+  header.nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+  }
+
+  .wordmark {
+    font-family: ui-serif, "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+  }
+
+  .wordmark em { font-style: italic; color: var(--shutter); }
+
+  .nav-cta {
+    background: var(--shutter-dark);
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-size: .9rem;
+    font-weight: 600;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .nav-login {
+    color: var(--ink);
+    text-decoration: none;
+    font-size: .9rem;
+    font-weight: 600;
+    opacity: .75;
+  }
+  .nav-login:hover { opacity: 1; text-decoration: underline; }
+
+  /* Hero, split layout with real photo */
+  .hero {
+    padding: 40px 0 70px;
+  }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.1fr .9fr;
+    gap: 48px;
+    align-items: center;
+  }
+
+  @media (max-width: 860px) {
+    .hero-grid { grid-template-columns: 1fr; }
+  }
+
+  .hero .kicker {
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    font-size: .78rem;
+    color: var(--shutter-dark);
+    font-weight: 600;
+    margin-bottom: 14px;
+  }
+
+  .hero h1 { font-size: clamp(2rem, 4.4vw, 2.9rem); }
+
+  .hero p.lead {
+    font-size: 1.08rem;
+    opacity: .82;
+    max-width: 520px;
+    margin: 18px 0 30px;
+  }
+
+  .hero-photo {
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(43,42,36,.18);
+  }
+
+  .hero-photo img { width: 100%; display: block; aspect-ratio: 4/5; object-fit: cover; }
+
+  .btn-primary {
+    display: inline-block;
+    background: var(--gold);
+    color: #fff;
+    padding: 15px 32px;
+    border-radius: 40px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1.02rem;
+    border: none;
+    cursor: pointer;
+  }
+
+  .btn-secondary {
+    display: inline-block;
+    margin-left: 14px;
+    padding: 15px 28px;
+    border: 1px solid var(--line);
+    border-radius: 40px;
+    text-decoration: none;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  section { padding: 64px 0; }
+
+  section.alt { background: var(--card); }
+
+  h2.section-title {
+    font-size: clamp(1.5rem, 3.2vw, 2.1rem);
+    text-align: center;
+    margin-bottom: 12px;
+  }
+
+  p.section-lead {
+    text-align: center;
+    max-width: 640px;
+    margin: 0 auto 40px;
+    opacity: .8;
+  }
+
+  .usp-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  @media (max-width: 760px) {
+    .usp-grid { grid-template-columns: 1fr; }
+  }
+
+  .usp-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 26px 22px;
+  }
+
+  section.alt .usp-card { background: #fff; }
+
+  .usp-card .num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: var(--shutter);
+    color: #fff;
+    font-weight: 700;
+    font-size: .95rem;
+    margin-bottom: 14px;
+  }
+
+  .usp-card h3 { font-size: 1.05rem; margin-bottom: 6px; }
+  .usp-card p { font-size: .92rem; opacity: .82; margin: 0; }
+
+  /* Drömmen om Frankrike, atmospheric strip */
+  .dream {
+    position: relative;
+    padding: 0;
+    height: 420px;
+    display: flex;
+    align-items: flex-end;
+  }
+
+  .dream img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: 50% 40%;
+  }
+
+  .dream::after {
+    content: "";
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(43,42,36,0) 30%, rgba(43,42,36,.72) 100%);
+  }
+
+  .dream .wrap { position: relative; z-index: 1; padding-bottom: 44px; }
+
+  .dream h2, .dream p { color: #fff; }
+  .dream h2 { text-align: left; max-width: 560px; }
+  .dream p { max-width: 520px; opacity: .92; margin: 0; }
+
+  /* Pricing */
+  .ladder {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 22px;
+  }
+
+  .rung {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 28px 24px;
+    position: relative;
+  }
+
+  .rung.featured { border: 2px solid var(--gold); }
+
+  .rung .badge {
+    position: absolute;
+    top: -12px; left: 24px;
+    background: var(--gold);
+    color: var(--ink);
+    font-size: .7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    padding: 4px 12px;
+    border-radius: 20px;
+  }
+
+  .rung h3 { font-size: 1.1rem; margin-bottom: 6px; }
+  .rung .price {
+    font-family: ui-serif, "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+    font-size: 1.6rem;
+    color: var(--shutter-dark);
+    margin: 10px 0 14px;
+  }
+  .rung .price span { font-size: .85rem; font-weight: 400; opacity: .7; }
+
+  .rung ul { margin: 0; padding-left: 18px; font-size: .92rem; opacity: .88; }
+  .rung ul li { margin-bottom: 6px; }
+
+  .price-note {
+    text-align: center;
+    max-width: 660px;
+    margin: 36px auto 0;
+    font-size: .9rem;
+    opacity: .75;
+  }
+
+  /* Included breakdown table */
+  .included {
+    margin-top: 48px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 8px 0;
+    overflow-x: auto;
+  }
+
+  table.included-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .92rem;
+  }
+
+  table.included-table th, table.included-table td {
+    text-align: center;
+    padding: 14px 22px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  @media (max-width: 480px) {
+    table.included-table { font-size: .84rem; }
+    table.included-table th, table.included-table td { padding: 11px 12px; }
+  }
+
+  table.included-table th { font-weight: 700; font-size: .8rem; text-transform: uppercase; letter-spacing: .04em; opacity: .7; }
+  table.included-table tr:last-child td { border-bottom: none; }
+  table.included-table td.yes { color: var(--shutter-dark); font-weight: 700; }
+  table.included-table td.no { opacity: .35; }
+
+  table.included-table.left-align th:first-child,
+  table.included-table.left-align td:first-child { text-align: left; }
+
+  /* Coordination fee example box */
+  .example-box {
+    max-width: 680px;
+    margin: 40px auto 0;
+    background: var(--card);
+    border: 1px dashed var(--shutter);
+    border-radius: 12px;
+    padding: 24px 28px;
+  }
+
+  .example-box .eyebrow {
+    text-transform: uppercase;
+    font-size: .74rem;
+    letter-spacing: .06em;
+    font-weight: 700;
+    color: var(--shutter-dark);
+  }
+
+  .example-box .flow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-top: 14px;
+    font-size: .95rem;
+  }
+
+  .example-box .flow .chip {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 8px 14px;
+  }
+
+  .example-box .flow .op { opacity: .5; font-weight: 700; }
+
+  /* Steps */
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    counter-reset: step;
+  }
+
+  .step { text-align: center; padding: 10px; }
+
+  .step .circle {
+    counter-increment: step;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    border: 2px solid var(--shutter);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 14px;
+    font-weight: 700;
+    color: var(--shutter-dark);
+  }
+
+  .step .circle::before { content: counter(step); }
+
+  .step h3 { font-size: .98rem; margin-bottom: 6px; }
+  .step p { font-size: .87rem; opacity: .8; margin: 0; }
+
+  /* Airbnb callout */
+  .callout {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 22px;
+    align-items: center;
+    background: var(--shutter);
+    color: #fff;
+    border-radius: 16px;
+    padding: 30px 34px;
+  }
+
+  @media (max-width: 620px) { .callout { grid-template-columns: 1fr; text-align: center; } }
+
+  .callout .icon {
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.16);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem;
+  }
+
+  .callout h3 { color: #fff; margin-bottom: 6px; }
+  .callout p { margin: 0; opacity: .92; }
+
+  /* Tillägg (pool/projektledning), lättare kortstil sa den inte upprepar .callout tre ganger pa rad */
+  .addon-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px;
+  }
+
+  @media (max-width: 700px) { .addon-grid { grid-template-columns: 1fr; } }
+
+  .addon-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 26px 24px;
+  }
+
+  .addon-card .icon {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: var(--shutter);
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.05rem;
+    margin-bottom: 14px;
+  }
+
+  .addon-card h3 { font-size: 1.02rem; margin-bottom: 8px; }
+  .addon-card p { font-size: .88rem; opacity: .85; margin: 0; }
+
+  /* Om oss */
+  .about-box {
+    display: grid;
+    grid-template-columns: .85fr 1.15fr;
+    gap: 44px;
+    align-items: center;
+  }
+
+  @media (max-width: 720px) { .about-box { grid-template-columns: 1fr; } }
+
+  .about-photo {
+    border-radius: 16px;
+    overflow: hidden;
+    aspect-ratio: 4/5;
+    position: relative;
+  }
+
+  .about-photo.placeholder {
+    border: 1px dashed var(--shutter);
+    background: var(--card);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 24px;
+  }
+
+  .about-photo .placeholder-text {
+    font-size: .88rem;
+    opacity: .65;
+    max-width: 200px;
+  }
+
+  .about-box .text p { opacity: .85; }
+
+  /* Bildkarusell, samma mönster som Volets France */
+  .slider-track {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .slider-track img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    opacity: 0;
+    transition: opacity .7s ease;
+  }
+
+  .slider-track img.active { opacity: 1; }
+
+  .slider-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255,255,255,.88);
+    color: var(--ink);
+    font-size: 1.3rem;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background .15s ease;
+  }
+
+  .slider-arrow:hover { background: #fff; }
+  .slider-arrow.prev { left: 12px; }
+  .slider-arrow.next { right: 12px; }
+
+  .slider-counter {
+    position: absolute;
+    bottom: 14px; right: 14px;
+    background: rgba(43,42,36,.55);
+    color: #f4efe4;
+    font-size: .75rem;
+    letter-spacing: .02em;
+    padding: 4px 11px;
+    border-radius: 999px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .trust-line {
+    background: var(--shutter-dark);
+    color: #fff;
+    border-radius: 12px;
+    padding: 20px 24px;
+    font-size: .95rem;
+    margin-top: 20px;
+  }
+
+  /* Booking */
+  .booking-section { background: var(--card); }
+
+  .booking-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: flex-start;
+  }
+
+  @media (max-width: 820px) { .booking-grid { grid-template-columns: 1fr; } }
+
+  .booking-copy .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    font-size: .78rem;
+    font-weight: 700;
+    color: var(--shutter-dark);
+  }
+
+  .prebook-form { margin-top: 20px; }
+
+  .prebook-form label {
+    display: block;
+    font-size: .82rem;
+    margin-bottom: 6px;
+    opacity: .75;
+  }
+
+  .prebook-form input, .prebook-form textarea {
+    width: 100%;
+    padding: 11px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: #fff;
+    color: var(--ink);
+    font-size: .95rem;
+    margin-bottom: 16px;
+    font-family: inherit;
+  }
+
+  .booking-embed {
+    min-height: 480px;
+  }
+
+  .booking-embed iframe { width: 100%; border: none; }
+
+  .booking-fallback { padding: 40px 24px; text-align: center; font-size: .9rem; opacity: .7; }
+
+  footer {
+    /* Extra bottompadding sa fotterlankarna gar att na aven langst ner pa
+       sidan, chattwidgeten ar position:fixed och tacker annars over dem
+       permanent (kan inte scrollas bort fran). Se Davids feedback
+       2026-07-28: manste ga att komma at lankarna i nagot lage. */
+    padding: 30px 0 190px;
+    text-align: center;
+    font-size: .82rem;
+    opacity: .65;
+  }
+
+  .footer-social {
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+    margin-bottom: 14px;
+  }
+
+  .footer-social a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: var(--shutter);
+    color: #fff;
+    font-size: 1rem;
+    text-decoration: none;
+    opacity: .85;
+    transition: opacity .15s ease, transform .15s ease;
+  }
+
+  .footer-social a:hover { opacity: 1; transform: translateY(-1px); }
+
+  @media print { body { background: #fff; } }
+
+  /* Generell mobilstädning, David 2026-07-29: sajten kändes inte
+     tillräckligt responsiv, framförallt för mycket vertikalt utrymme och
+     för bred wrap-padding på små skärmar. */
+  @media (max-width: 480px) {
+    .wrap { padding: 0 18px; }
+    section { padding: 44px 0; }
+    .hero { padding: 28px 0 44px; }
+    .hero .lead { margin: 14px 0 24px; }
+    .btn-primary { display: block; text-align: center; }
+    .btn-secondary { display: block; margin: 18px 0 0; text-align: center; }
+    .dream { height: 340px; }
+    .rung { padding: 22px 18px; }
+    .example-box { padding: 18px 20px; }
+    .callout { padding: 24px 22px; }
+  }
+
+  /* Chattwidget, "avlång LLM-bar" istallet for en chatbot-bubbla, se
+     kodkommentaren i <script id="duco-chat-script">. Doljs helt (display:
+     none som utgangslage) tills ett lyckat healthcheck mot backend visar
+     att den faktiskt gar att prata med just nu. */
+  #duco-chat-widget {
+    display: none;
+    position: fixed;
+    left: 50%;
+    bottom: 26px;
+    transform: translateX(-50%);
+    width: min(600px, calc(100vw - 32px));
+    z-index: 999;
+    font-family: ui-sans-serif, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  }
+
+  #duco-chat-thread {
+    display: none;
+    position: relative;
+    max-height: 46vh;
+    overflow-y: auto;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 14px 16px 14px 16px;
+    margin-bottom: 10px;
+    box-shadow: 0 16px 40px rgba(43,42,36,.16);
+    /* Tydlig, alltid synlig scrollbar (inte bara vid hover/drag), sa det
+       ar uppenbart att konversationen gar att skrolla. */
+    scrollbar-width: thin;
+    scrollbar-color: var(--shutter) transparent;
+  }
+
+  #duco-chat-thread::-webkit-scrollbar { width: 7px; }
+  #duco-chat-thread::-webkit-scrollbar-track { background: transparent; }
+  #duco-chat-thread::-webkit-scrollbar-thumb {
+    background: var(--shutter);
+    border-radius: 999px;
+    opacity: .6;
+  }
+
+  #duco-chat-close {
+    position: sticky;
+    top: 0;
+    float: right;
+    margin: -4px -4px 4px 8px;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    border: none;
+    background: #fff;
+    color: var(--ink);
+    opacity: .6;
+    font-size: 1rem;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(43,42,36,.12);
+  }
+
+  #duco-chat-close:hover { opacity: 1; }
+
+  #duco-chat-thread .msg {
+    font-size: .92rem;
+    line-height: 1.5;
+    padding: 9px 13px;
+    border-radius: 12px;
+    margin-bottom: 8px;
+    max-width: 88%;
+    /* Utan detta kollapsas \n\n (t.ex. den tvasprakiga halsningen) till en
+       enda lang mening, det var det som sag "fult" ut. */
+    white-space: pre-line;
+  }
+
+  #duco-chat-thread .msg:last-child { margin-bottom: 0; }
+
+  #duco-chat-thread .msg.user {
+    background: var(--shutter);
+    color: #fff;
+    margin-left: auto;
+    border-bottom-right-radius: 3px;
+  }
+
+  #duco-chat-thread .msg.assistant {
+    background: #fff;
+    border: 1px solid var(--line);
+    color: var(--ink);
+    border-bottom-left-radius: 3px;
+  }
+
+  /* "Tänker"-indikator medan svaret väntas in. */
+  #duco-chat-thread .msg.thinking {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-bottom-left-radius: 3px;
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    padding: 12px 14px;
+  }
+
+  #duco-chat-thread .msg.thinking span {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--shutter);
+    opacity: .35;
+    animation: duco-chat-think 1.1s ease-in-out infinite;
+  }
+
+  #duco-chat-thread .msg.thinking span:nth-child(2) { animation-delay: .15s; }
+  #duco-chat-thread .msg.thinking span:nth-child(3) { animation-delay: .3s; }
+
+  @keyframes duco-chat-think {
+    0%, 60%, 100% { opacity: .35; transform: translateY(0); }
+    30% { opacity: 1; transform: translateY(-3px); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #duco-chat-thread .msg.thinking span { animation: none; opacity: .7; }
+  }
+
+  /* duco-chat-bar ar nu en rundad box (inte en ren pill) som rymmer bade
+     inputraden och GDPR-texten under, sa GDPR-notisen visuellt hamnar i
+     samma synliga ruta som faltet, inte flytande i luften under den, se
+     Davids feedback 2026-07-28. */
+  #duco-chat-bar {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border-radius: 22px;
+    padding: 6px 8px 10px;
+    border: 1px solid var(--line);
+    box-shadow: 0 10px 30px rgba(43,42,36,.16), 0 0 0 0 rgba(201,138,46,.5);
+    animation: duco-chat-pulse 3.2s ease-in-out infinite;
+  }
+
+  #duco-chat-input-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-left: 14px;
+  }
+
+  @keyframes duco-chat-pulse {
+    0%, 100% { box-shadow: 0 10px 30px rgba(43,42,36,.16), 0 0 0 0 rgba(201,138,46,.38); }
+    50% { box-shadow: 0 10px 30px rgba(43,42,36,.16), 0 0 0 9px rgba(201,138,46,0); }
+  }
+
+  #duco-chat-widget:focus-within #duco-chat-bar,
+  #duco-chat-widget.has-messages #duco-chat-bar {
+    animation: none;
+  }
+
+  #duco-chat-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: .96rem;
+    color: var(--ink);
+    font-family: inherit;
+  }
+
+  #duco-chat-input::placeholder { color: var(--ink); opacity: .5; }
+
+  #duco-chat-send {
+    flex-shrink: 0;
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    border: none;
+    background: var(--gold);
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #duco-chat-send:disabled { opacity: .5; cursor: default; }
+
+  @media (prefers-reduced-motion: reduce) {
+    #duco-chat-bar { animation: none; }
+  }
+
+  /* GDPR-notis, nu en egen rad INUTI duco-chat-bar-boxen (under
+     inputraden), se HTML-kommentaren dar den placeras. */
+  #duco-chat-gdpr {
+    margin: 8px 10px 0;
+    padding-top: 8px;
+    border-top: 1px solid var(--line);
+    font-size: .72rem;
+    line-height: 1.4;
+    opacity: .65;
+    text-align: center;
+  }
+
+  #duco-chat-gdpr a {
+    color: inherit;
+    text-decoration: underline;
+  }
+
+  @media (max-width: 600px) {
+    #duco-chat-widget { bottom: 14px; }
+  }
+</style>
+
+<div class="viewport-backdrop"></div>
+
+<div class="full-bleed">
+<div class="wrap">
+  <header class="nav">
+    <div class="wordmark">Duco <em>Maison</em></div>
+    <div class="nav-links">
+      <!-- Kundportalen och chatt-API:t kors i samma EU-hostade Fly-app. -->
+      <a class="nav-login" href="https://duco-regie-portal.fly.dev/portal/login.html">Logga in</a>
+      <a class="nav-cta" href="#kontakt">Kom igång</a>
+    </div>
+  </header>
+</div>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="kicker">Fastighetstillsyn i Languedoc, på svenska</div>
+      <h1>Vi håller koll på ert hus när ni inte är där.</h1>
+      <p class="lead">Regelbunden tillsyn, koordinering av lokala hantverkare och städ, allt skött av ett svensktalande team som själva byggt hus och driver eget snickeri i Frankrike. Ni slipper språkkrångel, otydliga fakturor och överraskningar.</p>
+      <a class="btn-primary" href="#kontakt">Boka ett kostnadsfritt startbesök</a>
+      <a class="btn-secondary" href="#pris">Se priser</a>
+    </div>
+    <div class="hero-photo">
+      <img src="https://assets.cdn.filesafe.space/gICWK2jkSh3P8r1cOppf/media/19491123-457a-4278-8e90-465ee96029f2.jpg"
+        alt="David i ett fönster med blå fönsterluckor på ett stenhus i Languedoc" loading="eager">
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <h2 class="section-title">Varför Duco Maison</h2>
+    <p class="section-lead">Ingen annan aktör i området erbjuder det här, av sex konkreta skäl.</p>
+    <div class="usp-grid">
+      <div class="usp-card">
+        <div class="num">1</div>
+        <h3>Svensktalande, hela vägen</h3>
+        <p>Ni behöver aldrig förklara er på ett andra språk eller vänta på en tolk. Vi kommunicerar med er på svenska och sköter all kontakt med de lokala hantverkarna och leverantörerna.</p>
+      </div>
+      <div class="usp-card">
+        <div class="num">2</div>
+        <h3>Hantverkskunnande, inte bara logistik</h3>
+        <p>Vi har byggt eget hus och driver ett riktigt snickeri i Languedoc. Vi ser om ett jobb faktiskt är bra utfört, inte bara om det blev gjort.</p>
+      </div>
+      <div class="usp-card">
+        <div class="num">3</div>
+        <h3>Byggt för er som bor i huset</h3>
+        <p>Vi riktar oss inte till uthyrningsdrift och Airbnb-optimering. Vi finns för er som vill att huset är i toppskick när ni själva kommer dit.</p>
+      </div>
+      <div class="usp-card">
+        <div class="num">4</div>
+        <h3>Transparent pris, inga överraskningar</h3>
+        <p>Ett tydligt månadspris och en fast koordineringsavgift på allt anlitat arbete. Ni vet vad det kostar utan att begära en ny offert varje gång.</p>
+      </div>
+      <div class="usp-card">
+        <div class="num">5</div>
+        <h3>Riktig projektledarerfarenhet</h3>
+        <p>David har flera års erfarenhet som projektledare för byggnation av mässmontrar, från ritning och design till beställningar, leverantörskontakt och upphandling. Samma arbetssätt, applicerat på ert hus.</p>
+      </div>
+      <div class="usp-card">
+        <div class="num">6</div>
+        <h3>Egen erfarenhet av uthyrning</h3>
+        <p>Flera års egen erfarenhet som Airbnb Superhost. Läs mer om hur vi kan hjälpa er längre ner på sidan.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="dream">
+  <img src="https://assets.cdn.filesafe.space/gICWK2jkSh3P8r1cOppf/media/1e8eac1a-37bd-458f-952b-62b0ef10267a.jpg"
+    alt="Vy över tegeltak och tallar i en by i Languedoc" loading="lazy">
+  <div class="wrap">
+    <h2>Huset i Frankrike ska kännas som en dröm, inte ett orosmoment.</h2>
+    <p>Doften av lavendel, ljudet av cikador, en by där tiden gått långsammare. Vi finns till för att den känslan aldrig ska grumlas av att undra hur huset egentligen mår när ni är hemma.</p>
+  </div>
+</section>
+
+<section id="tjanster">
+  <div class="wrap">
+    <h2 class="section-title">Så funkar tjänsten</h2>
+    <p class="section-lead">Ett fast årspaket, betalt månadsvis, med det antal besök som faktiskt passar er. Vi planerar ett schema tillsammans med er för året, och justerar det vid behov om era resmönster ändras.</p>
+    <div class="ladder" id="pris">
+      <div class="rung">
+        <h3>4 besök/år</h3>
+        <div class="price">85 EUR<span>/mån</span></div>
+        <ul>
+          <li>Passar er som själva är på plats stora delar av året</li>
+          <li>Koll av skador, läckor, post och inbrottstecken</li>
+          <li>Eftersändning av viktig post vid behov</li>
+          <li>Fotorapport med kort sammanfattning efter varje besök</li>
+        </ul>
+      </div>
+      <div class="rung featured">
+        <span class="badge">Vanligast</span>
+        <h3>6 besök/år</h3>
+        <div class="price">100 EUR<span>/mån</span></div>
+        <ul>
+          <li>Passar er som är här en kortare säsong, t.ex. en sommarmånad</li>
+          <li>Allt i 4-besökspaketet</li>
+        </ul>
+      </div>
+      <div class="rung">
+        <h3>8 besök/år</h3>
+        <div class="price">115 EUR<span>/mån</span></div>
+        <ul>
+          <li>Ungefär var sjätte vecka, året runt</li>
+          <li>Passar er som sällan är på plats själva</li>
+          <li>Allt i övriga paket</li>
+        </ul>
+      </div>
+    </div>
+    <p class="price-note" style="margin-top:24px;">Vi lägger tillsammans upp en plan för vilka månader som passar bäst utifrån när ni själva är där, och flyttar enskilda besök vid behov. Extra grundlig genomgång inför säsongsöppning/stängning går alltid att lägga till separat.</p>
+
+    <div class="included">
+      <table class="included-table left-align">
+        <thead>
+          <tr><th>Ingår i alla tre paket</th><th></th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Besök med fotorapport enligt er årsplan</td><td class="yes">Ja</td></tr>
+          <tr><td>Kontakt vid akuta problem</td><td class="yes">Ja</td></tr>
+          <tr><td>Tillgång till vårt leverantörsnätverk vid behov</td><td class="yes">Ja</td></tr>
+          <tr><td>Betalning via kort eller SEPA-autogiro, ingen faktura att jaga</td><td class="yes">Ja</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="price-note" style="margin-top:16px;">Vi värnar om er integritet. Foton och annan dokumentation från era besök delas aldrig med någon annan än er som äger fastigheten.</p>
+
+    <div class="callout" style="margin-top:32px;">
+      <div class="icon"><i class="fa-solid fa-mobile-screen"></i></div>
+      <div>
+        <h3>Er egen portal, dygnet runt</h3>
+        <p>Ni behöver aldrig undra hur huset mår. Efter varje besök finns allt samlat i er personliga portal: fotorapporter, mätarställning för el och vatten (och pool-pH om ni har pool) med automatisk jämförelse mot förra besöket, så ni ser direkt om något förändrats. Ingen mätaravläsning att tolka själva, vi läser av och håller koll åt er. Se hela besökshistoriken, vad som är planerat framöver, och status på eventuella renoveringsprojekt, allt på ett och samma ställe. Behöver ni ett extra besök utöver abonnemanget bokar och betalar ni det direkt i portalen. Ingen inloggningsuppgift att komma ihåg, en enkel länk i mejlen räcker. Ingår i alla tre paket.</p>
+      </div>
+    </div>
+
+    <div class="addon-grid" style="margin-top:32px;">
+      <div class="addon-card">
+        <div class="icon"><i class="fa-solid fa-water"></i></div>
+        <h3>Poolskötsel Bas, från 20 EUR/mån</h3>
+        <p>Har ni pool? Vi håvar bort löv och skräp, tömmer skimmer- och pumpkorgar, kollar vattennivå, kontrollerar pump och filter, och mäter pH som loggas i er rapport. Kemisk balansering och reparationer hanteras istället via projektledning, mot en lokal poolfirma. Priset följer er tillsynsnivå: 20/25/30 EUR/mån vid 4/6/8 besök om året.</p>
+      </div>
+      <div class="addon-card">
+        <div class="icon"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+        <h3>Projektledning, en egen tjänst</h3>
+        <p>Behöver ni en hantverkare, en offert eller hjälp att hålla koll på ett större projekt, sköter vi kontakten och koordineringen mot en fast avgift på leverantörens faktura, se trappan nedan. Kräver inget tillsynsabonnemang, går lika bra som fristående tjänst, och ingår förstås även i alla tre besökspaket.</p>
+      </div>
+    </div>
+
+    <div class="included" style="margin-top:48px;">
+      <table class="included-table">
+        <thead>
+          <tr><th>Fakturans storlek</th><th>Vår koordineringsavgift</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Upp till 500 EUR</td><td class="yes">20%</td></tr>
+          <tr><td>500–2 000 EUR</td><td class="yes">15%</td></tr>
+          <tr><td>Över 2 000 EUR</td><td class="yes">10%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="price-note" style="margin-top:16px;">Fast och tydligt, alltid känt i förväg. Ju större jobbet är, desto lägre andel tar vi.</p>
+
+    <div class="example-box">
+      <div class="eyebrow">Två exempel</div>
+      <div class="flow">
+        <span class="chip">Poolfilter, 300 EUR-faktura</span>
+        <span class="op">→</span>
+        <span class="chip">20% koordineringsavgift = 60 EUR</span>
+      </div>
+      <div class="flow" style="margin-top:10px;">
+        <span class="chip">Takbyte, 8 000 EUR-faktura</span>
+        <span class="op">→</span>
+        <span class="chip">10% koordineringsavgift = 800 EUR</span>
+      </div>
+      <p style="margin:14px 0 0;font-size:.85rem;opacity:.7;">Vi tar aldrig emot pengar åt hantverkaren, ni betalar dem direkt. Vår avgift är bara betalning för vårt eget arbete med att hitta, offerera, godkänna och följa upp.</p>
+    </div>
+
+    <p class="price-note">Priset ovan gäller vår kärnzon (Béziers/Narbonne-bältet). För hus längre bort ger vi ett fast pris redan vid första kontakt, inga dolda avståndstillägg i efterhand.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="callout">
+      <div class="icon"><i class="fa-solid fa-key"></i></div>
+      <div>
+        <h3>Vill ni hyra ut huset när ni inte är där?</h3>
+        <p>Vi kan agera co-host åt er, med egen mångårig erfarenhet som Superhost på Airbnb. Vi hanterar inte uthyrningen på annat sätt, bokning och gästbetalningar sköter ni eller plattformen själva. Fråga oss så berättar vi mer om vad som passar er.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="section-title">Hur det går till</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="circle"></div>
+        <h3>Kostnadsfritt startbesök</h3>
+        <p>Vi går igenom huset tillsammans och sätter en plan.</p>
+      </div>
+      <div class="step">
+        <div class="circle"></div>
+        <h3>Abonnemang startar</h3>
+        <p>Betalning via kort, ni behöver aldrig tänka på fakturor.</p>
+      </div>
+      <div class="step">
+        <div class="circle"></div>
+        <h3>Löpande tillsyn</h3>
+        <p>Ni får en kort rapport med bilder efter varje besök.</p>
+      </div>
+      <div class="step">
+        <div class="circle"></div>
+        <h3>Projektledning vid behov</h3>
+        <p>Behövs en hantverkare, sköter vi kontakten och håller koll på jobbet.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="om" class="alt">
+  <div class="wrap">
+    <div class="about-box">
+      <div class="about-photo" id="om-slider">
+        <!-- Samma bildkarusell som återanvänds från Volets France (sites/volets-france.html). OBS: det här är
+             bilder från David och Emelies hus på Vrångö i Sverige, inte från huset i Languedoc, samma bilder
+             som redan används på Volets Frances Om oss-sida för att visa hantverket. Ingen bekräftad bild av
+             David och Emelie tillsammans i Frankrike hittad än, byt gärna ut mot en sådan om/när den finns. -->
+        <div class="slider-track">
+          <img class="active" src="https://assets.cdn.filesafe.space/gICWK2jkSh3P8r1cOppf/media/66f9d4fa-a4c3-4ab3-8e8e-ef862144bbd0.jpg" alt="Exteriör av David och Emelies hus på Vrångö i kvällsljus" />
+          <img src="https://assets.cdn.filesafe.space/gICWK2jkSh3P8r1cOppf/media/0a0fa2da-9a55-4444-8609-da406c038584.jpg" alt="Entrédörr och trappa vid husets ingång" />
+          <img src="https://assets.cdn.filesafe.space/gICWK2jkSh3P8r1cOppf/media/2ae6d9f7-0471-4207-9c75-a2bb3be3f14b.jpg" alt="Fönstersmyg med tapet och stol i hallen" />
+          <img src="https://assets.cdn.filesafe.space/gICWK2jkSh3P8r1cOppf/media/f59d4732-e01f-4ebc-9810-0f4738bb1cd7.jpg" alt="Trappa i hallen med blomsterbukett" />
+          <img src="https://assets.cdn.filesafe.space/gICWK2jkSh3P8r1cOppf/media/f04f3fa4-907f-45bb-a7a9-5215625d49e4.jpg" alt="Kök med diskho och fönster mot trädgården" />
+          <img src="https://assets.cdn.filesafe.space/gICWK2jkSh3P8r1cOppf/media/311833ad-f2a0-4a7e-991c-c183729840cd.jpg" alt="Nybakat bröd på köksön" />
+          <img src="https://assets.cdn.filesafe.space/gICWK2jkSh3P8r1cOppf/media/4cef7f53-a458-4e7e-9402-9417f0a8cd39.jpg" alt="Skafferi med kryddor och konserveringsburkar" />
+          <img src="https://assets.cdn.filesafe.space/gICWK2jkSh3P8r1cOppf/media/4b98a38c-7474-40d5-89eb-8cba97d9f927.jpg" alt="Vardagsrum med piano och hund på mattan" />
+          <img src="https://assets.cdn.filesafe.space/gICWK2jkSh3P8r1cOppf/media/71914139-5a12-40a3-acdc-beeb56c76638.jpg" alt="Badrum med klinkergolv i fiskbensmönster" />
+          <img src="https://assets.cdn.filesafe.space/gICWK2jkSh3P8r1cOppf/media/ce55045e-ef3d-449f-b891-136402cfdf49.jpg" alt="Sovrum med blommigt tapetmönster" />
+          <img src="https://assets.cdn.filesafe.space/gICWK2jkSh3P8r1cOppf/media/1fe8ceb7-fd8d-4f54-ac3a-4d85f5663de6.jpg" alt="David i ett nymålat rum under renoveringen" />
+          <img src="https://assets.cdn.filesafe.space/gICWK2jkSh3P8r1cOppf/media/d0682a52-7df1-43b2-9883-6b53f8d754ff.jpg" alt="Vardagsrum med högt i tak och stora fönster" />
+          <img src="https://assets.cdn.filesafe.space/gICWK2jkSh3P8r1cOppf/media/67e2c6ca-ff22-4336-b614-29c4515d1963.jpg" alt="David bygger om vindsvåningen tillsammans med en kollega" />
+          <img src="https://assets.cdn.filesafe.space/gICWK2jkSh3P8r1cOppf/media/bfc11adb-aae9-4140-a455-c6b1e6989723.jpg" alt="Barnrum med sänghimmel" />
+          <img src="https://assets.cdn.filesafe.space/gICWK2jkSh3P8r1cOppf/media/a06f3591-8832-47ea-b188-7cf2cae43439.jpg" alt="Kvällsarbete med marken inför bygget" />
+        </div>
+        <button class="slider-arrow prev" type="button" aria-label="Föregående bild">&lsaquo;</button>
+        <button class="slider-arrow next" type="button" aria-label="Nästa bild">&rsaquo;</button>
+        <div class="slider-counter"><span class="cur">1</span> / 15</div>
+      </div>
+      <div class="text">
+        <h2 class="section-title" style="text-align:left">Om oss</h2>
+        <p>Vi är en svensk familj som flyttat till Languedoc och redan driver Volets France, ett snickeri som renoverar fönsterluckor åt skandinaviska husägare i regionen. Duco Maison är samma omtanke om hantverk och ärlighet, applicerat på hela huset, inte bara luckorna.</p>
+        <p style="opacity:.85">David har flera års bakgrund som projektledare för byggnation av mässmontrar, med allt vad det innebär av ritning, design, beställningar, leverantörskontakt och upphandling. Det är exakt den kompetensen som krävs för att hålla ihop ett hus på distans, inte något vi lärt oss på vägen.</p>
+        <p style="opacity:.85">Vi känner till vad skandinaviska husägare förväntar sig av utfört arbete, och vi vet hur det känns att sitta hemma och undra hur huset i Frankrike egentligen mår. Det är precis den oron vi finns till för att ta bort.</p>
+        <div class="trust-line">Redan kund hos Volets France? Ni känner oss redan, hör av er så sätter vi upp tillsynen på samma gång.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="booking-section" id="kontakt">
+  <div class="wrap booking-grid">
+    <div class="booking-copy">
+      <span class="eyebrow">Boka direkt</span>
+      <h2 style="margin-top:10px;font-size:clamp(1.5rem,3vw,2rem);">Boka ett kostnadsfritt startbesök</h2>
+      <p>Fyll gärna i det ni redan vet nedan, då hinner vi förbereda oss innan besöket.</p>
+      <form class="prebook-form" id="prebook-form">
+        <label for="hv-namn">Namn</label>
+        <input type="text" id="hv-namn" name="namn" placeholder="För- och efternamn" required>
+
+        <label for="hv-epost">E-post</label>
+        <input type="email" id="hv-epost" name="epost" placeholder="din@epost.se" required>
+
+        <label for="hv-ort">Ort i Frankrike</label>
+        <input type="text" id="hv-ort" name="ort" placeholder="t.ex. Béziers, Pézenas, Roquebrun">
+
+        <label for="hv-info">Kort om huset (valfritt)</label>
+        <textarea id="hv-info" name="info" rows="3" placeholder="Hur ofta ni är där, vad ni framförallt vill ha hjälp med"></textarea>
+
+        <button type="submit" class="btn-primary" style="width:100%;">Skicka förfrågan</button>
+      </form>
+      <p style="font-size:.82rem;opacity:.65;margin-top:14px;">Vill ni boka tid direkt utan att fylla i något? Använd kalendern till höger.</p>
+    </div>
+    <div class="booking-embed">
+      <!-- Kalender "Startbesök - Duco Maison" skapad via GHL API 2026-07-24, id 32XrPuvKIGyt6KOUHlRo.
+           Standardinställningar (30 min-slots, event-typ), öppettider/tillgänglighet inte satta än, gör det i
+           GHL:s gränssnitt (Calendars -> Startbesök - Duco Maison -> Availability) innan sajten går skarpt. -->
+      <iframe src="https://api.leadconnectorhq.com/widget/booking/32XrPuvKIGyt6KOUHlRo"
+        style="width:100%;border:none;overflow:hidden;" scrolling="no" id="duco_regie_booking"
+        title="Boka startbesök"></iframe>
+      <noscript>
+        <div class="booking-fallback">Bokningskalendern kräver JavaScript. Maila oss istället på
+          jean-claude@mail.ducostudios.com.</div>
+      </noscript>
+    </div>
+  </div>
+</section>
+<script src="https://link.msgsndr.com/js/form_embed.js" type="text/javascript"></script>
+
+<script>
+  (function () {
+    var root = document.getElementById("om-slider");
+    if (!root) return;
+    var imgs = root.querySelectorAll(".slider-track img");
+    var counter = root.querySelector(".slider-counter .cur");
+    var i = 0;
+    var timer;
+    var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    function show(n) {
+      imgs[i].classList.remove("active");
+      i = (n + imgs.length) % imgs.length;
+      imgs[i].classList.add("active");
+      if (counter) counter.textContent = i + 1;
+    }
+
+    function startTimer() {
+      if (reduceMotion) return;
+      timer = setInterval(function () { show(i + 1); }, 4500);
+    }
+
+    function resetTimer() {
+      clearInterval(timer);
+      startTimer();
+    }
+
+    root.querySelector(".next").addEventListener("click", function () { show(i + 1); resetTimer(); });
+    root.querySelector(".prev").addEventListener("click", function () { show(i - 1); resetTimer(); });
+
+    var touchStartX = null;
+    var touchStartY = null;
+    var track = root.querySelector(".slider-track");
+    track.addEventListener("touchstart", function (e) {
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+    track.addEventListener("touchend", function (e) {
+      if (touchStartX === null) return;
+      var dx = e.changedTouches[0].clientX - touchStartX;
+      var dy = e.changedTouches[0].clientY - touchStartY;
+      touchStartX = null;
+      if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy)) return;
+      if (dx < 0) { show(i + 1); } else { show(i - 1); }
+      resetTimer();
+    }, { passive: true });
+
+    startTimer();
+  })();
+</script>
+
+<div id="duco-chat-widget" aria-live="polite">
+  <div id="duco-chat-thread">
+    <button id="duco-chat-close" type="button" aria-label="Stäng konversationen">&times;</button>
+  </div>
+  <form id="duco-chat-bar">
+    <div id="duco-chat-input-row">
+      <input id="duco-chat-input" type="text" placeholder="Fråga oss om huset, priser eller tillsynen…" autocomplete="off" maxlength="2000">
+      <button id="duco-chat-send" type="submit" aria-label="Skicka"><i class="fa-solid fa-arrow-up"></i></button>
+    </div>
+    <!-- GDPR-notis, flyttad in i widgeten 2026-07-28 pa Davids begaran (lag
+         tidigare som ett eget stycke langst ner pa sidan, oavsett om nagon
+         chattade eller inte). 2026-07-28: flyttad ANNU en gang, nu som en
+         egen rad INUTI duco-chat-bar-boxen (under inputraden) istallet for
+         som ett separat stycke efter formuläret, sa den visuellt ligger i
+         samma synliga ruta som faltet, inte flytande i luften under. Pa
+         engelska pa Davids uttryckliga begaran. Lanken pekar mot samma
+         integritetspolicy-placeholder som resten av sidan (se footer), byt
+         ut nar den riktiga sidan finns. -->
+    <p id="duco-chat-gdpr">By chatting with our AI assistant Jean-Claude, you agree that your messages may be processed by AI, in order to answer your question and keep notes for us. Read more in our <a href="/integritetspolicy.html" target="_blank" rel="noopener">privacy policy</a>.</p>
+  </form>
+</div>
+
+<script>
+  // Chattwidget mot den publika widget-endpointen i Duco-repots server
+  // (src/routes/widget.ts), INTE mot den interna /api/agent/chat (som har
+  // tillgång till hela affärens minne/compliance-larm, aldrig lämplig att
+  // exponera för anonyma besökare). Servern körs i Flys Paris-region och
+  // är tillgänglig oberoende av den lokala datorn. Widgeten döljs om dess
+  // healthcheck mot backend misslyckas.
+  //
+  // ORDNING VIKTIG: detta skript maste ligga EFTER widget-HTML:en ovan.
+  // Skriptet kors direkt (ingen DOMContentLoaded-lyssnare), sa om det
+  // laddas fore <div id="duco-chat-widget"> finns i sidan hittar
+  // document.getElementById ingenting och hela widgeten forblir dold utan
+  // nagot synligt fel. Upptackt 2026-07-27 via en forhandsvisning dar
+  // ordningen rakade bli fel efter flera redigeringar.
+  var DUCO_CHAT_API_BASE = "https://duco-regie-portal.fly.dev";
+
+  (function () {
+    // Skydd mot dubbel-initiering, 2026-07-27: om koden av misstag hamnar
+    // dubbelt i sidan (t.ex. klistrad ovanpa en gammal kopia i GHL
+    // istallet for att ersatta den) skulle bada instanserna annars binda
+    // till SAMMA element (getElementById tar alltid forsta traffen vid
+    // dubbla id:n) och bada visa halsningen/svara pa samma meddelande, se
+    // Davids rapport om dubbla halsningsmeddelanden. Detta gor att bara
+    // den forsta instansen faktiskt kors.
+    if (window.__ducoChatWidgetInitialized) return;
+    window.__ducoChatWidgetInitialized = true;
+
+    var widget = document.getElementById("duco-chat-widget");
+    var thread = document.getElementById("duco-chat-thread");
+    var closeBtn = document.getElementById("duco-chat-close");
+    var form = document.getElementById("duco-chat-bar");
+    var input = document.getElementById("duco-chat-input");
+    var sendBtn = document.getElementById("duco-chat-send");
+    if (!widget || !form || !input) return;
+
+    var history = [];
+    var greeted = false;
+
+    // Bilingual halsning, pa Davids uttryckliga begaran 2026-07-27: syftet
+    // ar att bade svenska OCH franska besokare direkt ska forsta att
+    // agenten hanterar deras sprak, utan att behova undra. Ersatte den
+    // tidigare rent svenska halsningen. Nar besokaren sedan skriver sitt
+    // forsta RIKTIGA meddelande ska agenten lasa till det spraket och inte
+    // fortsatta blanda, se motsvarande instruktion i systemprompten
+    // (src/routes/widget.ts).
+    var GREETING = "Hej! Jag är Jean-Claude, en AI-assistent som hjälper David och Emelie med tillsynen av hus i Languedoc. Fråga mig gärna om priser eller ert hus.\n\nBonjour ! Je suis Jean-Claude, un assistant IA qui aide David et Emelie avec la surveillance de maisons en Languedoc. N'hésitez pas à me poser vos questions.";
+
+    // Roterande platshallartext, pa Davids begaran: widgeten riktar sig
+    // bade till svenska kunder och franska leverantorer/hantverkare, sa
+    // faltet vaxlar mellan de tva efter nagra sekunder istallet for att
+    // bara visa den svenska framingen hela tiden.
+    var PLACEHOLDERS = [
+      "Fråga oss om huset, priser eller tillsynen…",
+      "Posez vos questions sur nos services ou vos travaux…"
+    ];
+    var placeholderIndex = 0;
+    setInterval(function () {
+      placeholderIndex = (placeholderIndex + 1) % PLACEHOLDERS.length;
+      input.placeholder = PLACEHOLDERS[placeholderIndex];
+    }, 6000);
+
+    // Enkel, saker formatering for assistentsvar: escapear all HTML forst
+    // (skydd mot XSS aven om modellen nagon gang skulle raka producera
+    // HTML-liknande text), tolkar sedan bara **fetstil** och radbrytningar.
+    // Modellen instrueras (se systemprompten i widget.ts) att INTE anvanda
+    // markdown eller tankstreck alls, sa detta ar ett skyddsnat for om den
+    // anda skulle rata ut sig, inte den primara losningen. Anvands bara for
+    // assistentsvar, besokarens egna meddelanden visas alltid rent som
+    // textContent.
+    function escapeHtml(text) {
+      return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+    function renderAssistantHtml(text) {
+      var escaped = escapeHtml(text);
+      escaped = escaped.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+      return escaped.replace(/\n/g, "<br>");
+    }
+
+    function addMessage(role, text) {
+      var el = document.createElement("div");
+      el.className = "msg " + role;
+      if (role === "assistant") {
+        el.innerHTML = renderAssistantHtml(text);
+      } else {
+        el.textContent = text;
+      }
+      thread.appendChild(el);
+      thread.style.display = "block";
+      widget.classList.add("has-messages");
+      thread.scrollTop = thread.scrollHeight;
+      return el;
+    }
+
+    function showThinking() {
+      var el = document.createElement("div");
+      el.className = "msg thinking";
+      el.innerHTML = "<span></span><span></span><span></span>";
+      thread.appendChild(el);
+      thread.scrollTop = thread.scrollHeight;
+      return el;
+    }
+
+    // Stäng-knappen döljer bara konversationen, den rensar INTE historiken,
+    // så om besökaren skriver igen fortsätter samtalet där det var.
+    if (closeBtn) {
+      closeBtn.addEventListener("click", function () {
+        thread.style.display = "none";
+        widget.classList.remove("has-messages");
+      });
+    }
+
+    // Historik sparas i sessionStorage, på Davids begäran: tidigare
+    // meddelanden ska komma fram igen om besökaren klickar i fältet på
+    // nytt, SÅ LÄNGE det inte är en ny session. sessionStorage är exakt
+    // rätt verktyg för det, den rensas automatiskt när fliken/webbläsaren
+    // stängs, till skillnad från localStorage som hade legat kvar för alltid.
+    var STORAGE_KEY = "duco_chat_state_v1";
+
+    function saveState() {
+      try {
+        sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ greeted: greeted, history: history }));
+      } catch (e) { /* privat läge/blockerad lagring, strunta i det */ }
+    }
+
+    function restoreState() {
+      var raw;
+      try { raw = sessionStorage.getItem(STORAGE_KEY); } catch (e) { return false; }
+      if (!raw) return false;
+      var state;
+      try { state = JSON.parse(raw); } catch (e) { return false; }
+      if (!state || !state.greeted) return false;
+      greeted = true;
+      addMessage("assistant", GREETING);
+      (state.history || []).forEach(function (turn) {
+        addMessage(turn.role === "user" ? "user" : "assistant", turn.content);
+      });
+      history = state.history || [];
+      return true;
+    }
+
+    // Tydlig identitet från start, på Davids uttryckliga begäran: besökaren
+    // ska direkt förstå att det är Jean-Claude, samma AI-assistent som
+    // står i sidfoten (jean-claude@mail.ducostudios.com), inte en anonym
+    // "AI-assistent". Visas EN gång, direkt när widgeten blir tillgänglig,
+    // inget API-anrop krävs för denna första rad.
+    function greetOnce() {
+      if (greeted) return;
+      greeted = true;
+      addMessage("assistant", GREETING);
+      saveState();
+    }
+
+    // Greeten visas nar besokaren faktiskt klickar in i faltet forsta
+    // gangen, inte direkt vid sidladdning, sa den inbjudande pulseringen pa
+    // baren far vara kvar tills nagon faktiskt engagerar sig. threadReady
+    // ser till att atergivning av historik/halsning bara sker EN gang per
+    // sidladdning, aven om faltet far fokus flera ganger (t.ex. stang och
+    // oppna widgeten igen). Fore den har fixen anropades restoreState() vid
+    // VARJE fokusering, vilket la till halsningen (och hela historiken) pa
+    // nytt ovanpa det som redan fanns i traden varje gang, se Davids
+    // rapport om dubbla/upprepade halsningsmeddelanden 2026-07-28.
+    // Stang-knappen doljer bara traden via display:none, den rensar aldrig
+    // innehallet, sa nar faltet far fokus igen racker det att visa traden
+    // pa nytt, inte bygga om den.
+    var threadReady = false;
+    input.addEventListener("focus", function () {
+      thread.style.display = "block";
+      widget.classList.add("has-messages");
+      if (threadReady) return;
+      threadReady = true;
+      if (!restoreState()) greetOnce();
+    });
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var message = input.value.trim();
+      if (!message) return;
+      input.value = "";
+      sendBtn.disabled = true;
+      addMessage("user", message);
+      var thinkingEl = showThinking();
+
+      fetch(DUCO_CHAT_API_BASE + "/api/widget/chat", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ message: message, history: history })
+      })
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+          thinkingEl.remove();
+          var reply = data && data.reply ? data.reply : "Kunde inte svara just nu, hör gärna av dig på jean-claude@mail.ducostudios.com istället.";
+          addMessage("assistant", reply);
+          history.push({ role: "user", content: message });
+          history.push({ role: "assistant", content: reply });
+          if (history.length > 20) history = history.slice(-20);
+        })
+        .catch(function () {
+          thinkingEl.remove();
+          addMessage("assistant", "Kunde inte svara just nu, hör gärna av dig på jean-claude@mail.ducostudios.com istället.");
+        })
+        .finally(function () {
+          sendBtn.disabled = false;
+          input.focus();
+        });
+    });
+
+    // Healthcheck med kort timeout: syns backend inte inom ~2.5s förblir
+    // widgeten helt dold.
+    var controller = new AbortController();
+    var timeout = setTimeout(function () { controller.abort(); }, 2500);
+    fetch(DUCO_CHAT_API_BASE + "/api/widget/health", {
+      signal: controller.signal
+    })
+      .then(function (res) {
+        if (res.ok) widget.style.display = "block";
+      })
+      .catch(function () { /* backend nås inte, widgeten förblir dold */ })
+      .finally(function () { clearTimeout(timeout); });
+  })();
+</script>
+
+<!-- Telefonnumret (Marie, AI-telefonassistenten) borttaget 2026-07-28 pa
+     Davids begaran tills telefonappen ar klar, se uppgiftslistan (franskt
+     nummer, GDPR-samtycke for inspelning m.m. fortfarande olost). Lagg
+     tillbaka bade denna rad och telefonnumret i footern nedan, samt
+     FAQ-svaret om att ringa Marie i widget.ts, nar telefonappen ar redo. -->
+
+<footer>
+  <div class="wrap">
+    <div class="footer-social">
+      <a href="https://www.instagram.com/emelie.d.bergqvist?igsh=MTk0cHVvdmVqMTVtZQ==" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+      <a href="https://youtube.com/@bonjourlife777?si=RdoKuILm0zLoX-Vo" target="_blank" rel="noopener" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+    </div>
+    Duco Maison &middot; jean-claude@mail.ducostudios.com &middot; <a href="/integritetspolicy.html" style="text-decoration:underline;">Integritetspolicy</a> &middot; <a href="/villkor.html" style="text-decoration:underline;">Allmänna villkor</a>
+  </div>
+</footer>
+</div>
