@@ -1504,6 +1504,46 @@
   })();
 </script>
 
+<script>
+  (function () {
+    var form = document.getElementById("prebook-form");
+    if (!form) return;
+    var submitBtn = form.querySelector("button[type=submit]");
+    var statusEl = document.createElement("p");
+    statusEl.style.marginTop = "10px";
+    statusEl.style.fontSize = ".85rem";
+    form.appendChild(statusEl);
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      statusEl.textContent = "";
+      submitBtn.disabled = true;
+
+      fetch(DUCO_CHAT_API_BASE + "/api/widget/prebook", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          namn: document.getElementById("hv-namn").value,
+          epost: document.getElementById("hv-epost").value,
+          ort: document.getElementById("hv-ort").value,
+          info: document.getElementById("hv-info").value
+        })
+      })
+        .then(function (res) {
+          if (!res.ok) throw new Error("failed");
+          statusEl.style.color = "#2f6b45";
+          statusEl.textContent = "Tack! Vi hör av oss inom kort.";
+          form.reset();
+        })
+        .catch(function () {
+          statusEl.style.color = "#a3462d";
+          statusEl.textContent = "Kunde inte skicka just nu, maila oss gärna istället på jean-claude@mail.ducostudios.com.";
+        })
+        .finally(function () { submitBtn.disabled = false; });
+    });
+  })();
+</script>
+
 <!-- Telefonnumret (Marie, AI-telefonassistenten) borttaget 2026-07-28 pa
      Davids begaran tills telefonappen ar klar, se uppgiftslistan (franskt
      nummer, GDPR-samtycke for inspelning m.m. fortfarande olost). Lagg
