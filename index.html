@@ -654,6 +654,21 @@
 
   .booking-fallback { padding: 40px 24px; text-align: center; font-size: .9rem; opacity: .7; }
 
+  .bw-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+
+  .bw-pill {
+    padding: 8px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--line);
+    background: #fff;
+    color: var(--ink);
+    font-size: .85rem;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  .bw-pill.bw-selected { background: var(--ink); color: #fff; border-color: var(--ink); }
+
   footer {
     /* Extra bottompadding sa fotterlankarna gar att na aven langst ner pa
        sidan, chattwidgeten ar position:fixed och tacker annars over dem
@@ -1201,13 +1216,25 @@
       </form>
       <p style="font-size:.82rem;opacity:.65;margin-top:14px;">Vill ni boka tid direkt utan att fylla i något? Använd kalendern till höger.</p>
     </div>
-    <div class="booking-embed">
-      <!-- Kalender "Startbesök - Duco Maison" skapad via GHL API 2026-07-24, id 32XrPuvKIGyt6KOUHlRo.
-           Standardinställningar (30 min-slots, event-typ), öppettider/tillgänglighet inte satta än, gör det i
-           GHL:s gränssnitt (Calendars -> Startbesök - Duco Maison -> Availability) innan sajten går skarpt. -->
-      <iframe src="https://api.leadconnectorhq.com/widget/booking/32XrPuvKIGyt6KOUHlRo"
-        style="width:100%;border:none;overflow:hidden;" scrolling="no" id="duco_regie_booking"
-        title="Boka startbesök"></iframe>
+    <div class="booking-embed" id="bw-widget">
+      <!-- Egen bokningsyta mot Zoho Calendar (david@ducomaison.fr), ersatte
+           2026-08-12 den tidigare GHL-iframen. Lediga tider räknas fram
+           servern-sidan (se src/integrations/calendar/availability.ts) och
+           bokningen skapas direkt som en händelse i Zoho-kalendern. -->
+      <div id="bw-loading" class="booking-fallback">Hämtar lediga tider...</div>
+      <div id="bw-content" style="display:none;">
+        <p style="font-size:.85rem;opacity:.7;margin-bottom:12px;">Välj ett datum och en tid, sen namn och e-post så bokar vi in er direkt.</p>
+        <div id="bw-dates" class="bw-pills"></div>
+        <div id="bw-times" class="bw-pills" style="margin-top:10px;"></div>
+        <form id="bw-form" style="display:none;margin-top:16px;">
+          <label for="bw-namn" style="display:block;font-size:.82rem;margin-bottom:6px;opacity:.75;">Namn</label>
+          <input type="text" id="bw-namn" required style="width:100%;padding:11px 14px;border-radius:8px;border:1px solid var(--line);margin-bottom:12px;font-family:inherit;">
+          <label for="bw-epost" style="display:block;font-size:.82rem;margin-bottom:6px;opacity:.75;">E-post</label>
+          <input type="email" id="bw-epost" required style="width:100%;padding:11px 14px;border-radius:8px;border:1px solid var(--line);margin-bottom:12px;font-family:inherit;">
+          <button type="submit" class="btn-primary" style="width:100%;">Boka tiden</button>
+        </form>
+        <p id="bw-status" style="margin-top:10px;font-size:.85rem;"></p>
+      </div>
       <noscript>
         <div class="booking-fallback">Bokningskalendern kräver JavaScript. Maila oss istället på
           jean-claude@ducomaison.fr.</div>
@@ -1215,7 +1242,6 @@
     </div>
   </div>
 </section>
-<script src="https://link.msgsndr.com/js/form_embed.js" type="text/javascript"></script>
 
 <script>
   (function () {
@@ -1547,6 +1573,142 @@
           statusEl.textContent = "Kunde inte skicka just nu, maila oss gärna istället på jean-claude@ducomaison.fr.";
         })
         .finally(function () { submitBtn.disabled = false; });
+    });
+  })();
+</script>
+
+<script>
+  (function () {
+    var loadingEl = document.getElementById("bw-loading");
+    var contentEl = document.getElementById("bw-content");
+    var datesEl = document.getElementById("bw-dates");
+    var timesEl = document.getElementById("bw-times");
+    var formEl = document.getElementById("bw-form");
+    var statusEl = document.getElementById("bw-status");
+    if (!loadingEl || !contentEl) return;
+
+    var WEEKDAY_NAMES = ["sön", "mån", "tis", "ons", "tor", "fre", "lör"];
+    var slotsByDate = {}; // "yyyy-mm-dd" (Europe/Paris) -> [{start, end}]
+    var selectedDate = null;
+    var selectedSlot = null;
+
+    function parisDateKey(isoString) {
+      var d = new Date(isoString);
+      var parts = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Paris", year: "numeric", month: "2-digit", day: "2-digit" }).formatToParts(d);
+      var map = {};
+      parts.forEach(function (p) { map[p.type] = p.value; });
+      return map.year + "-" + map.month + "-" + map.day;
+    }
+
+    function parisTimeLabel(isoString) {
+      return new Intl.DateTimeFormat("sv-SE", { timeZone: "Europe/Paris", hour: "2-digit", minute: "2-digit" }).format(new Date(isoString));
+    }
+
+    function dateLabel(dateKey) {
+      var d = new Date(dateKey + "T12:00:00Z");
+      return WEEKDAY_NAMES[d.getUTCDay()] + " " + d.getUTCDate() + "/" + (d.getUTCMonth() + 1);
+    }
+
+    function renderDates() {
+      datesEl.innerHTML = "";
+      var dateKeys = Object.keys(slotsByDate).sort();
+      dateKeys.slice(0, 12).forEach(function (dateKey) {
+        var pill = document.createElement("button");
+        pill.type = "button";
+        pill.className = "bw-pill" + (dateKey === selectedDate ? " bw-selected" : "");
+        pill.textContent = dateLabel(dateKey);
+        pill.addEventListener("click", function () {
+          selectedDate = dateKey;
+          selectedSlot = null;
+          formEl.style.display = "none";
+          renderDates();
+          renderTimes();
+        });
+        datesEl.appendChild(pill);
+      });
+    }
+
+    function renderTimes() {
+      timesEl.innerHTML = "";
+      if (!selectedDate) return;
+      (slotsByDate[selectedDate] || []).forEach(function (slot) {
+        var pill = document.createElement("button");
+        pill.type = "button";
+        pill.className = "bw-pill" + (selectedSlot && selectedSlot.start === slot.start ? " bw-selected" : "");
+        pill.textContent = parisTimeLabel(slot.start);
+        pill.addEventListener("click", function () {
+          selectedSlot = slot;
+          formEl.style.display = "block";
+          statusEl.textContent = "";
+          renderTimes();
+        });
+        timesEl.appendChild(pill);
+      });
+    }
+
+    fetch(DUCO_CHAT_API_BASE + "/api/widget/booking/availability")
+      .then(function (res) {
+        if (!res.ok) throw new Error("failed");
+        return res.json();
+      })
+      .then(function (data) {
+        (data.slots || []).forEach(function (slot) {
+          var dateKey = parisDateKey(slot.start);
+          if (!slotsByDate[dateKey]) slotsByDate[dateKey] = [];
+          slotsByDate[dateKey].push(slot);
+        });
+        loadingEl.style.display = "none";
+        contentEl.style.display = "block";
+        var firstDate = Object.keys(slotsByDate).sort()[0];
+        if (firstDate) {
+          selectedDate = firstDate;
+          renderDates();
+          renderTimes();
+        } else {
+          datesEl.textContent = "Inga lediga tider just nu, maila oss gärna på jean-claude@ducomaison.fr.";
+        }
+      })
+      .catch(function () {
+        loadingEl.textContent = "Kunde inte hämta lediga tider. Maila oss gärna istället på jean-claude@ducomaison.fr.";
+      });
+
+    formEl.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (!selectedSlot) return;
+      var submitBtn = formEl.querySelector("button[type=submit]");
+      submitBtn.disabled = true;
+      statusEl.textContent = "";
+
+      fetch(DUCO_CHAT_API_BASE + "/api/widget/booking", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          namn: document.getElementById("bw-namn").value,
+          epost: document.getElementById("bw-epost").value,
+          start: selectedSlot.start
+        })
+      })
+        .then(function (res) {
+          return res.json().then(function (body) { return { ok: res.ok, body: body }; });
+        })
+        .then(function (result) {
+          if (!result.ok) {
+            statusEl.style.color = "#a3462d";
+            statusEl.textContent = (result.body && result.body.error) || "Kunde inte boka just nu, försök igen.";
+            submitBtn.disabled = false;
+            return;
+          }
+          statusEl.style.color = "#2f6b45";
+          statusEl.textContent = "Klart! Ni är inbokade " + dateLabel(selectedDate) + " kl " + parisTimeLabel(selectedSlot.start) + ". Vi bekräftar på mejlen.";
+          formEl.style.display = "none";
+          datesEl.style.display = "none";
+          timesEl.style.display = "none";
+        })
+        .catch(function () {
+          statusEl.style.color = "#a3462d";
+          statusEl.textContent = "Kunde inte boka just nu, försök igen eller maila jean-claude@ducomaison.fr.";
+          submitBtn.disabled = false;
+        });
     });
   })();
 </script>
