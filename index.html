@@ -615,7 +615,7 @@
     align-items: flex-start;
   }
 
-  @media (max-width: 820px) { .booking-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 820px) { .booking-grid { grid-template-columns: 1fr; } #bw-widget { margin-top: 24px; } }
 
   .booking-copy .eyebrow {
     text-transform: uppercase;
@@ -659,6 +659,11 @@
     border-radius: 16px;
     padding: 28px;
     box-shadow: 0 16px 40px rgba(43,42,36,.16);
+    /* Trycker ner kortets topp sa den linjerar med "Boka ett..."-rubriken
+       till vanster, inte med eyebrow-texten ovanfor den. Motsvarar ungefar
+       eyebrowns radhojd + rubrikens margin-top + dess egen ledning. Justera
+       hardkodat om typsnitt/storlekar andras. */
+    margin-top: 38px;
   }
 
   .bw-label {
@@ -1217,7 +1222,7 @@
     <div class="booking-copy">
       <span class="eyebrow">Boka direkt</span>
       <h2 style="margin-top:10px;font-size:clamp(1.5rem,3vw,2rem);">Boka ett kostnadsfritt startbesök</h2>
-      <p>Fyll gärna i det ni redan vet nedan, då hinner vi förbereda oss innan besöket.</p>
+      <p>Fyll i era uppgifter, skicka sen en förfrågan eller välj en ledig tid direkt till höger, samma uppgifter används till bådadera.</p>
       <form class="prebook-form" id="prebook-form">
         <label for="hv-namn">Namn</label>
         <input type="text" id="hv-namn" name="namn" placeholder="För- och efternamn" required>
@@ -1233,27 +1238,27 @@
 
         <button type="submit" class="btn-primary" style="width:100%;">Skicka förfrågan</button>
       </form>
-      <p style="font-size:.82rem;opacity:.65;margin-top:14px;">Vill ni boka tid direkt utan att fylla i något? Använd kalendern till höger.</p>
+      <p style="font-size:.82rem;opacity:.65;margin-top:14px;">Vill ni istället boka en specifik tid direkt? Välj datum och tid till höger →</p>
     </div>
     <div class="booking-embed" id="bw-widget">
       <!-- Egen bokningsyta mot Zoho Calendar (david@ducomaison.fr), ersatte
            2026-08-12 den tidigare GHL-iframen. Lediga tider räknas fram
            servern-sidan (se src/integrations/calendar/availability.ts) och
-           bokningen skapas direkt som en händelse i Zoho-kalendern. -->
+           bokningen skapas direkt som en händelse i Zoho-kalendern.
+           Använder AVSIKTLIGT samma namn/epost/ort/info-falt som
+           prebook-form till vanster (hv-namn/hv-epost/hv-ort/hv-info)
+           istallet for egna dubblettfalt -- David paepekade 2026-08-12 att
+           det kandes konstigt att fylla i kontaktuppgifter tva ganger. -->
       <div id="bw-loading" class="booking-fallback">Hämtar lediga tider...</div>
       <div id="bw-content" style="display:none;">
-        <p style="font-size:.85rem;opacity:.7;margin-bottom:20px;">Välj ett datum och en tid, sen namn och e-post så bokar vi in er direkt.</p>
+        <p style="font-size:.85rem;opacity:.7;margin-bottom:20px;">Välj ett datum och en tid, namn och e-post fylls i till vänster.</p>
         <p class="bw-label">Datum</p>
         <div id="bw-dates" class="bw-pills"></div>
         <p class="bw-label">Tid</p>
         <div id="bw-times" class="bw-pills"></div>
-        <form id="bw-form" style="display:none;margin-top:16px;">
-          <label for="bw-namn" style="display:block;font-size:.82rem;margin-bottom:6px;opacity:.75;">Namn</label>
-          <input type="text" id="bw-namn" required style="width:100%;padding:11px 14px;border-radius:8px;border:1px solid var(--line);margin-bottom:12px;font-family:inherit;">
-          <label for="bw-epost" style="display:block;font-size:.82rem;margin-bottom:6px;opacity:.75;">E-post</label>
-          <input type="email" id="bw-epost" required style="width:100%;padding:11px 14px;border-radius:8px;border:1px solid var(--line);margin-bottom:12px;font-family:inherit;">
-          <button type="submit" class="btn-primary" style="width:100%;">Boka tiden</button>
-        </form>
+        <div id="bw-form" style="display:none;margin-top:20px;">
+          <button type="button" id="bw-submit" class="btn-primary" style="width:100%;">Boka tiden</button>
+        </div>
         <p id="bw-status" style="margin-top:10px;font-size:.85rem;"></p>
       </div>
       <noscript>
@@ -1693,19 +1698,33 @@
         loadingEl.textContent = "Kunde inte hämta lediga tider. Maila oss gärna istället på jean-claude@ducomaison.fr.";
       });
 
-    formEl.addEventListener("submit", function (e) {
-      e.preventDefault();
+    var submitBtn = document.getElementById("bw-submit");
+    submitBtn.addEventListener("click", function () {
       if (!selectedSlot) return;
-      var submitBtn = formEl.querySelector("button[type=submit]");
-      submitBtn.disabled = true;
       statusEl.textContent = "";
+
+      var namnEl = document.getElementById("hv-namn");
+      var epostEl = document.getElementById("hv-epost");
+      var namn = namnEl.value.trim();
+      var epost = epostEl.value.trim();
+      if (!namn || !epost || !epostEl.checkValidity()) {
+        statusEl.style.color = "#a3462d";
+        statusEl.textContent = "Fyll i namn och e-post till vänster innan ni bokar.";
+        (namn ? epostEl : namnEl).focus();
+        (namn ? epostEl : namnEl).scrollIntoView({ behavior: "smooth", block: "center" });
+        return;
+      }
+
+      submitBtn.disabled = true;
 
       fetch(DUCO_CHAT_API_BASE + "/api/widget/booking", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
-          namn: document.getElementById("bw-namn").value,
-          epost: document.getElementById("bw-epost").value,
+          namn: namn,
+          epost: epost,
+          ort: document.getElementById("hv-ort").value,
+          info: document.getElementById("hv-info").value,
           start: selectedSlot.start
         })
       })
