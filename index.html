@@ -654,18 +654,37 @@
 
   .booking-fallback { padding: 40px 24px; text-align: center; font-size: .9rem; opacity: .7; }
 
-  .bw-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+  #bw-widget {
+    background: #fff;
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: 0 16px 40px rgba(43,42,36,.16);
+  }
+
+  .bw-label {
+    font-size: .78rem;
+    font-weight: 600;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    opacity: .55;
+    margin: 0 0 10px;
+  }
+
+  .bw-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
 
   .bw-pill {
-    padding: 8px 14px;
+    padding: 9px 16px;
     border-radius: 20px;
     border: 1px solid var(--line);
-    background: #fff;
+    background: var(--card);
     color: var(--ink);
     font-size: .85rem;
     cursor: pointer;
     font-family: inherit;
+    transition: border-color .15s, background .15s;
   }
+
+  .bw-pill:hover { border-color: var(--gold); }
 
   .bw-pill.bw-selected { background: var(--ink); color: #fff; border-color: var(--ink); }
 
@@ -1223,9 +1242,11 @@
            bokningen skapas direkt som en händelse i Zoho-kalendern. -->
       <div id="bw-loading" class="booking-fallback">Hämtar lediga tider...</div>
       <div id="bw-content" style="display:none;">
-        <p style="font-size:.85rem;opacity:.7;margin-bottom:12px;">Välj ett datum och en tid, sen namn och e-post så bokar vi in er direkt.</p>
+        <p style="font-size:.85rem;opacity:.7;margin-bottom:20px;">Välj ett datum och en tid, sen namn och e-post så bokar vi in er direkt.</p>
+        <p class="bw-label">Datum</p>
         <div id="bw-dates" class="bw-pills"></div>
-        <div id="bw-times" class="bw-pills" style="margin-top:10px;"></div>
+        <p class="bw-label">Tid</p>
+        <div id="bw-times" class="bw-pills"></div>
         <form id="bw-form" style="display:none;margin-top:16px;">
           <label for="bw-namn" style="display:block;font-size:.82rem;margin-bottom:6px;opacity:.75;">Namn</label>
           <input type="text" id="bw-namn" required style="width:100%;padding:11px 14px;border-radius:8px;border:1px solid var(--line);margin-bottom:12px;font-family:inherit;">
