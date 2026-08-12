@@ -656,9 +656,9 @@
 
   #bw-widget {
     background: #fff;
+    border: 1px solid var(--line);
     border-radius: 16px;
     padding: 28px;
-    box-shadow: 0 16px 40px rgba(43,42,36,.16);
     /* Trycker ner kortets topp sa den linjerar med "Boka ett..."-rubriken
        till vanster, inte med eyebrow-texten ovanfor den. Motsvarar ungefar
        eyebrowns radhojd + rubrikens margin-top + dess egen ledning. Justera
@@ -1222,7 +1222,7 @@
     <div class="booking-copy">
       <span class="eyebrow">Boka direkt</span>
       <h2 style="margin-top:10px;font-size:clamp(1.5rem,3vw,2rem);">Boka ett kostnadsfritt startbesök</h2>
-      <p>Fyll i era uppgifter, skicka sen en förfrågan eller välj en ledig tid direkt till höger, samma uppgifter används till bådadera.</p>
+      <p>Fyll i era uppgifter, välj sen valfritt en ledig tid till höger, en enda knapp längst ner skickar iväg det hela.</p>
       <form class="prebook-form" id="prebook-form">
         <label for="hv-namn">Namn</label>
         <input type="text" id="hv-namn" name="namn" placeholder="För- och efternamn" required>
@@ -1236,9 +1236,9 @@
         <label for="hv-info">Kort om huset (valfritt)</label>
         <textarea id="hv-info" name="info" rows="3" placeholder="Hur ofta ni är där, vad ni framförallt vill ha hjälp med"></textarea>
 
-        <button type="submit" class="btn-primary" style="width:100%;">Skicka förfrågan</button>
+        <p id="prebook-selected-slot" style="font-size:.85rem;margin:-6px 0 14px;display:none;"></p>
+        <button type="submit" class="btn-primary" id="prebook-submit" style="width:100%;">Skicka förfrågan</button>
       </form>
-      <p style="font-size:.82rem;opacity:.65;margin-top:14px;">Vill ni istället boka en specifik tid direkt? Välj datum och tid till höger →</p>
     </div>
     <div class="booking-embed" id="bw-widget">
       <!-- Egen bokningsyta mot Zoho Calendar (david@ducomaison.fr), ersatte
@@ -1247,19 +1247,19 @@
            bokningen skapas direkt som en händelse i Zoho-kalendern.
            Använder AVSIKTLIGT samma namn/epost/ort/info-falt som
            prebook-form till vanster (hv-namn/hv-epost/hv-ort/hv-info)
-           istallet for egna dubblettfalt -- David paepekade 2026-08-12 att
-           det kandes konstigt att fylla i kontaktuppgifter tva ganger. -->
+           istallet for egna dubblettfalt -- och AVSIKTLIGT EN enda
+           skicka-knapp (i prebook-form) istallet for en egen
+           "Boka tiden"-knapp har -- David papekade 2026-08-12/13 tva
+           ganger att tva separata knappar/faltset for samma sak kandes
+           konstigt. Att valja en tid har byter bara vad den delade
+           knappen gor nar man trycker pa den (se skriptet langst ner). -->
       <div id="bw-loading" class="booking-fallback">Hämtar lediga tider...</div>
       <div id="bw-content" style="display:none;">
-        <p style="font-size:.85rem;opacity:.7;margin-bottom:20px;">Välj ett datum och en tid, namn och e-post fylls i till vänster.</p>
+        <p style="font-size:.85rem;opacity:.7;margin-bottom:20px;">Valfritt: välj ett datum och en tid för att boka direkt, annars skickar vi bara vidare er förfrågan.</p>
         <p class="bw-label">Datum</p>
         <div id="bw-dates" class="bw-pills"></div>
         <p class="bw-label">Tid</p>
         <div id="bw-times" class="bw-pills"></div>
-        <div id="bw-form" style="display:none;margin-top:20px;">
-          <button type="button" id="bw-submit" class="btn-primary" style="width:100%;">Boka tiden</button>
-        </div>
-        <p id="bw-status" style="margin-top:10px;font-size:.85rem;"></p>
       </div>
       <noscript>
         <div class="booking-fallback">Bokningskalendern kräver JavaScript. Maila oss istället på
@@ -1565,53 +1565,24 @@
 
 <script>
   (function () {
+    // En enda delad knapp for bade "skicka forfragan" och "boka en
+    // specifik tid" -- David papekade 2026-08-12/13 att tva separata
+    // knappar for i praktiken samma sak (kontaktuppgifter -> vi hor av oss)
+    // kandes konstigt. Knappens text/beteende byter beroende pa om en tid
+    // ar vald i kalendern till hoger.
     var form = document.getElementById("prebook-form");
-    if (!form) return;
-    var submitBtn = form.querySelector("button[type=submit]");
-    var statusEl = document.createElement("p");
-    statusEl.style.marginTop = "10px";
-    statusEl.style.fontSize = ".85rem";
-    form.appendChild(statusEl);
-
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      statusEl.textContent = "";
-      submitBtn.disabled = true;
-
-      fetch(DUCO_CHAT_API_BASE + "/api/widget/prebook", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          namn: document.getElementById("hv-namn").value,
-          epost: document.getElementById("hv-epost").value,
-          ort: document.getElementById("hv-ort").value,
-          info: document.getElementById("hv-info").value
-        })
-      })
-        .then(function (res) {
-          if (!res.ok) throw new Error("failed");
-          statusEl.style.color = "#2f6b45";
-          statusEl.textContent = "Tack! Vi hör av oss inom kort.";
-          form.reset();
-        })
-        .catch(function () {
-          statusEl.style.color = "#a3462d";
-          statusEl.textContent = "Kunde inte skicka just nu, maila oss gärna istället på jean-claude@ducomaison.fr.";
-        })
-        .finally(function () { submitBtn.disabled = false; });
-    });
-  })();
-</script>
-
-<script>
-  (function () {
+    var submitBtn = document.getElementById("prebook-submit");
+    var selectedSlotEl = document.getElementById("prebook-selected-slot");
     var loadingEl = document.getElementById("bw-loading");
     var contentEl = document.getElementById("bw-content");
     var datesEl = document.getElementById("bw-dates");
     var timesEl = document.getElementById("bw-times");
-    var formEl = document.getElementById("bw-form");
-    var statusEl = document.getElementById("bw-status");
-    if (!loadingEl || !contentEl) return;
+    if (!form || !loadingEl || !contentEl) return;
+
+    var statusEl = document.createElement("p");
+    statusEl.style.marginTop = "10px";
+    statusEl.style.fontSize = ".85rem";
+    form.appendChild(statusEl);
 
     var WEEKDAY_NAMES = ["sön", "mån", "tis", "ons", "tor", "fre", "lör"];
     var slotsByDate = {}; // "yyyy-mm-dd" (Europe/Paris) -> [{start, end}]
@@ -1635,6 +1606,17 @@
       return WEEKDAY_NAMES[d.getUTCDay()] + " " + d.getUTCDate() + "/" + (d.getUTCMonth() + 1);
     }
 
+    function updateSubmitButton() {
+      if (selectedSlot) {
+        submitBtn.textContent = "Boka " + dateLabel(selectedDate) + " kl " + parisTimeLabel(selectedSlot.start);
+        selectedSlotEl.style.display = "block";
+        selectedSlotEl.textContent = "Vald tid: " + dateLabel(selectedDate) + " kl " + parisTimeLabel(selectedSlot.start) + " (klicka på tiden igen för att avmarkera)";
+      } else {
+        submitBtn.textContent = "Skicka förfrågan";
+        selectedSlotEl.style.display = "none";
+      }
+    }
+
     function renderDates() {
       datesEl.innerHTML = "";
       var dateKeys = Object.keys(slotsByDate).sort();
@@ -1646,9 +1628,9 @@
         pill.addEventListener("click", function () {
           selectedDate = dateKey;
           selectedSlot = null;
-          formEl.style.display = "none";
           renderDates();
           renderTimes();
+          updateSubmitButton();
         });
         datesEl.appendChild(pill);
       });
@@ -1658,15 +1640,16 @@
       timesEl.innerHTML = "";
       if (!selectedDate) return;
       (slotsByDate[selectedDate] || []).forEach(function (slot) {
+        var isSelected = selectedSlot && selectedSlot.start === slot.start;
         var pill = document.createElement("button");
         pill.type = "button";
-        pill.className = "bw-pill" + (selectedSlot && selectedSlot.start === slot.start ? " bw-selected" : "");
+        pill.className = "bw-pill" + (isSelected ? " bw-selected" : "");
         pill.textContent = parisTimeLabel(slot.start);
         pill.addEventListener("click", function () {
-          selectedSlot = slot;
-          formEl.style.display = "block";
+          selectedSlot = isSelected ? null : slot;
           statusEl.textContent = "";
           renderTimes();
+          updateSubmitButton();
         });
         timesEl.appendChild(pill);
       });
@@ -1698,57 +1681,57 @@
         loadingEl.textContent = "Kunde inte hämta lediga tider. Maila oss gärna istället på jean-claude@ducomaison.fr.";
       });
 
-    var submitBtn = document.getElementById("bw-submit");
-    submitBtn.addEventListener("click", function () {
-      if (!selectedSlot) return;
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
       statusEl.textContent = "";
 
-      var namnEl = document.getElementById("hv-namn");
-      var epostEl = document.getElementById("hv-epost");
-      var namn = namnEl.value.trim();
-      var epost = epostEl.value.trim();
-      if (!namn || !epost || !epostEl.checkValidity()) {
-        statusEl.style.color = "#a3462d";
-        statusEl.textContent = "Fyll i namn och e-post till vänster innan ni bokar.";
-        (namn ? epostEl : namnEl).focus();
-        (namn ? epostEl : namnEl).scrollIntoView({ behavior: "smooth", block: "center" });
-        return;
-      }
+      var namn = document.getElementById("hv-namn").value.trim();
+      var epost = document.getElementById("hv-epost").value.trim();
+      var ort = document.getElementById("hv-ort").value;
+      var info = document.getElementById("hv-info").value;
 
       submitBtn.disabled = true;
 
-      fetch(DUCO_CHAT_API_BASE + "/api/widget/booking", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          namn: namn,
-          epost: epost,
-          ort: document.getElementById("hv-ort").value,
-          info: document.getElementById("hv-info").value,
-          start: selectedSlot.start
-        })
-      })
+      var request = selectedSlot
+        ? fetch(DUCO_CHAT_API_BASE + "/api/widget/booking", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({ namn: namn, epost: epost, ort: ort, info: info, start: selectedSlot.start })
+          })
+        : fetch(DUCO_CHAT_API_BASE + "/api/widget/prebook", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({ namn: namn, epost: epost, ort: ort, info: info })
+          });
+
+      request
         .then(function (res) {
-          return res.json().then(function (body) { return { ok: res.ok, body: body }; });
+          return res.json().then(function (body) { return { ok: res.ok, body: body }; }).catch(function () { return { ok: res.ok, body: null }; });
         })
         .then(function (result) {
           if (!result.ok) {
             statusEl.style.color = "#a3462d";
-            statusEl.textContent = (result.body && result.body.error) || "Kunde inte boka just nu, försök igen.";
+            statusEl.textContent = (result.body && result.body.error) || "Kunde inte skicka just nu, försök igen.";
             submitBtn.disabled = false;
             return;
           }
           statusEl.style.color = "#2f6b45";
-          statusEl.textContent = "Klart! Ni är inbokade " + dateLabel(selectedDate) + " kl " + parisTimeLabel(selectedSlot.start) + ". Vi bekräftar på mejlen.";
-          formEl.style.display = "none";
-          datesEl.style.display = "none";
-          timesEl.style.display = "none";
+          if (selectedSlot) {
+            statusEl.textContent = "Klart! Ni är inbokade " + dateLabel(selectedDate) + " kl " + parisTimeLabel(selectedSlot.start) + ". Vi bekräftar på mejlen.";
+            datesEl.style.display = "none";
+            timesEl.style.display = "none";
+          } else {
+            statusEl.textContent = "Tack! Vi hör av oss inom kort.";
+          }
+          form.reset();
+          selectedSlot = null;
+          updateSubmitButton();
         })
         .catch(function () {
           statusEl.style.color = "#a3462d";
-          statusEl.textContent = "Kunde inte boka just nu, försök igen eller maila jean-claude@ducomaison.fr.";
-          submitBtn.disabled = false;
-        });
+          statusEl.textContent = "Kunde inte skicka just nu, maila oss gärna istället på jean-claude@ducomaison.fr.";
+        })
+        .finally(function () { submitBtn.disabled = false; });
     });
   })();
 </script>
