@@ -1203,7 +1203,7 @@
         title="Boka startbesök"></iframe>
       <noscript>
         <div class="booking-fallback">Bokningskalendern kräver JavaScript. Maila oss istället på
-          jean-claude@mail.ducostudios.com.</div>
+          jean-claude@ducomaison.fr.</div>
       </noscript>
     </div>
   </div>
@@ -1425,7 +1425,7 @@
 
     // Tydlig identitet från start, på Davids uttryckliga begäran: besökaren
     // ska direkt förstå att det är Jean-Claude, samma AI-assistent som
-    // står i sidfoten (jean-claude@mail.ducostudios.com), inte en anonym
+    // står i sidfoten (jean-claude@ducomaison.fr), inte en anonym
     // "AI-assistent". Visas EN gång, direkt när widgeten blir tillgänglig,
     // inget API-anrop krävs för denna första rad.
     function greetOnce() {
@@ -1473,7 +1473,7 @@
         .then(function (res) { return res.json(); })
         .then(function (data) {
           thinkingEl.remove();
-          var reply = data && data.reply ? data.reply : "Kunde inte svara just nu, hör gärna av dig på jean-claude@mail.ducostudios.com istället.";
+          var reply = data && data.reply ? data.reply : "Kunde inte svara just nu, hör gärna av dig på jean-claude@ducomaison.fr istället.";
           addMessage("assistant", reply);
           history.push({ role: "user", content: message });
           history.push({ role: "assistant", content: reply });
@@ -1481,7 +1481,7 @@
         })
         .catch(function () {
           thinkingEl.remove();
-          addMessage("assistant", "Kunde inte svara just nu, hör gärna av dig på jean-claude@mail.ducostudios.com istället.");
+          addMessage("assistant", "Kunde inte svara just nu, hör gärna av dig på jean-claude@ducomaison.fr istället.");
         })
         .finally(function () {
           sendBtn.disabled = false;
@@ -1537,7 +1537,7 @@
         })
         .catch(function () {
           statusEl.style.color = "#a3462d";
-          statusEl.textContent = "Kunde inte skicka just nu, maila oss gärna istället på jean-claude@mail.ducostudios.com.";
+          statusEl.textContent = "Kunde inte skicka just nu, maila oss gärna istället på jean-claude@ducomaison.fr.";
         })
         .finally(function () { submitBtn.disabled = false; });
     });
@@ -1556,7 +1556,7 @@
       <a href="https://www.instagram.com/emelie.d.bergqvist?igsh=MTk0cHVvdmVqMTVtZQ==" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
       <a href="https://youtube.com/@bonjourlife777?si=RdoKuILm0zLoX-Vo" target="_blank" rel="noopener" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
     </div>
-    Duco Maison &middot; jean-claude@mail.ducostudios.com &middot; <a href="/integritetspolicy.html" style="text-decoration:underline;">Integritetspolicy</a> &middot; <a href="/villkor.html" style="text-decoration:underline;">Allmänna villkor</a>
+    Duco Maison &middot; jean-claude@ducomaison.fr &middot; <a href="/integritetspolicy.html" style="text-decoration:underline;">Integritetspolicy</a> &middot; <a href="/villkor.html" style="text-decoration:underline;">Allmänna villkor</a>
   </div>
 </footer>
 </div>
