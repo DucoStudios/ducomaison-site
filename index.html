@@ -647,11 +647,6 @@
     font-family: inherit;
   }
 
-  .booking-embed {
-    min-height: 480px;
-  }
-
-  .booking-embed iframe { width: 100%; border: none; }
 
   .booking-fallback { padding: 40px 24px; text-align: center; font-size: .9rem; opacity: .7; }
 
@@ -1262,6 +1257,10 @@
         <p class="bw-label">Tid</p>
         <div id="bw-times" class="bw-pills"></div>
       </div>
+      <div id="bw-success" style="display:none;text-align:center;padding:16px 0;">
+        <i class="fa-solid fa-circle-check" style="font-size:1.8rem;color:var(--gold);"></i>
+        <p id="bw-success-text" style="margin:12px 0 0;font-size:.95rem;"></p>
+      </div>
       <noscript>
         <div class="booking-fallback">Bokningskalendern kräver JavaScript. Maila oss istället på
           jean-claude@ducomaison.fr.</div>
@@ -1578,6 +1577,8 @@
     var contentEl = document.getElementById("bw-content");
     var datesEl = document.getElementById("bw-dates");
     var timesEl = document.getElementById("bw-times");
+    var successEl = document.getElementById("bw-success");
+    var successTextEl = document.getElementById("bw-success-text");
     if (!form || !loadingEl || !contentEl) return;
 
     var statusEl = document.createElement("p");
@@ -1716,12 +1717,16 @@
             submitBtn.disabled = false;
             return;
           }
-          statusEl.style.color = "#2f6b45";
           if (selectedSlot) {
-            statusEl.textContent = "Klart! Ni är inbokade " + dateLabel(selectedDate) + " kl " + parisTimeLabel(selectedSlot.start) + ". Vi bekräftar på mejlen.";
-            datesEl.style.display = "none";
-            timesEl.style.display = "none";
+            // Bekraftelsen visas i kalenderkortet till hoger istallet for
+            // under vanster-formularets knapp -- David papekade 2026-08-13
+            // att kortet blev en stor tom vit yta efter en bokning och att
+            // bekraftelsetexten hellre borde sta dar tiden faktiskt valdes.
+            successTextEl.textContent = "Klart! Ni är inbokade " + dateLabel(selectedDate) + " kl " + parisTimeLabel(selectedSlot.start) + ". Vi bekräftar på mejlen.";
+            contentEl.style.display = "none";
+            successEl.style.display = "block";
           } else {
+            statusEl.style.color = "#2f6b45";
             statusEl.textContent = "Tack! Vi hör av oss inom kort.";
           }
           form.reset();
