@@ -178,6 +178,11 @@
   .lang-switch a:hover { opacity: .85; filter: none; }
   .lang-switch .lang-current { opacity: 1; filter: none; cursor: default; }
 
+  /* Diskret korslank till Duco Maison, 2026-08-13 pa Davids begaran.
+     Ligger UTANFOR .navlinks av samma skal som .lang-switch ovan. */
+  .cross-link { font-size: .85rem; opacity: .65; text-decoration: none; color: var(--ink); white-space: nowrap; }
+  .cross-link:hover { opacity: 1; text-decoration: underline; }
+
   @media (max-width:720px) {
     .navlinks {
       display: none;
@@ -1258,6 +1263,7 @@
     <div class="wordmark">Volets <em>France</em></div>
     <div class="navlinks"><a href="#tjanster">Tjänster</a><a href="#process">Process</a><a href="#pris">Pris</a><a
         href="#om">Om oss</a><a href="#kontakt">Kontakt</a></div>
+    <a class="cross-link" href="https://ducomaison.fr/">Fastighetstillsyn</a>
     <div class="lang-switch" role="group" aria-label="Språk / Language / Langue">
       <span class="lang-current" aria-label="Svenska" title="Svenska">🇸🇪</span>
       <a href="/volets-france/fr/" aria-label="Français" title="Français">🇫🇷</a>

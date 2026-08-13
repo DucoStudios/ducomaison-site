@@ -176,6 +176,10 @@
   .lang-switch a:hover { opacity: .85; filter: none; }
   .lang-switch .lang-current { opacity: 1; filter: none; cursor: default; }
 
+  /* Diskret korslank till Volets France, 2026-08-13 pa Davids begaran. */
+  .cross-link { font-size: .85rem; opacity: .65; text-decoration: none; color: var(--ink); white-space: nowrap; }
+  .cross-link:hover { opacity: 1; text-decoration: underline; }
+
   /* Hero, split layout with real photo */
   .hero {
     padding: 40px 0 70px;
@@ -1006,6 +1010,7 @@
   <header class="nav">
     <div class="wordmark">Duco <em>Maison</em></div>
     <div class="nav-links">
+      <a class="cross-link" href="https://ducomaison.fr/volets-france/">Fönsterluckor</a>
       <div class="lang-switch" role="group" aria-label="Språk / Language / Langue">
         <span class="lang-current" aria-label="Svenska" title="Svenska">🇸🇪</span>
         <a href="/fr/" aria-label="Français" title="Français">🇫🇷</a>

@@ -9,6 +9,10 @@
   content="Nous surveillons votre maison en Languedoc quand vous n'êtes pas là. Visites régulières, coordination des artisans locaux, tout en français. À partir de 85 €/mois.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://ducomaison.fr/fr/">
+<link rel="alternate" hreflang="sv" href="https://ducomaison.fr/">
+<link rel="alternate" hreflang="en" href="https://ducomaison.fr/en/">
+<link rel="alternate" hreflang="fr" href="https://ducomaison.fr/fr/">
+<link rel="alternate" hreflang="x-default" href="https://ducomaison.fr/">
 
 <meta property="og:type" content="website">
 <meta property="og:title" content="Surveillance de maison en Languedoc pour propriétaires scandinaves | Duco Maison">
@@ -171,6 +175,10 @@
   }
   .lang-switch a:hover { opacity: .85; filter: none; }
   .lang-switch .lang-current { opacity: 1; filter: none; cursor: default; }
+
+  /* Diskret korslank till Volets France */
+  .cross-link { font-size: .85rem; opacity: .65; text-decoration: none; color: var(--ink); white-space: nowrap; }
+  .cross-link:hover { opacity: 1; text-decoration: underline; }
 
   /* Hero, split layout with real photo */
   .hero {
@@ -1002,6 +1010,7 @@
   <header class="nav">
     <div class="wordmark">Duco <em>Maison</em></div>
     <div class="nav-links">
+      <a class="cross-link" href="https://ducomaison.fr/volets-france/fr/">Volets</a>
       <div class="lang-switch" role="group" aria-label="Langue / Språk / Language">
         <a href="/" aria-label="Svenska" title="Svenska">🇸🇪</a>
         <span class="lang-current" aria-label="Français" title="Français">🇫🇷</span>
