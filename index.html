@@ -946,6 +946,40 @@
   @media (max-width: 600px) {
     #duco-chat-widget { bottom: 14px; }
   }
+
+  /* Produkttips, portat fran sites/volets-france.html 2026-08-13 pa Davids
+     begaran, men AVSIKTLIGT expanderbar (details-tagg) har istallet for
+     scroll-reveal-animerad som pa Volets -- David tyckte for mycket
+     animering kandes stokigt, en enda klick-for-att-visa-toggle for hela
+     listan later battre an att 18 kategorier ramlar in en och en. */
+  #produkttips { padding: 64px 0; }
+  #produkttips .section-head { text-align: center; max-width: 640px; margin: 0 auto 32px; }
+  #produkttips .eyebrow { text-transform: uppercase; letter-spacing: .06em; font-size: .78rem; font-weight: 700; color: var(--shutter-dark); }
+  #produkttips h2 { margin-top: 8px; font-size: clamp(1.5rem, 3vw, 2rem); }
+  #produkttips .section-head p { opacity: .8; }
+
+  .product-tips-details { text-align: center; }
+  .product-tips-details summary {
+    cursor: pointer; list-style: none; display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 22px; border: 1px solid var(--line); border-radius: 10px;
+    background: var(--card); color: var(--shutter-dark); font-weight: 600; font-size: .92rem;
+  }
+  .product-tips-details summary::-webkit-details-marker { display: none; }
+  .product-tips-details summary i { font-size: .8em; transition: transform .2s; }
+  .product-tips-details[open] summary i { transform: rotate(180deg); }
+  .product-tips-details[open] summary { margin-bottom: 32px; }
+
+  .product-categories { display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px 40px; margin-top: 8px; text-align: left; }
+  @media (max-width: 760px) { .product-categories { grid-template-columns: 1fr; } }
+  .product-cat { padding-top: 28px; border-top: 1px solid var(--line); }
+  .product-cat h3 { font-size: 1.02rem; margin: 0 0 4px; }
+  .product-cat .cat-note { font-size: .84rem; opacity: .7; line-height: 1.5; margin: 0 0 14px; }
+  .product-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+  .product-item { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; font-size: .88rem; line-height: 1.5; padding-bottom: 10px; border-bottom: 1px dashed var(--line); }
+  .product-item a { color: var(--shutter-dark); text-decoration: none; font-weight: 600; white-space: nowrap; flex-shrink: 0; }
+  .product-item a:hover { text-decoration: underline; }
+  .product-item .pname { opacity: .88; }
+  .product-item .pprice { opacity: .6; font-size: .8rem; white-space: nowrap; }
 </style>
 </head>
 <body>
@@ -1071,6 +1105,7 @@
         </thead>
         <tbody>
           <tr><td>Besök med fotorapport enligt er årsplan</td><td class="yes">Ja</td></tr>
+          <tr><td>Egen kundportal med fotorapporter och mätarhistorik</td><td class="yes">Ja</td></tr>
           <tr><td>Kontakt vid akuta problem</td><td class="yes">Ja</td></tr>
           <tr><td>Tillgång till vårt leverantörsnätverk vid behov</td><td class="yes">Ja</td></tr>
           <tr><td>Betalning via kort eller SEPA-autogiro, ingen faktura att jaga</td><td class="yes">Ja</td></tr>
@@ -1204,7 +1239,7 @@
       </div>
       <div class="text">
         <h2 class="section-title" style="text-align:left">Om oss</h2>
-        <p>Vi är en svensk familj som flyttat till Languedoc och redan driver Volets France, ett snickeri som renoverar fönsterluckor åt skandinaviska husägare i regionen. Duco Maison är samma omtanke om hantverk och ärlighet, applicerat på hela huset, inte bara luckorna.</p>
+        <p>Vi är en svensk familj som flyttat till Languedoc och redan driver <a href="https://ducomaison.fr/volets-france/">Volets France</a>, ett snickeri som renoverar fönsterluckor åt skandinaviska husägare i regionen. Duco Maison är samma omtanke om hantverk och ärlighet, applicerat på hela huset, inte bara luckorna.</p>
         <p style="opacity:.85">David har flera års bakgrund som projektledare för byggnation av mässmontrar, med allt vad det innebär av ritning, design, beställningar, leverantörskontakt och upphandling. Det är exakt den kompetensen som krävs för att hålla ihop ett hus på distans, inte något vi lärt oss på vägen.</p>
         <p style="opacity:.85">Vi känner till vad skandinaviska husägare förväntar sig av utfört arbete, och vi vet hur det känns att sitta hemma och undra hur huset i Frankrike egentligen mår. Det är precis den oron vi finns till för att ta bort.</p>
         <div class="trust-line">Redan kund hos Volets France? Ni känner oss redan, hör av er så sätter vi upp tillsynen på samma gång.</div>
@@ -1268,6 +1303,497 @@
     </div>
   </div>
 </section>
+
+<section id="produkttips">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Produkttips</span>
+      <h2>Produkttips för ett franskt hus</h2>
+      <p>En research-baserad lista med produkter som passar livet i ett franskt hus. Länkarna är
+        affiliate-länkar, det kostar er inget extra men ger oss en liten del av köpet.</p>
+    </div>
+    <details class="product-tips-details">
+      <summary>Visa produkttipsen <i class="fa-solid fa-chevron-down"></i></summary>
+      <div class="product-categories">
+      <div class="product-cat">
+        <h3>Belysning &amp; smidesjärn</h3>
+        <ul class="product-list">
+          <li class="product-item">
+            <span class="pname">Applique murale rétro industriel, fer forgé, cage diamant</span>
+            <a href="https://www.amazon.fr/dp/B07BWB6YVQ?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+          <li class="product-item">
+            <span class="pname">Applique murale extérieure fer forgé, IP44, E27, verre</span>
+            <a href="https://www.amazon.fr/dp/B09FQB4X9M?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+          <li class="product-item">
+            <span class="pname">Lanterne extérieure rustique en fer forgé, design vintage</span>
+            <a href="https://www.amazon.fr/dp/B07PCRZLW2?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+          <li class="product-item">
+            <span class="pname">Étagère murale ronde rétro en fer forgé industriel, 6 nivåer</span>
+            <a href="https://www.amazon.fr/dp/B08394QR73?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+        </ul>
+      </div>
+      <div class="product-cat">
+        <h3>Bordslinne &amp; textil</h3>
+        <ul class="product-list">
+          <li class="product-item">
+            <span class="pname">Nappe provençale, olivmotiv, 2m40 x 1m48, anti-tache</span>
+            <a href="https://www.amazon.fr/dp/B014HB81XU?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+          <li class="product-item">
+            <span class="pname">Nappe provençale rund, anti-tache, 160 cm</span>
+            <a href="https://www.amazon.fr/dp/B08ZL39868?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+          <li class="product-item">
+            <span class="pname">Nappe glycine et lavande, 2m40 x 1m50</span>
+            <a href="https://www.amazon.fr/dp/B00O1V62Z6?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+          <li class="product-item">
+            <span class="pname">Coussin lavande de Provence &quot;Sweet Dreams&quot; (2-pack)</span>
+            <a href="https://www.amazon.fr/dp/B0C3RF2XYL?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+        </ul>
+      </div>
+      <div class="product-cat">
+        <h3>Sänglinne</h3>
+        <ul class="product-list">
+          <li class="product-item">
+            <span class="pname">MATT &amp; ROSE housse de couette 100 % lin lavé, 240x220</span>
+            <a href="https://www.amazon.fr/dp/B0BBS6D3QV?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+          <li class="product-item">
+            <span class="pname">Homescapes parure de lit lin lavé, 200x200 + 2 taies</span>
+            <a href="https://www.amazon.fr/dp/B07QWV3DMH?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+        </ul>
+      </div>
+      <div class="product-cat">
+        <h3>Kök &amp; bord</h3>
+        <ul class="product-list">
+          <li class="product-item">
+            <span class="pname">Le Creuset cocotte fonte, rund, &quot;Bleu Marseille&quot;, 22 cm</span>
+            <a href="https://www.amazon.fr/dp/B00DNOOYCU?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+          <li class="product-item">
+            <span class="pname">vancasso BONBON service de table i keramik, 24 delar, vintage rustik stil</span>
+            <a href="https://www.amazon.fr/dp/B08VW2L3W6?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+        </ul>
+      </div>
+      <div class="product-cat">
+        <h3>Trädgård &amp; uteliv</h3>
+        <ul class="product-list">
+          <li class="product-item">
+            <span class="pname">Siena Conca Classica Toscana: terrakottakruka XXL, frostsäker</span>
+            <a href="https://www.amazon.fr/dp/B07WGVW4CG?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+          <li class="product-item">
+            <span class="pname">Biscottini Orcio: amforakruka i terrakotta, 46x34x36 cm</span>
+            <a href="https://www.amazon.fr/dp/B08L6CFDWZ?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+          <li class="product-item">
+            <span class="pname">Fermob bistrostol, &quot;Naturel&quot;</span>
+            <a href="https://www.amazon.fr/dp/B00VXJC99C?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+          <li class="product-item">
+            <span class="pname">Fermob bistrobord runt, 96 cm, &quot;Réglisse&quot;</span>
+            <a href="https://www.amazon.fr/dp/B01IBEBD20?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+          <li class="product-item">
+            <span class="pname">Engelhart luxury petanque-set i trälåda, 6 klot</span>
+            <a href="https://www.amazon.fr/dp/B007TGX2CG?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+          <li class="product-item">
+            <span class="pname">Loungegrupp XXL i konstrotting, TecTake, 6 platser, soffa+fåtöljer+bord <span
+                class="pprice">~800-1200 EUR</span></span>
+            <a href="https://www.amazon.fr/dp/B09SBQCKSX?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+          <li class="product-item">
+            <span class="pname">vidaXL loungegrupp 8 delar med dynor, konstrotting <span class="pprice">~800-1200
+                EUR</span></span>
+            <a href="https://www.amazon.fr/dp/B0798KP7DN?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+        </ul>
+      </div>
+      <div class="product-cat">
+        <h3>Väggdekor</h3>
+        <ul class="product-list">
+          <li class="product-item">
+            <span class="pname">Vintage resposter &quot;Provence France&quot;, canvas, 60x90 cm</span>
+            <a href="https://www.amazon.fr/dp/B0CRHWZS55?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+          <li class="product-item">
+            <span class="pname">Vintage resposter &quot;Aix en Provence&quot;, canvas, 50x75 cm</span>
+            <a href="https://www.amazon.fr/dp/B09QCGC3P7?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+        </ul>
+      </div>
+      <div class="product-cat">
+        <h3>Bain nordique / vedeldat spabad</h3>
+        <p class="cat-note">Den franska motsvarigheten till bastun.</p>
+        <ul class="product-list">
+          <li class="product-item">
+            <span class="pname">FinnTherm bain nordique, 180x101 cm, 5-6 personer, med trappsteg <span
+                class="pprice">~1500-2500 EUR</span></span>
+            <a href="https://www.amazon.fr/dp/B09Z6VPV4Z?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+          <li class="product-item">
+            <span class="pname">FinnTherm Bergen tunnbad, 160x110 cm, 22 kW inoxugn, 3-4 personer <span
+                class="pprice">~2000-3000 EUR</span></span>
+            <a href="https://www.amazon.fr/dp/B09Z6XHZ6J?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+          <li class="product-item">
+            <span class="pname">Arebos uppblåsbart spa, 6 personer, 130 massagejets, uppvärmt <span
+                class="pprice">~500-800 EUR</span></span>
+            <a href="https://www.amazon.fr/dp/B08FCMYS9D?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+        </ul>
+      </div>
+      <div class="product-cat">
+        <h3>Pool</h3>
+        <ul class="product-list">
+          <li class="product-item">
+            <span class="pname">Piscine bois hors-sol K2O, 655x390x124 cm, med sandfilter och stege <span
+                class="pprice">~3000-5000 EUR</span></span>
+            <a href="https://www.amazon.fr/dp/B00C1X8O1Q?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+          <li class="product-item">
+            <span class="pname">Piscine bois Waterclip SABTANG, oktogonal, 510x320x129 cm <span
+                class="pprice">~2500-4000 EUR</span></span>
+            <a href="https://www.amazon.fr/dp/B0711HLTZ5?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+        </ul>
+      </div>
+      <div class="product-cat">
+        <h3>Four à pizza &amp; plancha</h3>
+        <p class="cat-note">Det franska svaret på grillen.</p>
+        <ul class="product-list">
+          <li class="product-item">
+            <span class="pname">Parkland vedeldad utomhusugn, portabel, pizza och BBQ <span class="pprice">~150-300
+                EUR</span></span>
+            <a href="https://www.amazon.fr/dp/B075MM5TNQ?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+          <li class="product-item">
+            <span class="pname">GYMAX pizzaugn, ved/pellets, termometer, upp till 450°C <span class="pprice">~150-250
+                EUR</span></span>
+            <a href="https://www.amazon.fr/dp/B0BVW9Z12P?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+          <li class="product-item">
+            <span class="pname">Royal Catering plancha gaz inox, professionell, 60 cm, 2 zoner <span
+                class="pprice">~300-600 EUR</span></span>
+            <a href="https://www.amazon.fr/dp/B0949J2PJQ?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+          <li class="product-item">
+            <span class="pname">Happybuy plancha inox, 91x56 cm, universal med fettränna <span class="pprice">~150-250
+                EUR</span></span>
+            <a href="https://www.amazon.fr/dp/B07Q4GRM4B?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+        </ul>
+      </div>
+      <div class="product-cat">
+        <h3>Brasero</h3>
+        <ul class="product-list">
+          <li class="product-item">
+            <span class="pname">Brasero/plancha cortenstål &quot;Lou Provencau&quot;, vedförvaring, grill ingår <span
+                class="pprice">~250-450 EUR</span></span>
+            <a href="https://www.amazon.fr/dp/B0F3JXKLY6?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+          <li class="product-item">
+            <span class="pname">MOODZ brasero cortenstål, Ø100 cm, 3 mm tjocklek <span class="pprice">~250-400
+                EUR</span></span>
+            <a href="https://www.amazon.fr/dp/B071CQ7ZPJ?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+        </ul>
+      </div>
+      <div class="product-cat">
+        <h3>Pergola bioklimatisk</h3>
+        <ul class="product-list">
+          <li class="product-item">
+            <span class="pname">Pergola bioklimatisk, sweeek, 3x3 m, reglerbara lameller, aluminium/stål <span
+                class="pprice">~1500-2500 EUR</span></span>
+            <a href="https://www.amazon.fr/dp/B0D6NG392T?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+          <li class="product-item">
+            <span class="pname">Alice&#x27;s Garden pergola bioklimatisk, antracit, 3x3 m, reglerbara lameller <span
+                class="pprice">~1500-2500 EUR</span></span>
+            <a href="https://www.amazon.fr/dp/B0BQN4DSZ3?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+        </ul>
+      </div>
+      <div class="product-cat">
+        <h3>Marockanskt möblemang</h3>
+        <p class="cat-note">Handgjorda läderpuffar och mosaikbord.</p>
+        <ul class="product-list">
+          <li class="product-item">
+            <span class="pname">Pouf marrakchi, äkta läder, handgjord i Marrakech av marockanska hantverkare <span
+                class="pprice">~80-150 EUR</span></span>
+            <a href="https://www.amazon.fr/dp/B07VQ2GB93?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+          <li class="product-item">
+            <span class="pname">ALMADIH pouf marockansk, äkta läder, handgjord i Marrakech <span class="pprice">~80-150
+                EUR</span></span>
+            <a href="https://www.amazon.fr/dp/B07BRRGF9C?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+          <li class="product-item">
+            <span class="pname">Casa Moro mosaikbord runt, emaljerad svart/vit, fer forgé-stativ, matbordsstorlek <span
+                class="pprice">~250-450 EUR</span></span>
+            <a href="https://www.amazon.fr/dp/B0BC289G13?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+          <li class="product-item">
+            <span class="pname">Casa Moro mosaikbord runt Ø60 cm, emaljerad vit <span class="pprice">~150-250
+                EUR</span></span>
+            <a href="https://www.amazon.fr/dp/B0C6612GCC?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+          <li class="product-item">
+            <span class="pname">&quot;Marrakech&quot; soffbord runt i mosaik, Ø80 cm, blå/gul <span
+                class="pprice">~150-250 EUR</span></span>
+            <a href="https://www.amazon.fr/dp/B07HFGM4P6?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+          <li class="product-item">
+            <span class="pname">&quot;Marrakech&quot; hopfällbart matbord i mosaik, 120x80 cm, rektangulärt <span
+                class="pprice">~300-500 EUR</span></span>
+            <a href="https://www.amazon.fr/dp/B079SNH9FG?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+          <li class="product-item">
+            <span class="pname">albena Marokko Galerie mosaikbord runt Ø80 cm, grön/vit <span class="pprice">~150-250
+                EUR</span></span>
+            <a href="https://www.amazon.fr/dp/B00KGBIQ0E?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+        </ul>
+      </div>
+      <div class="product-cat">
+        <h3>Vinkyl / vinkällare</h3>
+        <ul class="product-list">
+          <li class="product-item">
+            <span class="pname">Kalamera vinkyl, 45 flaskor, dubbla temperaturzoner, 120 L <span class="pprice">~300-450
+                EUR</span></span>
+            <a href="https://www.amazon.fr/dp/B0D2XTZJKT?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+          <li class="product-item">
+            <span class="pname">Cavist CVST24 vinkyl, 24 flaskor, dubbla zoner, inox, UV-skyddad glasdörr <span
+                class="pprice">~250-400 EUR</span></span>
+            <a href="https://www.amazon.fr/dp/B077SHBBD2?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+        </ul>
+      </div>
+      <div class="product-cat">
+        <h3>Store banne</h3>
+        <ul class="product-list">
+          <li class="product-item">
+            <span class="pname">VEVOR store banne manuel, 4x2,4 m, vevmanövrerad <span class="pprice">~200-350
+                EUR</span></span>
+            <a href="https://www.amazon.fr/dp/B0CQCTL59D?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+        </ul>
+      </div>
+      <div class="product-cat">
+        <h3>Värme &amp; kyla</h3>
+        <p class="cat-note">För Languedocs heta somrar och kalla stenmurar på vintern.</p>
+        <ul class="product-list">
+          <li class="product-item">
+            <span class="pname">Klarstein Kraftwerk Smart mobil klimatanläggning, 10 000 BTU, app &amp; Alexa <span
+                class="pprice">~300-450 EUR</span></span>
+            <a href="https://www.amazon.fr/dp/B086N3TTMT?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+          <li class="product-item">
+            <span class="pname">Cecotec EnergySilence Aero 4850 takfläkt, 122 cm, fjärrkontroll, sommar/vinterläge <span
+                class="pprice">~80-130 EUR</span></span>
+            <a href="https://www.amazon.fr/dp/B0BPYRSSKM?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+          <li class="product-item">
+            <span class="pname">Purline RAFY 220 evaporativ luftkylare, stor kapacitet för stora rum <span
+                class="pprice">~200-350 EUR</span></span>
+            <a href="https://www.amazon.fr/dp/B08XN4TZVP?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+          <li class="product-item">
+            <span class="pname">Supra Leïos Pierre pelletskamin, automatisk temperaturreglering,
+              vecko-/dagsprogrammering <span class="pprice">~1500-2500 EUR</span></span>
+            <a href="https://www.amazon.fr/dp/B00HLG6OE2?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+        </ul>
+      </div>
+      <div class="product-cat">
+        <h3>Smart styrning</h3>
+        <p class="cat-note">För er som inte alltid är på plats.</p>
+        <ul class="product-list">
+          <li class="product-item">
+            <span class="pname">Netatmo Thermostat Connecté, styr värmen i telefonen oavsett var ni är <span
+                class="pprice">~150-200 EUR</span></span>
+            <a href="https://www.amazon.fr/dp/B00GWKW8SY?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+          <li class="product-item">
+            <span class="pname">X-Sense trådlös vattenläckagedetektor med basstation, larm + appnotis <span
+                class="pprice">~80-120 EUR</span></span>
+            <a href="https://www.amazon.fr/dp/B0BJ6B1LPQ?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+          <li class="product-item">
+            <span class="pname">TP-Link HS110 smart eluttag, wifi, tidsstyrning och förbrukningsmätning <span
+                class="pprice">~20-35 EUR</span></span>
+            <a href="https://www.amazon.fr/dp/B01I59FP3E?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+          <li class="product-item">
+            <span class="pname">TP-Link Tapo C310 utomhuskamera, wifi, nattsyn 30 m, rörelselarm i appen <span
+                class="pprice">~35-50 EUR</span></span>
+            <a href="https://www.amazon.fr/dp/B08JLR2751?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+        </ul>
+      </div>
+      <div class="product-cat">
+        <h3>Byggnadsvård</h3>
+        <p class="cat-note">Andningsbara, traditionella material för gamla stenhus.</p>
+        <ul class="product-list">
+          <li class="product-item">
+            <span class="pname">PRB Fleur de Chaux, naturlig andningsbar kalkputs, 4 kg <span class="pprice">~20-35
+                EUR</span></span>
+            <a href="https://www.amazon.fr/dp/B07HH88SZD?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+          <li class="product-item">
+            <span class="pname">Onyx linolja för trä, 100 % linfrö, tillverkad i Frankrike, för fönsterluckor och
+              utomhusträ <span class="pprice">~15-30 EUR</span></span>
+            <a href="https://www.amazon.fr/dp/B08YNSYJJQ?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+          <li class="product-item">
+            <span class="pname">Arcane Industries Imperfacade Hydro, hydrofug för sten/tegel/puts fasad <span
+                class="pprice">~30-60 EUR</span></span>
+            <a href="https://www.amazon.fr/dp/B076H2RZXJ?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+          <li class="product-item">
+            <span class="pname">Arcane Industries Badigeon à la chaux, traditionell kalkfärg för in- och utomhusbruk
+              <span class="pprice">~25-45 EUR</span></span>
+            <a href="https://www.amazon.fr/dp/B071G9G712?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+        </ul>
+      </div>
+      <div class="product-cat">
+        <h3>Prydnader</h3>
+        <ul class="product-list">
+          <li class="product-item">
+            <span class="pname">Bougeoir mural i smidesjärn, dekorativ ljushållare</span>
+            <a href="https://www.amazon.fr/dp/B0B5LG2ZFD?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+          <li class="product-item">
+            <span class="pname">TERESA&#x27;S COLLECTIONS vaser i keramik, rustik stil, set om 3</span>
+            <a href="https://www.amazon.fr/dp/B07W53RH74?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+          <li class="product-item">
+            <span class="pname">Guirlande guinguette utomhus 20 m, LED, vattentät</span>
+            <a href="https://www.amazon.fr/dp/B0CS379LQJ?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+          <li class="product-item">
+            <span class="pname">Miroir soleil i smidesjärn, europeisk stil</span>
+            <a href="https://www.amazon.fr/dp/B0816KFVBM?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+        </ul>
+      </div>
+      <div class="product-cat">
+        <h3>Hushållsartiklar</h3>
+        <p class="cat-note">Slipp släpa hem det tunga från affären.</p>
+        <ul class="product-list">
+          <li class="product-item">
+            <span class="pname">La Compagnie de Provence: savon de Marseille, kub 400 g</span>
+            <a href="https://www.amazon.fr/dp/B07NW6F8XK?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+          <li class="product-item">
+            <span class="pname">MOLTONEL toapapper, familjeformat, 18 rullar</span>
+            <a href="https://www.amazon.fr/dp/B00YEUWI2A?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+          <li class="product-item">
+            <span class="pname">PERSIL tvättmedel flytande, Bouquet de Provence, 36 tvättar</span>
+            <a href="https://www.amazon.fr/dp/B08L5LFLVV?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+          <li class="product-item">
+            <span class="pname">Sopsäckar 50 L, 200-pack, förstärkt kvalitet</span>
+            <a href="https://www.amazon.fr/dp/B07B319KLM?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+          <li class="product-item">
+            <span class="pname">Hushållspapper, 32 rullar</span>
+            <a href="https://www.amazon.fr/dp/B075XQWD59?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+          <li class="product-item">
+            <span class="pname">PAIC diskmedel, dunk</span>
+            <a href="https://www.amazon.fr/dp/B002C6BQEO?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+          <li class="product-item">
+            <span class="pname">Disksvampar, 9-pack, ekonomiformat</span>
+            <a href="https://www.amazon.fr/dp/B09HSKBRPZ?tag=bonjourlife00-21" target="_blank"
+              rel="noopener sponsored">Se produkten</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    </details>
+  </div>
+</section>
+
 
 <script>
   (function () {
