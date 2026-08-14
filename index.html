@@ -180,6 +180,15 @@
   .cross-link { font-size: .85rem; opacity: .65; text-decoration: none; color: var(--ink); white-space: nowrap; }
   .cross-link:hover { opacity: 1; text-decoration: underline; }
 
+  /* Toppmenyn har ingen flex-wrap och body har overflow-x:hidden, sa fyra
+     objekt (korslank, flaggor, Logga in, CTA-knapp) i en rad far inte plats
+     pa smala skarmar utan att klippas/klampas ihop. Doljs istallet, samma
+     mönster som volets-france.htmls .navlinks pa mobil. 2026-08-14. */
+  @media (max-width: 640px) {
+    .cross-link, .nav-login { display: none; }
+    .nav-links { gap: 14px; }
+  }
+
   /* Hero, split layout with real photo */
   .hero {
     padding: 40px 0 70px;
