@@ -1,0 +1,1169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CutBoard — Duco</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%AA%9A%3C/text%3E%3C/svg%3E">
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<style>
+  :root{
+    --limestone:#f5efe3;
+    --canvas-white:#ffffff;
+    --ink:#1a1a18;
+    --ink-2:#4a4a46;
+    --paper:#eee7d8;
+    --lavender:#e8ecfa;
+    --lavender-border:#d3d9f0;
+    --gold:#c2603c;
+    --gold-deep:#9c4a2e;
+    --line: rgba(20,20,18,.14);
+    --panel-w: 260px;
+  }
+  *{box-sizing:border-box;}
+  html,body{
+    margin:0; padding:0; height:100%;
+    background:var(--limestone);
+    color:var(--ink);
+    font-family: ui-sans-serif, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    overflow:hidden;
+  }
+  h1,h2,h3{font-family: ui-sans-serif, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; font-weight:800; letter-spacing:-.01em;}
+  input, select, button{
+    font-family:inherit; font-size:13px;
+  }
+  input[type="number"], input[type="text"], select{
+    width:100%; padding:8px 11px; border:1.5px solid var(--lavender-border);
+    border-radius:10px; background:var(--lavender); color:var(--ink);
+  }
+  input[type="number"]:focus, input[type="text"]:focus, select:focus{
+    outline:2px solid var(--gold); outline-offset:1px;
+  }
+  input[type="color"]{
+    width:38px; height:32px; padding:0; border:1.5px solid var(--lavender-border);
+    border-radius:9px; background:none; cursor:pointer;
+  }
+  label{ display:block; font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-2); margin:8px 0 3px; font-weight:600; }
+  button{
+    cursor:pointer; border:1.5px solid var(--line); background:#fff;
+    color:var(--ink); padding:8px 14px; border-radius:10px; font-weight:600;
+  }
+  button:hover{ background:var(--paper); }
+  button.secondary{ background:#fff; color:var(--ink-2); border-color:var(--line); font-weight:500; }
+  button.secondary:hover{ background:var(--paper); color:var(--ink); }
+  button.danger{ background:#fff; color:#a33; border-color:#a33; }
+  button.danger:hover{ background:#a33; color:#fff; }
+  button:disabled{ opacity:.4; cursor:not-allowed; }
+  #btnAdd, #btnDriveConnect{
+    background:var(--gold); border:none; color:#fff; border-radius:999px;
+    box-shadow:0 3px 10px rgba(194,96,60,.35); padding:9px 18px;
+  }
+  #btnAdd:hover, #btnDriveConnect:hover{ background:var(--gold-deep); }
+
+  #app{ display:flex; flex-direction:column; height:100%; }
+
+  header{
+    display:flex; align-items:center; gap:16px;
+    padding:12px 18px; background:#fff; color:var(--ink);
+    border-bottom:1px solid var(--line);
+    flex:none;
+  }
+  header h1{ font-size:19px; margin:0; color:var(--ink); white-space:nowrap; font-weight:800; }
+  header .proj{ flex:1; max-width:260px; }
+  header .proj input{ background:var(--lavender); border:1.5px solid var(--lavender-border); color:var(--ink); }
+  header .proj input::placeholder{ color:#8b8fa8; }
+  header .kerf{ display:flex; align-items:center; gap:6px; white-space:nowrap; font-size:12.5px; color:var(--ink-2); }
+  header .kerf input{ width:64px; background:var(--lavender); border:1.5px solid var(--lavender-border); color:var(--ink); }
+  header .spacer{ flex:1; }
+  header .actions{ display:flex; gap:8px; align-items:center; }
+  header button{ padding:8px 14px; font-size:12.5px; }
+
+  #main{ flex:1; display:flex; min-height:0; }
+
+  #left{
+    width:var(--panel-w); flex:none; background:var(--limestone);
+    border-right:1px solid var(--line); overflow-y:auto; padding:16px;
+  }
+  #left h2{ font-size:13px; margin:0 0 6px; font-weight:800; }
+  #left .hint{ font-size:11.5px; color:var(--ink-2); margin-bottom:10px; line-height:1.4; }
+
+  #objList{ margin-top:14px; border-top:1px solid var(--line); padding-top:10px; }
+  .objRowWrap{ margin-bottom:5px; }
+  .objRow{
+    display:flex; align-items:center; gap:8px; padding:7px 8px;
+    border-radius:10px; cursor:pointer; font-size:12.5px;
+    background:#fff; border:1px solid transparent;
+  }
+  .objRow:hover{ border-color:var(--lavender-border); }
+  .objRow.selected{ background:var(--gold); color:#fff; }
+  .objRow .expandArrow{ flex:none; width:12px; opacity:.6; font-size:10px; }
+  .objRow .swatch{ width:14px; height:14px; border-radius:4px; flex:none; border:1px solid rgba(0,0,0,.2); }
+  .objRow .nm{ flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .objRow .dims{ font-variant-numeric:tabular-nums; opacity:.8; font-size:11px; }
+  .objEdit{
+    background:var(--lavender); border:1.5px solid var(--lavender-border);
+    border-top:none; border-radius:0 0 10px 10px; padding:10px 10px 12px;
+    margin-top:-6px; padding-top:14px;
+  }
+  .objEdit input[type="number"], .objEdit input[type="text"]{ background:#fff; }
+
+  #canvasWrap{ flex:1; position:relative; background:var(--canvas-white); min-width:0; }
+  canvas{ display:block; width:100%; height:100%; cursor:grab; }
+  canvas.dragging{ cursor:grabbing; }
+
+  #right{
+    width:var(--panel-w); flex:none; background:var(--limestone);
+    border-left:1px solid var(--line); overflow-y:auto; padding:16px;
+    display:none;
+  }
+  #right.show{ display:block; }
+  #right h2{ font-size:13px; margin:0 0 10px; font-weight:800; }
+  .row2{ display:flex; gap:8px; }
+  .row2 > div{ flex:1; }
+  .btnrow{ display:flex; gap:8px; margin-top:14px; }
+  .btnrow button{ flex:1; }
+
+  #zoomHud{
+    position:absolute; bottom:10px; left:10px; background:rgba(26,26,24,.78);
+    color:#fff; padding:5px 12px; border-radius:999px; font-size:11.5px;
+    font-variant-numeric:tabular-nums; pointer-events:none;
+  }
+
+  #driveModal{
+    position:fixed; inset:0; background:rgba(26,26,24,.45);
+    display:none; align-items:center; justify-content:center; z-index:20;
+  }
+  #driveModal.show{ display:flex; }
+  #driveModal .box{
+    background:#fff; border-radius:18px; padding:22px; width:380px;
+    max-width:90vw; box-shadow:0 16px 48px rgba(26,26,24,.28);
+  }
+  #driveModal h3{ margin:0 0 4px; font-size:19px; font-weight:800; }
+  #driveModal p{ font-size:12px; color:var(--ink-2); line-height:1.5; margin:0 0 12px; }
+  #driveFileList{ max-height:220px; overflow-y:auto; margin:10px 0; border:1.5px solid var(--lavender-border); border-radius:10px; }
+  .driveFileRow{ padding:8px 10px; font-size:12.5px; cursor:pointer; border-bottom:1px solid var(--line); }
+  .driveFileRow:last-child{ border-bottom:none; }
+  .driveFileRow:hover{ background:var(--lavender); }
+  #driveStatus{ font-size:11.5px; color:var(--ink-2); margin-top:8px; min-height:14px; }
+
+  #printArea{ display:none; }
+  @media print{
+    body *{ visibility:hidden; }
+    #printArea, #printArea *{ visibility:visible; }
+    #printArea{
+      display:block; position:absolute; top:0; left:0; width:100%;
+      background:#fff; color:#000; padding:16px;
+    }
+    #printArea h1{ font-size:20px; margin:0 0 2px; }
+    #printArea #printMeta{ font-size:11.5px; color:#444; margin:0 0 16px; }
+    .printBoard{ break-inside:avoid; margin-bottom:16px; border:1px solid #ccc; border-radius:6px; padding:10px 12px; }
+    .printBoard h3{ font-size:13px; margin:0 0 8px; }
+    .printBoard svg{ display:block; width:100%; height:auto; max-height:180px; }
+    .printBoard .partsInBoard{ font-size:10.5px; color:#444; margin-top:6px; }
+    #printArea table{ width:100%; border-collapse:collapse; font-size:11px; margin-top:8px; }
+    #printArea th, #printArea td{ border:1px solid #999; padding:4px 6px; text-align:left; }
+    #printArea thead{ background:#eee; }
+    #printArea h2.tableHeading{ font-size:14px; margin:20px 0 6px; }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <h1>🪚 CutBoard</h1>
+    <div class="proj"><input id="projName" type="text" placeholder="Project name (e.g. Jessica's shutters)"></div>
+    <div class="kerf">
+      <span>Saw kerf</span>
+      <input id="kerfInput" type="number" step="0.1" min="0" value="3.0">
+      <span>mm</span>
+    </div>
+    <div class="spacer"></div>
+    <div class="actions">
+      <button class="secondary" id="btnPrint">Print</button>
+      <button class="secondary" id="btnExport">Export JSON</button>
+      <button class="secondary" id="btnImport">Import JSON</button>
+      <button id="btnDrive">Google Drive</button>
+    </div>
+  </header>
+
+  <div id="main">
+    <div id="left">
+      <h2>New board / sheet</h2>
+      <label>Name</label>
+      <input id="newName" type="text" placeholder="e.g. Board 1">
+      <div class="row2">
+        <div><label>Width (mm)</label><input id="newW" type="number" step="0.1" min="0.1" value="220.0"></div>
+        <div><label>Length (mm)</label><input id="newH" type="number" step="0.1" min="0.1" value="1000.0"></div>
+      </div>
+      <label>Colour</label>
+      <input id="newColor" type="color" value="#c9b88a">
+      <label style="display:flex;align-items:center;gap:6px;text-transform:none;font-size:12.5px;color:var(--ink-2);margin-top:10px;">
+        <input id="newIsBoard" type="checkbox" style="width:auto;"> Base board (background — doesn't collide with what you place on it)
+      </label>
+      <div class="btnrow"><button id="btnAdd" style="flex:1">Add</button></div>
+
+      <div id="objList">
+        <h2>Objects</h2>
+        <div class="hint">Click to select, drag to move — the list below expands with full edit fields. Drag the gold corners to resize. Ctrl/Cmd+C / V to copy.</div>
+        <label>Sort by</label>
+        <select id="sortSelect">
+          <option value="name">Name (A–Z)</option>
+          <option value="w_desc">Width, largest → smallest</option>
+          <option value="w_asc">Width, smallest → largest</option>
+          <option value="h_desc">Length, largest → smallest</option>
+          <option value="h_asc">Length, smallest → largest</option>
+          <option value="area_desc">Area, largest → smallest</option>
+        </select>
+        <div id="objRows" style="margin-top:8px;"></div>
+      </div>
+    </div>
+
+    <div id="canvasWrap">
+      <canvas id="cv"></canvas>
+      <div id="zoomHud"></div>
+    </div>
+
+    <div id="right">
+      <h2>Selected board</h2>
+      <label>Name</label>
+      <input id="selName" type="text">
+      <div class="row2">
+        <div><label>Width (mm)</label><input id="selW" type="number" step="0.1" min="0.1"></div>
+        <div><label>Length (mm)</label><input id="selH" type="number" step="0.1" min="0.1"></div>
+      </div>
+      <label>Rotation (degrees)</label>
+      <input id="selRot" type="number" step="1">
+      <label>Colour</label>
+      <input id="selColor" type="color">
+      <label style="display:flex;align-items:center;gap:6px;text-transform:none;font-size:12.5px;color:var(--ink-2);margin-top:10px;">
+        <input id="selIsBoard" type="checkbox" style="width:auto;"> Base board (background)
+      </label>
+      <div class="btnrow">
+        <button class="secondary" id="btnDup">Duplicate</button>
+        <button class="danger" id="btnDel">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="driveModal">
+  <div class="box">
+    <h3>Google Drive</h3>
+    <p>Needs your own Google OAuth Client ID (created once, free, in Google Cloud Console). Paste it here — it's only stored in your browser.</p>
+    <label>Google OAuth Client ID</label>
+    <input id="driveClientId" type="text" placeholder="xxxxxxxx.apps.googleusercontent.com">
+    <label>Drive folder ID (optional, otherwise "CutBoard Projects" is created)</label>
+    <input id="driveFolderId" type="text" placeholder="leave blank for automatic">
+    <div class="btnrow">
+      <button class="secondary" id="btnDriveSaveCfg">Save settings</button>
+      <button id="btnDriveConnect">Connect</button>
+    </div>
+    <div id="driveFileList" style="display:none;"></div>
+    <div class="btnrow" id="driveActionRow" style="display:none;">
+      <button class="secondary" id="btnDriveSaveProj">Save project to Drive</button>
+      <button class="secondary" id="btnDriveRefresh">Refresh list</button>
+    </div>
+    <div id="driveStatus"></div>
+    <div class="btnrow"><button class="secondary" id="btnDriveClose" style="flex:1">Close</button></div>
+  </div>
+</div>
+
+<input type="file" id="fileInput" accept="application/json" style="display:none">
+
+<div id="printArea">
+  <h1 id="printTitle">CutBoard</h1>
+  <p id="printMeta"></p>
+  <div id="printBoards"></div>
+  <h2 class="tableHeading">Parts list</h2>
+  <table id="printTable">
+    <thead><tr><th>Code</th><th>Name</th><th>Width (mm)</th><th>Length (mm)</th><th>Rotation</th><th>Board</th></tr></thead>
+    <tbody id="printTableBody"></tbody>
+  </table>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  // ---------- state ----------
+  let objects = [];      // {id,name,w,h,x,y,rot,color,isBoard}
+  let selectedId = null;
+  let kerf = 3.0;
+  let clipboard = [];
+  let nextId = 1;
+
+  const view = { panX: 40, panY: 40, zoom: 0.35 }; // px per mm
+
+  // ---------- persistence (local) ----------
+  // NOTE: storage keys stay in their original form so existing saved
+  // projects (from before the English rewrite) keep loading correctly.
+  const LS_KEY = "kaplayout_project_v1";
+  function autosave(){
+    try{
+      localStorage.setItem(LS_KEY, JSON.stringify({
+        projectName: projNameEl.value, kerf, objects
+      }));
+    }catch(e){}
+  }
+  // older saved projects have no isBoard flag -- infer it from the name so
+  // existing "grundbräda"/"base board"-style boards don't false-flag as collisions
+  function migrateObjects(objs){
+    return (objs||[]).map(o=>({
+      isBoard: /^(grundbr[aä]d|base ?board)/i.test(o.name||""),
+      ...o
+    }));
+  }
+
+  function autoload(){
+    try{
+      const raw = localStorage.getItem(LS_KEY);
+      if(!raw) return;
+      const data = JSON.parse(raw);
+      projNameEl.value = data.projectName || "";
+      kerf = data.kerf || 3.0;
+      kerfInput.value = kerf.toFixed(1);
+      objects = migrateObjects(data.objects);
+      nextId = 1 + objects.reduce((m,o)=>Math.max(m,o.id||0), 0);
+    }catch(e){}
+  }
+
+  // ---------- DOM refs ----------
+  const cv = document.getElementById("cv");
+  const ctx = cv.getContext("2d");
+  const canvasWrap = document.getElementById("canvasWrap");
+  const zoomHud = document.getElementById("zoomHud");
+  const objRowsEl = document.getElementById("objRows");
+  const rightPanel = document.getElementById("right");
+  const projNameEl = document.getElementById("projName");
+  const kerfInput = document.getElementById("kerfInput");
+
+  const newName = document.getElementById("newName");
+  const newW = document.getElementById("newW");
+  const newH = document.getElementById("newH");
+  const newColor = document.getElementById("newColor");
+  const newIsBoard = document.getElementById("newIsBoard");
+
+  const selName = document.getElementById("selName");
+  const selW = document.getElementById("selW");
+  const selH = document.getElementById("selH");
+  const selRot = document.getElementById("selRot");
+  const selColor = document.getElementById("selColor");
+  const selIsBoard = document.getElementById("selIsBoard");
+
+  // ---------- canvas sizing ----------
+  function resizeCanvas(){
+    const r = canvasWrap.getBoundingClientRect();
+    cv.width = r.width * devicePixelRatio;
+    cv.height = r.height * devicePixelRatio;
+    cv.style.width = r.width+"px";
+    cv.style.height = r.height+"px";
+    draw();
+  }
+  window.addEventListener("resize", resizeCanvas);
+
+  // ---------- helpers ----------
+  function uid(){ return nextId++; }
+  function getSel(){ return objects.find(o=>o.id===selectedId) || null; }
+  function palette(){
+    return ["#c9b88a","#8aa9a5","#d19a3d","#34515e","#a35b4a","#6f8f4a","#b56e93","#5c6bc0"];
+  }
+  let paletteIdx = 0;
+
+  function worldToScreen(x,y){
+    return [ (x*view.zoom + view.panX) * devicePixelRatio, (y*view.zoom + view.panY) * devicePixelRatio ];
+  }
+  function screenToWorld(sx,sy){
+    return [ (sx/devicePixelRatio - view.panX)/view.zoom, (sy/devicePixelRatio - view.panY)/view.zoom ];
+  }
+
+  function objCorners(o){
+    // returns 4 corners in world space, accounting rotation around center (o.x,o.y)
+    const rad = o.rot * Math.PI/180;
+    const cos = Math.cos(rad), sin = Math.sin(rad);
+    const hw = o.w/2, hh = o.h/2;
+    const pts = [[-hw,-hh],[hw,-hh],[hw,hh],[-hw,hh]];
+    return pts.map(([dx,dy])=>[
+      o.x + dx*cos - dy*sin,
+      o.y + dx*sin + dy*cos
+    ]);
+  }
+
+  function pointInObj(o, wx, wy){
+    const rad = -o.rot * Math.PI/180;
+    const dx = wx - o.x, dy = wy - o.y;
+    const cos = Math.cos(rad), sin = Math.sin(rad);
+    const lx = dx*cos - dy*sin;
+    const ly = dx*sin + dy*cos;
+    return Math.abs(lx) <= o.w/2 && Math.abs(ly) <= o.h/2;
+  }
+
+  function hitTest(wx, wy){
+    // prefer a non-board piece so boards under a stack of pieces don't steal clicks
+    for(let i=objects.length-1; i>=0; i--){
+      if(!objects[i].isBoard && pointInObj(objects[i], wx, wy)) return objects[i];
+    }
+    for(let i=objects.length-1; i>=0; i--){
+      if(objects[i].isBoard && pointInObj(objects[i], wx, wy)) return objects[i];
+    }
+    return null;
+  }
+
+  const HANDLE_PX = 11; // css px, matches drawing size
+  const HANDLE_MIN_RENDER_PX = 55; // don't allow grabbing corner handles on objects this small on screen -- too easy to grab by accident when zoomed out, use the exact-mm fields instead
+  function handleHitTest(o, sx, sy){
+    const pw = o.w * view.zoom * devicePixelRatio;
+    const ph = o.h * view.zoom * devicePixelRatio;
+    if(pw < HANDLE_MIN_RENDER_PX*devicePixelRatio || ph < HANDLE_MIN_RENDER_PX*devicePixelRatio) return -1;
+    // sx,sy = raw device-pixel screen coords. Returns corner index 0..3 or -1.
+    const corners = objCorners(o).map(([wx,wy]) => worldToScreen(wx,wy));
+    const thresh = (HANDLE_PX*0.9) * devicePixelRatio;
+    for(let i=0;i<4;i++){
+      const [hx,hy] = corners[i];
+      if(Math.hypot(sx-hx, sy-hy) <= thresh) return i;
+    }
+    return -1;
+  }
+
+  function resizeByCorner(o, cornerIndex, mx, my){
+    const rad = o.rot * Math.PI/180;
+    const cos = Math.cos(rad), sin = Math.sin(rad);
+    const signs = [[-1,-1],[1,-1],[1,1],[-1,1]];
+    const opp = signs[(cornerIndex+2)%4];
+    const fixedX = o.x + (opp[0]*o.w/2)*cos - (opp[1]*o.h/2)*sin;
+    const fixedY = o.y + (opp[0]*o.w/2)*sin + (opp[1]*o.h/2)*cos;
+    const dx = mx - fixedX, dy = my - fixedY;
+    // rotate (dx,dy) by -rad into the object's local frame
+    const ldx = dx*cos + dy*sin;
+    const ldy = -dx*sin + dy*cos;
+    const newW = Math.max(2, Math.abs(ldx));
+    const newH = Math.max(2, Math.abs(ldy));
+    const cx = fixedX + (ldx/2)*cos - (ldy/2)*sin;
+    const cy = fixedY + (ldx/2)*sin + (ldy/2)*cos;
+    o.w = newW; o.h = newH; o.x = cx; o.y = cy;
+  }
+
+  // ---------- collision detection (SAT for rotated rects) ----------
+  function projectOntoAxis(corners, axis){
+    let min=Infinity, max=-Infinity;
+    for(const [x,y] of corners){
+      const d = x*axis[0] + y*axis[1];
+      if(d<min) min=d; if(d>max) max=d;
+    }
+    return [min,max];
+  }
+  function rectsOverlap(a, b){
+    const cornersA = objCorners(a), cornersB = objCorners(b);
+    const axes = [];
+    for(const o of [a,b]){
+      const rad = o.rot*Math.PI/180;
+      axes.push([Math.cos(rad), Math.sin(rad)]);
+      axes.push([-Math.sin(rad), Math.cos(rad)]);
+    }
+    for(const axis of axes){
+      const [aMin,aMax] = projectOntoAxis(cornersA, axis);
+      const [bMin,bMax] = projectOntoAxis(cornersB, axis);
+      if(aMax <= bMin + 1e-6 || bMax <= aMin + 1e-6) return false;
+    }
+    return true;
+  }
+  function computeOverlaps(){
+    const overlapping = new Set();
+    for(let i=0;i<objects.length;i++){
+      for(let j=i+1;j<objects.length;j++){
+        const a = objects[i], b = objects[j];
+        // a piece sitting on top of a base board is expected, not a collision --
+        // only flag piece-vs-piece (or board-vs-board) overlaps
+        if(a.isBoard !== b.isBoard) continue;
+        if(rectsOverlap(a, b)){
+          overlapping.add(a.id);
+          overlapping.add(b.id);
+        }
+      }
+    }
+    return overlapping;
+  }
+
+  // ---------- board/piece assignment (for labelling + print) ----------
+  function indexToLetters(i){
+    let s = "";
+    i++;
+    while(i>0){ i--; s = String.fromCharCode(65+(i%26))+s; i=Math.floor(i/26); }
+    return s;
+  }
+  function computeAssignments(){
+    const boards = objects.filter(o=>o.isBoard);
+    const pieces = objects.filter(o=>!o.isBoard);
+    const sortedBoards = [...boards].sort((a,b)=> (a.x-b.x) || (a.y-b.y));
+    const boardCode = new Map();
+    sortedBoards.forEach((b,i)=> boardCode.set(b.id, indexToLetters(i)));
+
+    const byBoard = new Map();
+    const unplaced = [];
+    for(const p of pieces){
+      let home = null;
+      for(const b of sortedBoards){ if(pointInObj(b, p.x, p.y)){ home=b; break; } }
+      if(!home){ unplaced.push(p); continue; }
+      if(!byBoard.has(home.id)) byBoard.set(home.id, []);
+      byBoard.get(home.id).push(p);
+    }
+
+    const pieceCode = new Map();
+    const pieceBoardName = new Map();
+    const layout = new Map(); // boardId -> [{piece, lx, ly, printRot}] sorted along the board
+    for(const b of sortedBoards){
+      const list = byBoard.get(b.id) || [];
+      const swap = b.h > b.w;
+      const withPos = list.map(p=>{
+        const rad = -b.rot*Math.PI/180;
+        const dx = p.x-b.x, dy = p.y-b.y;
+        let lx = dx*Math.cos(rad) - dy*Math.sin(rad);
+        let ly = dx*Math.sin(rad) + dy*Math.cos(rad);
+        if(swap){ const nx=-ly, ny=lx; lx=nx; ly=ny; }
+        const printRot = ((p.rot - b.rot + (swap?90:0)) % 360 + 360) % 360;
+        return {piece:p, lx, ly, printRot};
+      });
+      withPos.sort((a,b2)=> a.lx - b2.lx);
+      withPos.forEach((entry,i)=>{
+        const code = boardCode.get(b.id) + (i+1);
+        pieceCode.set(entry.piece.id, code);
+        pieceBoardName.set(entry.piece.id, `${boardCode.get(b.id)} — ${b.name}`);
+      });
+      layout.set(b.id, {swap, diagW: swap?b.h:b.w, diagH: swap?b.w:b.h, items: withPos});
+    }
+    unplaced.forEach((p,i)=> { pieceCode.set(p.id, "U"+(i+1)); pieceBoardName.set(p.id, "— none —"); });
+
+    return { sortedBoards, boardCode, unplaced, pieceCode, pieceBoardName, layout };
+  }
+
+  // ---------- drawing ----------
+  function draw(){
+    const w = cv.width, h = cv.height;
+    ctx.save();
+    ctx.clearRect(0,0,w,h);
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0,0,w,h);
+
+    // grid every 100mm
+    ctx.strokeStyle = "rgba(28,27,23,.08)";
+    ctx.lineWidth = 1;
+    const gridMm = 100;
+    const stepPx = gridMm * view.zoom * devicePixelRatio;
+    if(stepPx > 6){
+      const originX = view.panX * devicePixelRatio;
+      const originY = view.panY * devicePixelRatio;
+      for(let x = originX % stepPx; x < w; x += stepPx){
+        ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,h); ctx.stroke();
+      }
+      for(let y = originY % stepPx; y < h; y += stepPx){
+        ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.stroke();
+      }
+    }
+    // origin marker
+    const [ox,oy] = worldToScreen(0,0);
+    ctx.strokeStyle = "rgba(150,99,26,.5)";
+    ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(ox-14,oy); ctx.lineTo(ox+14,oy); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(ox,oy-14); ctx.lineTo(ox,oy+14); ctx.stroke();
+
+    const overlapping = computeOverlaps();
+
+    for(const o of objects){
+      const rad = o.rot * Math.PI/180;
+      const [sx,sy] = worldToScreen(o.x, o.y);
+      const isOverlap = overlapping.has(o.id);
+      ctx.save();
+      ctx.translate(sx, sy);
+      ctx.rotate(rad);
+      const pw = o.w * view.zoom * devicePixelRatio;
+      const ph = o.h * view.zoom * devicePixelRatio;
+
+      ctx.fillStyle = isOverlap ? "#e0433955" : (o.color + "3d");
+      ctx.fillRect(-pw/2, -ph/2, pw, ph);
+      ctx.lineWidth = (isOverlap ? 3 : (o.id===selectedId ? 2.5 : 2)) * devicePixelRatio;
+      ctx.strokeStyle = isOverlap ? "#c0392b" : ((o.id===selectedId) ? "#c98a2e" : "#1c1b17");
+      if(isOverlap) ctx.setLineDash([6*devicePixelRatio, 4*devicePixelRatio]);
+      else if(o.isBoard) ctx.setLineDash([9*devicePixelRatio, 6*devicePixelRatio]);
+      ctx.strokeRect(-pw/2, -ph/2, pw, ph);
+      ctx.setLineDash([]);
+
+      if(o.id===selectedId && pw >= HANDLE_MIN_RENDER_PX*devicePixelRatio && ph >= HANDLE_MIN_RENDER_PX*devicePixelRatio){
+        const hs = HANDLE_PX * devicePixelRatio;
+        ctx.fillStyle = "#ffffff";
+        ctx.lineWidth = 1.5 * devicePixelRatio;
+        ctx.strokeStyle = "#c98a2e";
+        const hpts = [[-pw/2,-ph/2],[pw/2,-ph/2],[pw/2,ph/2],[-pw/2,ph/2]];
+        for(const [hx,hy] of hpts){
+          ctx.fillRect(hx-hs/2, hy-hs/2, hs, hs);
+          ctx.strokeRect(hx-hs/2, hy-hs/2, hs, hs);
+        }
+      }
+
+      // label
+      ctx.fillStyle = "#1c1b17";
+      const fontPx = Math.max(9, Math.min(15, pw*0.09)) * devicePixelRatio;
+      ctx.font = `600 ${fontPx}px ui-sans-serif, Arial`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      const label = o.name || "(unnamed)";
+      const dims = `${o.w.toFixed(1)} × ${o.h.toFixed(1)} mm`;
+      if(pw > 40*devicePixelRatio && ph > 24*devicePixelRatio){
+        ctx.fillText(label, 0, -fontPx*0.65);
+        ctx.font = `400 ${fontPx*0.8}px ui-sans-serif, Arial`;
+        ctx.fillText(dims, 0, fontPx*0.65);
+      }
+      ctx.restore();
+    }
+    ctx.restore();
+
+    const overlapCount = overlapping.size;
+    zoomHud.textContent = `Zoom ${(view.zoom*100).toFixed(0)}% · Saw kerf ${kerf.toFixed(1)}mm · Objects ${objects.length}` +
+      (overlapCount ? ` · ⚠ ${overlapCount} overlapping` : " · No overlaps");
+    zoomHud.style.color = overlapCount ? "#ffb4ab" : "#fff";
+    return overlapping;
+  }
+
+  // ---------- object list panel ----------
+  function sortObjectsForList(list){
+    const mode = document.getElementById("sortSelect").value;
+    const arr = [...list];
+    switch(mode){
+      case "w_desc": arr.sort((a,b)=> b.w - a.w); break;
+      case "w_asc":  arr.sort((a,b)=> a.w - b.w); break;
+      case "h_desc": arr.sort((a,b)=> b.h - a.h); break;
+      case "h_asc":  arr.sort((a,b)=> a.h - b.h); break;
+      case "area_desc": arr.sort((a,b)=> (b.w*b.h) - (a.w*a.h)); break;
+      default: arr.sort((a,b)=> (a.name||"").localeCompare(b.name||""));
+    }
+    return arr;
+  }
+
+  let expandedId = null;
+
+  function renderObjList(){
+    objRowsEl.innerHTML = "";
+    const overlapping = computeOverlaps();
+    for(const o of sortObjectsForList(objects)){
+      const wrap = document.createElement("div");
+      wrap.className = "objRowWrap";
+
+      const row = document.createElement("div");
+      row.className = "objRow" + (o.id===selectedId ? " selected" : "");
+      const warn = overlapping.has(o.id) ? `<span title="Overlaps another object" style="color:#c0392b;font-weight:700;">⚠</span>` : "";
+      const boardTag = o.isBoard ? `<span title="Base board" style="opacity:.55;font-size:11px;">▦</span>` : "";
+      const isOpen = expandedId === o.id;
+      row.innerHTML = `<span class="expandArrow">${isOpen ? "▾" : "▸"}</span>
+        <span class="swatch" style="background:${o.color}"></span>
+        ${boardTag}<span class="nm">${escapeHtml(o.name||"(unnamed)")}</span>
+        <span class="dims">${o.w.toFixed(1)}×${o.h.toFixed(1)}</span> ${warn}`;
+      row.addEventListener("click", ()=>{
+        selectedId = o.id;
+        expandedId = (expandedId === o.id) ? null : o.id;
+        syncSelPanel(); renderObjList(); draw();
+      });
+      wrap.appendChild(row);
+
+      if(isOpen){
+        const edit = document.createElement("div");
+        edit.className = "objEdit";
+        edit.innerHTML = `
+          <label>Name</label>
+          <input class="e-name" type="text" value="${escapeHtml(o.name)}">
+          <div class="row2">
+            <div><label>Width (mm)</label><input class="e-w" type="number" step="0.1" min="0.1" value="${o.w.toFixed(1)}"></div>
+            <div><label>Length (mm)</label><input class="e-h" type="number" step="0.1" min="0.1" value="${o.h.toFixed(1)}"></div>
+          </div>
+          <label>Rotation (degrees)</label>
+          <input class="e-rot" type="number" step="1" value="${o.rot}">
+          <label>Colour</label>
+          <input class="e-color" type="color" value="${o.color}">
+          <label style="display:flex;align-items:center;gap:6px;text-transform:none;font-size:12.5px;color:var(--ink-2);margin-top:10px;">
+            <input class="e-board" type="checkbox" style="width:auto;" ${o.isBoard?"checked":""}> Base board (background)
+          </label>
+          <div class="btnrow">
+            <button class="secondary e-dup">Duplicate</button>
+            <button class="danger e-del">Delete</button>
+          </div>
+        `;
+        const byClass = (c)=> edit.querySelector("."+c);
+        byClass("e-name").addEventListener("input", (e)=>{ o.name = e.target.value; renderObjList(); draw(); autosave(); });
+        byClass("e-w").addEventListener("input", (e)=>{ const v=parseFloat(e.target.value); if(!isNaN(v)&&v>0){ o.w=v; draw(); autosave(); } });
+        byClass("e-h").addEventListener("input", (e)=>{ const v=parseFloat(e.target.value); if(!isNaN(v)&&v>0){ o.h=v; draw(); autosave(); } });
+        byClass("e-rot").addEventListener("input", (e)=>{ const v=parseFloat(e.target.value); if(!isNaN(v)){ o.rot=v; draw(); autosave(); } });
+        byClass("e-color").addEventListener("input", (e)=>{ o.color = e.target.value; renderObjList(); draw(); autosave(); });
+        byClass("e-board").addEventListener("change", (e)=>{ o.isBoard = e.target.checked; renderObjList(); draw(); autosave(); });
+        byClass("e-dup").addEventListener("click", ()=>{ addObject(o.name+" (copy)", o.w, o.h, o.color, o.x+30, o.y+30, o.isBoard); });
+        byClass("e-del").addEventListener("click", ()=>{
+          objects = objects.filter(x=>x.id!==o.id);
+          if(selectedId===o.id) selectedId=null;
+          expandedId = null;
+          renderObjList(); syncSelPanel(); draw(); autosave();
+        });
+        wrap.appendChild(edit);
+      }
+
+      objRowsEl.appendChild(wrap);
+    }
+  }
+  document.getElementById("sortSelect").addEventListener("change", renderObjList);
+  function escapeHtml(s){
+    return s.replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  function syncSelPanel(){
+    const o = getSel();
+    if(!o){ rightPanel.classList.remove("show"); return; }
+    rightPanel.classList.add("show");
+    selName.value = o.name;
+    selW.value = o.w.toFixed(1);
+    selH.value = o.h.toFixed(1);
+    selRot.value = o.rot;
+    selColor.value = o.color;
+    selIsBoard.checked = !!o.isBoard;
+  }
+
+  // ---------- add / edit / delete ----------
+  function addObject(name, w, h, color, x, y, isBoard){
+    const o = {
+      id: uid(),
+      name: name || `Board ${objects.length+1}`,
+      w: Math.max(0.1, w), h: Math.max(0.1, h),
+      x: (x!==undefined) ? x : 100 + (objects.length%6)*40,
+      y: (y!==undefined) ? y : 100 + Math.floor(objects.length/6)*40,
+      rot: 0,
+      color: color || palette()[paletteIdx++ % palette().length],
+      isBoard: !!isBoard
+    };
+    objects.push(o);
+    selectedId = o.id;
+    renderObjList(); syncSelPanel(); draw(); autosave();
+    return o;
+  }
+
+  document.getElementById("btnAdd").addEventListener("click", ()=>{
+    const w = parseFloat(newW.value), h = parseFloat(newH.value);
+    if(!(w>0) || !(h>0)){ alert("Enter a valid width and length in mm."); return; }
+    addObject(newName.value.trim(), w, h, newColor.value, undefined, undefined, newIsBoard.checked);
+    newName.value = "";
+  });
+
+  document.getElementById("btnDup").addEventListener("click", ()=>{
+    const o = getSel(); if(!o) return;
+    addObject(o.name + " (copy)", o.w, o.h, o.color, o.x+30, o.y+30, o.isBoard);
+  });
+  document.getElementById("btnDel").addEventListener("click", ()=>{
+    if(!selectedId) return;
+    objects = objects.filter(o=>o.id!==selectedId);
+    selectedId = null;
+    renderObjList(); syncSelPanel(); draw(); autosave();
+  });
+
+  [ [selName,"name",false], [selW,"w",true], [selH,"h",true], [selRot,"rot",true] ].forEach(([el,key,isNum])=>{
+    el.addEventListener("input", ()=>{
+      const o = getSel(); if(!o) return;
+      let v = el.value;
+      if(isNum){ v = parseFloat(v); if(isNaN(v)) return; }
+      o[key] = v;
+      renderObjList(); draw(); autosave();
+    });
+  });
+  selColor.addEventListener("input", ()=>{
+    const o = getSel(); if(!o) return;
+    o.color = selColor.value;
+    renderObjList(); draw(); autosave();
+  });
+  selIsBoard.addEventListener("change", ()=>{
+    const o = getSel(); if(!o) return;
+    o.isBoard = selIsBoard.checked;
+    renderObjList(); draw(); autosave();
+  });
+
+  kerfInput.addEventListener("input", ()=>{
+    const v = parseFloat(kerfInput.value);
+    if(!isNaN(v) && v>=0){ kerf = v; draw(); autosave(); }
+  });
+  projNameEl.addEventListener("input", autosave);
+
+  // ---------- canvas interaction: pan / select / drag / resize / zoom ----------
+  let dragMode = null; // 'move' | 'pan' | 'resize'
+  let dragObj = null;
+  let dragStart = {x:0,y:0};
+  let objStart = {x:0,y:0};
+  let panStart = {x:0,y:0};
+  let resizeCorner = -1;
+
+  function evtWorld(e){
+    const r = cv.getBoundingClientRect();
+    const sx = (e.clientX - r.left) * devicePixelRatio;
+    const sy = (e.clientY - r.top) * devicePixelRatio;
+    return screenToWorld(sx,sy);
+  }
+  function evtScreen(e){
+    const r = cv.getBoundingClientRect();
+    return [ (e.clientX - r.left) * devicePixelRatio, (e.clientY - r.top) * devicePixelRatio ];
+  }
+
+  cv.addEventListener("mousedown", (e)=>{
+    const sel = getSel();
+    if(sel){
+      const [sx,sy] = evtScreen(e);
+      const ci = handleHitTest(sel, sx, sy);
+      if(ci >= 0){
+        dragMode = "resize"; dragObj = sel; resizeCorner = ci;
+        cv.classList.add("dragging");
+        return;
+      }
+    }
+    const [wx,wy] = evtWorld(e);
+    const hit = hitTest(wx,wy);
+    if(hit){
+      selectedId = hit.id;
+      expandedId = hit.id;
+      dragMode = "move"; dragObj = hit;
+      dragStart = {x:wx,y:wy};
+      objStart = {x:hit.x, y:hit.y};
+      cv.classList.add("dragging");
+    } else {
+      selectedId = null;
+      dragMode = "pan";
+      panStart = {x:e.clientX, y:e.clientY};
+      objStart = {x:view.panX, y:view.panY};
+      cv.classList.add("dragging");
+    }
+    syncSelPanel(); renderObjList(); draw();
+  });
+
+  window.addEventListener("mousemove", (e)=>{
+    if(dragMode === "resize" && dragObj){
+      const [wx,wy] = evtWorld(e);
+      resizeByCorner(dragObj, resizeCorner, wx, wy);
+      syncSelPanel();
+      draw();
+    } else if(dragMode === "move" && dragObj){
+      const [wx,wy] = evtWorld(e);
+      let nx = objStart.x + (wx - dragStart.x);
+      let ny = objStart.y + (wy - dragStart.y);
+      const snap = snapAgainstOthers(dragObj, nx, ny);
+      dragObj.x = snap.x; dragObj.y = snap.y;
+      draw();
+    } else if(dragMode === "pan"){
+      view.panX = objStart.x + (e.clientX - panStart.x)/devicePixelRatio;
+      view.panY = objStart.y + (e.clientY - panStart.y)/devicePixelRatio;
+      draw();
+    }
+  });
+  window.addEventListener("mouseup", ()=>{
+    if(dragMode==="move" || dragMode==="resize") autosave();
+    dragMode = null; dragObj = null;
+    cv.classList.remove("dragging");
+  });
+
+  // snap dragged object's edges to other objects' edges, gap = kerf (axis-aligned only)
+  function snapAgainstOthers(o, nx, ny){
+    const SNAP_PX = 10;
+    let bestX = nx, bestY = ny;
+    const nearlyAxisAligned = (Math.abs(o.rot % 90) < 0.01);
+    if(nearlyAxisAligned){
+      const hw = o.w/2, hh = o.h/2;
+      for(const other of objects){
+        if(other.id===o.id) continue;
+        if(Math.abs(other.rot % 90) > 0.01) continue;
+        const ohw = other.w/2, ohh = other.h/2;
+        // vertical overlap check for horizontal snap
+        const vOverlap = (ny+hh > other.y-ohh) && (ny-hh < other.y+ohh);
+        if(vOverlap){
+          const targetsX = [ other.x - ohw - kerf - hw, other.x + ohw + kerf + hw, other.x - ohw + hw, other.x + ohw - hw ];
+          for(const tx of targetsX){
+            const [sx1] = worldToScreen(nx,0);
+            const [sx2] = worldToScreen(tx,0);
+            if(Math.abs(sx1-sx2) < SNAP_PX*devicePixelRatio){ bestX = tx; }
+          }
+        }
+        const hOverlap = (nx+hw > other.x-ohw) && (nx-hw < other.x+ohw);
+        if(hOverlap){
+          const targetsY = [ other.y - ohh - kerf - hh, other.y + ohh + kerf + hh, other.y - ohh + hh, other.y + ohh - hh ];
+          for(const ty of targetsY){
+            const [,sy1] = worldToScreen(0,ny);
+            const [,sy2] = worldToScreen(0,ty);
+            if(Math.abs(sy1-sy2) < SNAP_PX*devicePixelRatio){ bestY = ty; }
+          }
+        }
+      }
+    }
+    return {x:bestX, y:bestY};
+  }
+
+  cv.addEventListener("wheel", (e)=>{
+    e.preventDefault();
+    const r = cv.getBoundingClientRect();
+    const mx = (e.clientX - r.left), my = (e.clientY - r.top);
+    const [wx,wy] = screenToWorld(mx*devicePixelRatio, my*devicePixelRatio);
+    const factor = Math.exp(-e.deltaY * 0.0012);
+    view.zoom = Math.min(4, Math.max(0.02, view.zoom * factor));
+    // keep mouse point stable
+    view.panX = mx - wx*view.zoom;
+    view.panY = my - wy*view.zoom;
+    draw();
+  }, {passive:false});
+
+  // ---------- keyboard: copy/paste, delete ----------
+  window.addEventListener("keydown", (e)=>{
+    const tag = (document.activeElement && document.activeElement.tagName) || "";
+    if(tag==="INPUT" || tag==="TEXTAREA") return;
+    if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==="c"){
+      const o = getSel(); if(o) clipboard = [JSON.parse(JSON.stringify(o))];
+    } else if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==="v"){
+      for(const c of clipboard){
+        addObject(c.name+" (copy)", c.w, c.h, c.color, c.x+30, c.y+30, c.isBoard);
+      }
+    } else if(e.key==="Delete" || e.key==="Backspace"){
+      if(selectedId){ document.getElementById("btnDel").click(); }
+    }
+  });
+
+  // ---------- print: per-board cut diagrams + labelled parts list ----------
+  document.getElementById("btnPrint").addEventListener("click", ()=>{
+    const overlapping = computeOverlaps();
+    const { sortedBoards, boardCode, unplaced, pieceCode, pieceBoardName, layout } = computeAssignments();
+
+    document.getElementById("printTitle").textContent = projNameEl.value.trim() || "CutBoard";
+    const d = new Date();
+    let meta = `Saw kerf ${kerf.toFixed(1)}mm · ${objects.length} objects · Printed ${d.toLocaleDateString("en-GB")}`;
+    if(overlapping.size) meta += ` · ⚠ ${overlapping.size} objects overlap — check the workspace before cutting!`;
+    if(unplaced.length) meta += ` · ${unplaced.length} piece(s) not placed on any base board`;
+    document.getElementById("printMeta").textContent = meta;
+
+    const boardsEl = document.getElementById("printBoards");
+    boardsEl.innerHTML = "";
+    for(const b of sortedBoards){
+      const { diagW, diagH, items } = layout.get(b.id);
+      const strokeW = Math.max(diagW,diagH) * 0.0025;
+      let svg = `<svg viewBox="0 0 ${diagW} ${diagH}" role="img" aria-label="Cut layout for board ${boardCode.get(b.id)}">
+        <rect x="0" y="0" width="${diagW}" height="${diagH}" fill="#fafafa" stroke="#333" stroke-width="${strokeW}"/>`;
+      for(const entry of items){
+        const cx = diagW/2 + entry.lx, cy = diagH/2 + entry.ly;
+        const code = pieceCode.get(entry.piece.id);
+        const shortSide = Math.min(entry.piece.w, entry.piece.h);
+        const fs = Math.max(diagH*0.1, Math.min(shortSide*0.45, diagW*0.03));
+        svg += `<g transform="translate(${cx.toFixed(2)},${cy.toFixed(2)}) rotate(${entry.printRot.toFixed(1)})">
+          <rect x="${(-entry.piece.w/2).toFixed(2)}" y="${(-entry.piece.h/2).toFixed(2)}" width="${entry.piece.w.toFixed(2)}" height="${entry.piece.h.toFixed(2)}" fill="${entry.piece.color}77" stroke="#222" stroke-width="${strokeW}"/>
+          <text x="0" y="0" text-anchor="middle" dominant-baseline="central" font-size="${fs.toFixed(1)}" font-weight="700" fill="#111">${code}</text>
+        </g>`;
+      }
+      svg += `</svg>`;
+      const partsLine = items.map(entry => `${pieceCode.get(entry.piece.id)} ${escapeHtml(entry.piece.name)} (${entry.piece.w.toFixed(1)}×${entry.piece.h.toFixed(1)}mm)`).join(" · ") || "No pieces placed on this board.";
+      const section = document.createElement("div");
+      section.className = "printBoard";
+      section.innerHTML = `<h3>Board ${boardCode.get(b.id)} — ${escapeHtml(b.name)} (${b.w.toFixed(1)} × ${b.h.toFixed(1)} mm)</h3>${svg}<div class="partsInBoard">${partsLine}</div>`;
+      boardsEl.appendChild(section);
+    }
+    if(unplaced.length){
+      const section = document.createElement("div");
+      section.className = "printBoard";
+      section.style.borderColor = "#c0392b";
+      const list = unplaced.map(p => `${pieceCode.get(p.id)} ${escapeHtml(p.name)} (${p.w.toFixed(1)}×${p.h.toFixed(1)}mm)`).join(" · ");
+      section.innerHTML = `<h3 style="color:#a33;">⚠ Not placed on any base board</h3><div class="partsInBoard">${list}</div>`;
+      boardsEl.appendChild(section);
+    }
+
+    const body = document.getElementById("printTableBody");
+    body.innerHTML = "";
+    const pieces = objects.filter(o=>!o.isBoard)
+      .sort((a,b)=> (pieceCode.get(a.id)||"").localeCompare(pieceCode.get(b.id)||"", undefined, {numeric:true}));
+    for(const o of pieces){
+      const tr = document.createElement("tr");
+      const warn = overlapping.has(o.id) ? " ⚠" : "";
+      tr.innerHTML = `<td><strong>${pieceCode.get(o.id)}</strong></td><td>${escapeHtml(o.name||"(unnamed)")}${warn}</td><td>${o.w.toFixed(1)}</td><td>${o.h.toFixed(1)}</td><td>${o.rot}°</td><td>${escapeHtml(pieceBoardName.get(o.id)||"")}</td>`;
+      body.appendChild(tr);
+    }
+    window.print();
+  });
+
+  // ---------- export / import JSON ----------
+  document.getElementById("btnExport").addEventListener("click", ()=>{
+    const data = { projectName: projNameEl.value, kerf, objects };
+    const blob = new Blob([JSON.stringify(data,null,2)], {type:"application/json"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = (projNameEl.value.trim() || "cutboard-project") + ".json";
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+  const fileInput = document.getElementById("fileInput");
+  document.getElementById("btnImport").addEventListener("click", ()=> fileInput.click());
+  fileInput.addEventListener("change", ()=>{
+    const f = fileInput.files[0]; if(!f) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try{
+        loadProjectData(JSON.parse(reader.result));
+      }catch(e){ alert("Could not read the file: "+e.message); }
+    };
+    reader.readAsText(f);
+    fileInput.value = "";
+  });
+  function loadProjectData(data){
+    projNameEl.value = data.projectName || "";
+    kerf = data.kerf || 3.0;
+    kerfInput.value = kerf.toFixed(1);
+    objects = migrateObjects(data.objects);
+    nextId = 1 + objects.reduce((m,o)=>Math.max(m,o.id||0), 0);
+    selectedId = null;
+    renderObjList(); syncSelPanel(); draw(); autosave();
+  }
+
+  // ================= Google Drive =================
+  const LS_DRIVE_CFG = "kaplayout_drive_cfg_v1";
+  let driveTokenClient = null;
+  let driveAccessToken = null;
+  let driveFolderId = "";
+  let driveClientIdVal = "";
+
+  function loadDriveCfg(){
+    try{
+      const raw = localStorage.getItem(LS_DRIVE_CFG);
+      if(!raw) return;
+      const c = JSON.parse(raw);
+      driveClientIdVal = c.clientId || "";
+      driveFolderId = c.folderId || "";
+      document.getElementById("driveClientId").value = driveClientIdVal;
+      document.getElementById("driveFolderId").value = driveFolderId;
+    }catch(e){}
+  }
+  function saveDriveCfg(){
+    driveClientIdVal = document.getElementById("driveClientId").value.trim();
+    driveFolderId = document.getElementById("driveFolderId").value.trim();
+    localStorage.setItem(LS_DRIVE_CFG, JSON.stringify({clientId:driveClientIdVal, folderId:driveFolderId}));
+  }
+
+  const driveModal = document.getElementById("driveModal");
+  document.getElementById("btnDrive").addEventListener("click", ()=>{ driveModal.classList.add("show"); });
+  document.getElementById("btnDriveClose").addEventListener("click", ()=>{ driveModal.classList.remove("show"); });
+  document.getElementById("btnDriveSaveCfg").addEventListener("click", ()=>{
+    saveDriveCfg();
+    setDriveStatus("Settings saved locally.");
+  });
+
+  function setDriveStatus(msg){ document.getElementById("driveStatus").textContent = msg; }
+
+  document.getElementById("btnDriveConnect").addEventListener("click", ()=>{
+    saveDriveCfg();
+    if(!driveClientIdVal){ setDriveStatus("Enter a Client ID first."); return; }
+    if(typeof google === "undefined" || !google.accounts){
+      setDriveStatus("The Google library hasn't loaded yet, try again in a second.");
+      return;
+    }
+    driveTokenClient = google.accounts.oauth2.initTokenClient({
+      client_id: driveClientIdVal,
+      scope: "https://www.googleapis.com/auth/drive.file",
+      callback: async (resp) => {
+        if(resp.error){ setDriveStatus("Sign-in error: "+resp.error); return; }
+        driveAccessToken = resp.access_token;
+        setDriveStatus("Connected to Google Drive.");
+        document.getElementById("driveActionRow").style.display = "flex";
+        document.getElementById("driveFileList").style.display = "block";
+        await ensureFolder();
+        await refreshDriveList();
+      }
+    });
+    driveTokenClient.requestAccessToken();
+  });
+
+  async function ensureFolder(){
+    if(driveFolderId) return driveFolderId;
+    // search for existing "CutBoard Projects" folder, else create it
+    const q = encodeURIComponent("name='CutBoard Projects' and mimeType='application/vnd.google-apps.folder' and trashed=false");
+    const res = await gapiFetch(`https://www.googleapis.com/drive/v3/files?q=${q}&fields=files(id,name)`);
+    const data = await res.json();
+    if(data.files && data.files.length){
+      driveFolderId = data.files[0].id;
+    } else {
+      const createRes = await gapiFetch("https://www.googleapis.com/drive/v3/files", {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify({ name:"CutBoard Projects", mimeType:"application/vnd.google-apps.folder" })
+      });
+      const created = await createRes.json();
+      driveFolderId = created.id;
+    }
+    document.getElementById("driveFolderId").value = driveFolderId;
+    saveDriveCfg();
+    return driveFolderId;
+  }
+
+  function gapiFetch(url, opts){
+    opts = opts || {};
+    opts.headers = Object.assign({ "Authorization": "Bearer " + driveAccessToken }, opts.headers||{});
+    return fetch(url, opts);
+  }
+
+  async function refreshDriveList(){
+    const listEl = document.getElementById("driveFileList");
+    listEl.innerHTML = "Loading...";
+    const q = encodeURIComponent(`'${driveFolderId}' in parents and trashed=false and mimeType='application/json'`);
+    const res = await gapiFetch(`https://www.googleapis.com/drive/v3/files?q=${q}&fields=files(id,name,modifiedTime)&orderBy=modifiedTime desc`);
+    const data = await res.json();
+    listEl.innerHTML = "";
+    if(!data.files || !data.files.length){
+      listEl.innerHTML = "<div class='driveFileRow' style='cursor:default;color:#888'>No saved projects yet.</div>";
+      return;
+    }
+    for(const f of data.files){
+      const row = document.createElement("div");
+      row.className = "driveFileRow";
+      const d = new Date(f.modifiedTime);
+      row.textContent = `${f.name}  (${d.toLocaleDateString("en-GB")} ${d.toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"})})`;
+      row.addEventListener("click", async ()=>{
+        setDriveStatus("Opening "+f.name+"...");
+        const r = await gapiFetch(`https://www.googleapis.com/drive/v3/files/${f.id}?alt=media`);
+        const json = await r.json();
+        loadProjectData(json);
+        setDriveStatus("Opened "+f.name+".");
+        driveModal.classList.remove("show");
+      });
+      listEl.appendChild(row);
+    }
+  }
+  document.getElementById("btnDriveRefresh").addEventListener("click", refreshDriveList);
+
+  document.getElementById("btnDriveSaveProj").addEventListener("click", async ()=>{
+    if(!driveAccessToken){ setDriveStatus("Connect first."); return; }
+    setDriveStatus("Saving...");
+    const name = (projNameEl.value.trim() || "cutboard-project") + ".json";
+    const data = { projectName: projNameEl.value, kerf, objects };
+    const q = encodeURIComponent(`name='${name.replace(/'/g,"\\'")}' and '${driveFolderId}' in parents and trashed=false`);
+    const existing = await (await gapiFetch(`https://www.googleapis.com/drive/v3/files?q=${q}&fields=files(id)`)).json();
+
+    const boundary = "kaplayout_boundary";
+    const metadata = existing.files && existing.files.length
+      ? { name }
+      : { name, parents:[driveFolderId] };
+    const body =
+      `--${boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${JSON.stringify(metadata)}\r\n` +
+      `--${boundary}\r\nContent-Type: application/json\r\n\r\n${JSON.stringify(data)}\r\n--${boundary}--`;
+
+    let url = "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart";
+    let method = "POST";
+    if(existing.files && existing.files.length){
+      url = `https://www.googleapis.com/upload/drive/v3/files/${existing.files[0].id}?uploadType=multipart`;
+      method = "PATCH";
+    }
+    const res = await gapiFetch(url, {
+      method,
+      headers: { "Content-Type": `multipart/related; boundary=${boundary}` },
+      body
+    });
+    if(res.ok){ setDriveStatus("Saved to Drive: "+name); refreshDriveList(); }
+    else { setDriveStatus("Error saving ("+res.status+")"); }
+  });
+
+  // ---------- init ----------
+  loadDriveCfg();
+  autoload();
+  resizeCanvas();
+  renderObjList();
+  syncSelPanel();
+})();
+</script>
+</body>
+</html>
