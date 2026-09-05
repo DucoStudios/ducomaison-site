@@ -713,6 +713,35 @@
 
   .bw-pill.bw-selected { background: var(--ink); color: #fff; border-color: var(--ink); }
 
+  /* Manadskalender for datumval (2026-09-05), samma monster/klasser som
+     sites/volets-france.html i agent-repot, omfargat mot den har sidans
+     egna --ink/--shutter/--gold-variabler. Ersatter den tidigare platta
+     datum-pill-raden i #bw-dates -- se service:"tillsyn" i skriptet
+     langst ner, samma delade Zoho-kalender som Volets France. */
+  .bw-cal-nav { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+  .bw-cal-nav-btns { display: flex; gap: 6px; }
+  .bw-cal-nav button {
+    border: 1px solid var(--line); background: var(--card); color: var(--ink);
+    border-radius: 8px; padding: 6px 10px; font-family: inherit; font-size: .85rem; cursor: pointer;
+  }
+  .bw-cal-nav button:hover { border-color: var(--shutter); }
+  .bw-cal-month-label { font-family: ui-serif, Georgia, serif; font-size: 1rem; font-weight: 600; }
+  .bw-cal-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; margin-bottom: 20px; }
+  .bw-cal-weekday { font-size: .68rem; font-weight: 700; text-transform: uppercase; opacity: .5; text-align: center; padding-bottom: 4px; }
+  .bw-cal-day {
+    min-height: 44px; border: 1px solid var(--line); border-radius: 8px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-size: .82rem; color: var(--ink); opacity: .3;
+  }
+  .bw-cal-day.bw-cal-outside { visibility: hidden; }
+  .bw-cal-day.bw-cal-has-slots { opacity: 1; cursor: pointer; background: var(--card); transition: border-color .15s, background .15s; }
+  .bw-cal-day.bw-cal-has-slots:hover { border-color: var(--shutter); }
+  .bw-cal-day.bw-cal-today { border-color: var(--gold); border-width: 2px; }
+  .bw-cal-day.bw-cal-selected { background: var(--ink); border-color: var(--ink); }
+  .bw-cal-day.bw-cal-selected .bw-cal-daynum { color: #fff; }
+  .bw-cal-day.bw-cal-selected .bw-cal-dot { background: #fff; }
+  .bw-cal-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--gold); margin-top: 3px; }
+
   footer {
     /* Extra bottompadding sa fotterlankarna gar att na aven langst ner pa
        sidan, chattwidgeten ar position:fixed och tacker annars over dem
@@ -1317,8 +1346,14 @@
       <div id="bw-loading" class="booking-fallback">Loading available times...</div>
       <div id="bw-content" style="display:none;">
         <p style="font-size:.85rem;opacity:.7;margin-bottom:20px;">Optional: pick a date and time to book directly, otherwise we'll get back to you with a suggestion.</p>
-        <p class="bw-label">Date</p>
-        <div id="bw-dates" class="bw-pills"></div>
+        <div class="bw-cal-nav">
+          <span class="bw-cal-month-label" id="bw-cal-month-label"></span>
+          <div class="bw-cal-nav-btns">
+            <button type="button" id="bw-cal-prev" aria-label="Previous month"><i class="fa-solid fa-chevron-left"></i></button>
+            <button type="button" id="bw-cal-next" aria-label="Next month"><i class="fa-solid fa-chevron-right"></i></button>
+          </div>
+        </div>
+        <div id="bw-cal-grid" class="bw-cal-grid"></div>
         <p class="bw-label">Time</p>
         <div id="bw-times" class="bw-pills"></div>
       </div>
@@ -2131,7 +2166,6 @@
     var selectedSlotEl = document.getElementById("prebook-selected-slot");
     var loadingEl = document.getElementById("bw-loading");
     var contentEl = document.getElementById("bw-content");
-    var datesEl = document.getElementById("bw-dates");
     var timesEl = document.getElementById("bw-times");
     var successEl = document.getElementById("bw-success");
     var successTextEl = document.getElementById("bw-success-text");
@@ -2143,9 +2177,17 @@
     form.appendChild(statusEl);
 
     var WEEKDAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    var MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    var calGridEl = document.getElementById("bw-cal-grid");
+    var calMonthLabelEl = document.getElementById("bw-cal-month-label");
     var slotsByDate = {}; // "yyyy-mm-dd" (Europe/Paris) -> [{start, end}]
     var selectedDate = null;
     var selectedSlot = null;
+    var calendarAnchor = new Date();
+
+    function isoDate(d) {
+      return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+    }
 
     function parisDateKey(isoString) {
       var d = new Date(isoString);
@@ -2175,22 +2217,45 @@
       }
     }
 
-    function renderDates() {
-      datesEl.innerHTML = "";
-      var dateKeys = Object.keys(slotsByDate).sort();
-      dateKeys.slice(0, 12).forEach(function (dateKey) {
-        var pill = document.createElement("button");
-        pill.type = "button";
-        pill.className = "bw-pill" + (dateKey === selectedDate ? " bw-selected" : "");
-        pill.textContent = dateLabel(dateKey);
-        pill.addEventListener("click", function () {
-          selectedDate = dateKey;
+    function renderCalendarGrid() {
+      var anchor = calendarAnchor;
+      calMonthLabelEl.textContent = MONTH_NAMES[anchor.getMonth()] + " " + anchor.getFullYear();
+
+      var firstOfMonth = new Date(anchor.getFullYear(), anchor.getMonth(), 1);
+      var daysInMonth = new Date(anchor.getFullYear(), anchor.getMonth() + 1, 0).getDate();
+      var leadingEmpty = (firstOfMonth.getDay() + 6) % 7; // mandag-start
+      var totalCells = Math.ceil((leadingEmpty + daysInMonth) / 7) * 7;
+      var gridStart = new Date(firstOfMonth);
+      gridStart.setDate(gridStart.getDate() - leadingEmpty);
+
+      var todayIso = isoDate(new Date());
+      var cellsHtml = WEEKDAY_NAMES.slice(1).concat(WEEKDAY_NAMES[0]).map(function (d) {
+        return '<div class="bw-cal-weekday">' + d + "</div>";
+      }).join("");
+
+      for (var i = 0; i < totalCells; i++) {
+        var cellDate = new Date(gridStart);
+        cellDate.setDate(cellDate.getDate() + i);
+        var cellIso = isoDate(cellDate);
+        var outside = cellDate.getMonth() !== anchor.getMonth();
+        var hasSlots = !!slotsByDate[cellIso];
+        var cls = "bw-cal-day";
+        if (outside) cls += " bw-cal-outside";
+        if (hasSlots) cls += " bw-cal-has-slots";
+        if (cellIso === todayIso) cls += " bw-cal-today";
+        if (cellIso === selectedDate) cls += " bw-cal-selected";
+        cellsHtml += '<div class="' + cls + '" data-date="' + cellIso + '"><span class="bw-cal-daynum">' + cellDate.getDate() + "</span>" + (hasSlots ? '<span class="bw-cal-dot"></span>' : "") + "</div>";
+      }
+
+      calGridEl.innerHTML = cellsHtml;
+      calGridEl.querySelectorAll(".bw-cal-has-slots").forEach(function (el) {
+        el.addEventListener("click", function () {
+          selectedDate = el.dataset.date;
           selectedSlot = null;
-          renderDates();
+          renderCalendarGrid();
           renderTimes();
           updateSubmitButton();
         });
-        datesEl.appendChild(pill);
       });
     }
 
@@ -2229,15 +2294,27 @@
         var firstDate = Object.keys(slotsByDate).sort()[0];
         if (firstDate) {
           selectedDate = firstDate;
-          renderDates();
+          var firstParts = firstDate.split("-").map(Number);
+          calendarAnchor = new Date(firstParts[0], firstParts[1] - 1, 1);
+          renderCalendarGrid();
           renderTimes();
         } else {
-          datesEl.textContent = "No available times right now, feel free to email us at jean-claude@ducomaison.fr.";
+          renderCalendarGrid();
+          timesEl.textContent = "No available times right now, feel free to email us at jean-claude@ducomaison.fr.";
         }
       })
       .catch(function () {
         loadingEl.textContent = "Could not load available times. Feel free to email us instead at jean-claude@ducomaison.fr.";
       });
+
+    document.getElementById("bw-cal-prev").addEventListener("click", function () {
+      calendarAnchor = new Date(calendarAnchor.getFullYear(), calendarAnchor.getMonth() - 1, 1);
+      renderCalendarGrid();
+    });
+    document.getElementById("bw-cal-next").addEventListener("click", function () {
+      calendarAnchor = new Date(calendarAnchor.getFullYear(), calendarAnchor.getMonth() + 1, 1);
+      renderCalendarGrid();
+    });
 
     form.addEventListener("submit", function (e) {
       e.preventDefault();
