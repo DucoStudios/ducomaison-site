@@ -566,11 +566,13 @@
     } catch (e) {}
     // Default new visitors to inches if their browser locale looks
     // US/imperial -- a low-stakes guess the settings panel can override.
+    // Language is NOT auto-detected from locale (David's explicit call,
+    // 2026-09-07): CutBoard defaults to English for every visitor
+    // regardless of browser language, since the Swedish/French options
+    // exist for customers who want them, not as a silent default switch.
     if (!localStorage.getItem(LS_SETTINGS)) {
       const locale = (navigator.language || "en-US").toLowerCase();
       if (/^en-(us|lr|mm)/.test(locale)) settings.units = "in";
-      if (locale.startsWith("sv")) settings.lang = "sv";
-      else if (locale.startsWith("fr")) settings.lang = "fr";
     }
   }
   function saveSettings(){
