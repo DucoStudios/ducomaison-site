@@ -824,6 +824,42 @@
     o.w = newW; o.h = newH; o.x = cx; o.y = cy;
   }
 
+  // ---------- rotate by dragging a handle above the object ----------
+  // Same idea as the corner-resize handles: a freehand way to do the same
+  // thing the numeric Rotation field already does, without removing that
+  // field -- exact degrees still need to be typeable (David's explicit
+  // ask, 2026-09-08), this is purely an additional input method.
+  const ROTATE_HANDLE_DIST_PX = 34; // css px, fixed screen distance regardless of zoom
+  function rotateHandleWorldPos(o){
+    // Mirrors the local-to-world rotation transform in objCorners, at the
+    // local point straight "above" the object's top edge (before rotation).
+    const rad = o.rot * Math.PI/180;
+    const armMm = ROTATE_HANDLE_DIST_PX / view.zoom; // view.zoom is px-per-mm, DPR-independent
+    const localY = -(o.h/2 + armMm);
+    return [ o.x - localY*Math.sin(rad), o.y + localY*Math.cos(rad) ];
+  }
+  function rotateHandleHitTest(o, sx, sy){
+    if(o.kind === "slab") return false;
+    const pw = o.w * view.zoom * devicePixelRatio, ph = o.h * view.zoom * devicePixelRatio;
+    if(pw < HANDLE_MIN_RENDER_PX*devicePixelRatio || ph < HANDLE_MIN_RENDER_PX*devicePixelRatio) return false;
+    const [hx,hy] = worldToScreen(...rotateHandleWorldPos(o));
+    const thresh = (HANDLE_PX*1.1) * devicePixelRatio; // slightly larger than the resize corners -- it's a lone target, not one of four
+    return Math.hypot(sx-hx, sy-hy) <= thresh;
+  }
+  // Snaps to the nearest 15 degrees within a small tolerance so square/45
+  // angles are easy to land on by eye, same spirit as snapAgainstOthers
+  // for position -- still fully freehand outside the tolerance band.
+  const ROTATE_SNAP_STEP_DEG = 15;
+  const ROTATE_SNAP_TOLERANCE_DEG = 3;
+  function rotateByDrag(o, mx, my){
+    const dx = mx - o.x, dy = my - o.y;
+    if(Math.hypot(dx,dy) < 1e-6) return;
+    let deg = Math.atan2(dx, -dy) * 180/Math.PI;
+    const nearest = Math.round(deg/ROTATE_SNAP_STEP_DEG) * ROTATE_SNAP_STEP_DEG;
+    if(Math.abs(deg-nearest) <= ROTATE_SNAP_TOLERANCE_DEG) deg = nearest;
+    o.rot = deg;
+  }
+
   // ================= Slabs (organic-shaped boards from a photo) =================
   // A slab is stored as a normal object (kind:"slab") with a bounding w/h like any
   // other board, plus: imageSrc (data URL), and outline/cracks as arrays of points
@@ -1208,6 +1244,25 @@
           ctx.fillRect(hx-hs/2, hy-hs/2, hs, hs);
           ctx.strokeRect(hx-hs/2, hy-hs/2, hs, hs);
         }
+        // Rotation handle: a lone dot above the top edge, connected by a
+        // thin line -- freehand rotation alongside the exact-degrees field
+        // (David's explicit ask, 2026-09-08), same screen-space distance
+        // regardless of zoom (see ROTATE_HANDLE_DIST_PX).
+        const armPx = ROTATE_HANDLE_DIST_PX * devicePixelRatio;
+        const rhx = 0, rhy = -ph/2 - armPx;
+        ctx.beginPath();
+        ctx.moveTo(0, -ph/2);
+        ctx.lineTo(rhx, rhy);
+        ctx.lineWidth = 1.5 * devicePixelRatio;
+        ctx.strokeStyle = "#c98a2e";
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(rhx, rhy, hs/2 + 1.5*devicePixelRatio, 0, Math.PI*2);
+        ctx.fillStyle = "#ffffff";
+        ctx.fill();
+        ctx.lineWidth = 1.5 * devicePixelRatio;
+        ctx.strokeStyle = "#c98a2e";
+        ctx.stroke();
       }
 
       // label
@@ -1514,6 +1569,11 @@
     }
     const sel = getSel();
     if(sel){
+      if(rotateHandleHitTest(sel, sx, sy)){
+        dragMode = "rotate"; dragObj = sel; dragUndoPending = true;
+        cv.classList.add("dragging");
+        return;
+      }
       const ci = handleHitTest(sel, sx, sy);
       if(ci >= 0){
         dragMode = "resize"; dragObj = sel; resizeCorner = ci; dragUndoPending = true;
@@ -1543,8 +1603,12 @@
     const sx = (clientX - r.left) * devicePixelRatio;
     const sy = (clientY - r.top) * devicePixelRatio;
     const [wx,wy] = screenToWorld(sx,sy);
-    if(dragUndoPending && (dragMode === "resize" || dragMode === "move")){ pushUndo(); dragUndoPending = false; }
-    if(dragMode === "resize" && dragObj){
+    if(dragUndoPending && (dragMode === "resize" || dragMode === "move" || dragMode === "rotate")){ pushUndo(); dragUndoPending = false; }
+    if(dragMode === "rotate" && dragObj){
+      rotateByDrag(dragObj, wx, wy);
+      syncSelPanel();
+      draw();
+    } else if(dragMode === "resize" && dragObj){
       resizeByCorner(dragObj, resizeCorner, wx, wy);
       syncSelPanel();
       draw();
@@ -1561,7 +1625,7 @@
     }
   }
   function pointerUp(){
-    if(dragMode==="move" || dragMode==="resize") autosave();
+    if(dragMode==="move" || dragMode==="resize" || dragMode==="rotate") autosave();
     dragMode = null; dragObj = null;
     cv.classList.remove("dragging");
   }
