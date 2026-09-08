@@ -404,6 +404,18 @@
   </div>
 </div>
 
+<div id="accountModal" class="modalOverlay">
+  <div class="modalBox">
+    <h3 data-i18n="accountHeading">Account</h3>
+    <p id="accountPlanText"></p>
+    <div class="btnrow"><button id="btnManageSubscription" style="flex:1" data-i18n="manageSubBtn">Manage subscription</button></div>
+    <p class="hint" data-i18n="manageSubHint">Cancel, switch monthly/yearly, update your card, or see invoices — all through Stripe's own secure page.</p>
+    <div class="btnrow"><button class="secondary" id="btnOpenCloudFromAccount" style="flex:1" data-i18n="cloudBtn">My projects</button></div>
+    <div id="accountStatus"></div>
+    <div class="btnrow"><button class="secondary" id="btnAccountClose" style="flex:1" data-i18n="closeBtn">Close</button></div>
+  </div>
+</div>
+
 <input type="file" id="fileInput" accept="application/json" style="display:none">
 
 <div id="printArea">
@@ -468,7 +480,10 @@
       restoreSending: "Sending…", restoreSent: "If that email has a CutBoard Pro subscription, check your inbox for an unlock link.",
       cloudSaving: "Saving…", cloudSaved: "Saved.", cloudLoading: "Loading…", cloudDeleteConfirm: "Delete this cloud project?",
       accountProLabel: "CutBoard Pro", noBoardsForAutoArrange: "Add a board or sheet first, then Auto-arrange will pack your pieces onto it.",
-      watermark: "Made with CutBoard Free — ducomaison.fr/cutboard"
+      watermark: "Made with CutBoard Free — ducomaison.fr/cutboard",
+      accountHeading: "Account", manageSubBtn: "Manage subscription",
+      manageSubHint: "Cancel, switch monthly/yearly, update your card, or see invoices — all through Stripe's own secure page.",
+      manageSubLoading: "Opening…", manageSubError: "Could not open the billing portal right now — try again in a moment."
     },
     sv: {
       newBoardHeading: "Ny skiva / bräda", templateLabel: "Mall", templateCustom: "Egen storlek…",
@@ -500,7 +515,10 @@
       restoreSending: "Skickar…", restoreSent: "Om den adressen har en CutBoard Pro-prenumeration hittar du en upplåsningslänk i inkorgen.",
       cloudSaving: "Sparar…", cloudSaved: "Sparat.", cloudLoading: "Laddar…", cloudDeleteConfirm: "Ta bort det här molnprojektet?",
       accountProLabel: "CutBoard Pro", noBoardsForAutoArrange: "Lägg till en skiva eller bräda först, sedan packar Auto-arrangera dina delar på den.",
-      watermark: "Skapad med CutBoard Free — ducomaison.fr/cutboard"
+      watermark: "Skapad med CutBoard Free — ducomaison.fr/cutboard",
+      accountHeading: "Konto", manageSubBtn: "Hantera prenumeration",
+      manageSubHint: "Avsluta, byt mellan månads-/årsvis, uppdatera ditt kort eller se fakturor — allt via Stripes egen säkra sida.",
+      manageSubLoading: "Öppnar…", manageSubError: "Kunde inte öppna faktureringsportalen just nu — försök igen om en liten stund."
     },
     fr: {
       newBoardHeading: "Nouveau panneau", templateLabel: "Modèle", templateCustom: "Taille personnalisée…",
@@ -532,7 +550,10 @@
       restoreSending: "Envoi…", restoreSent: "Si cette adresse a un abonnement CutBoard Pro, vous recevrez un lien de déverrouillage.",
       cloudSaving: "Sauvegarde…", cloudSaved: "Sauvegardé.", cloudLoading: "Chargement…", cloudDeleteConfirm: "Supprimer ce projet cloud ?",
       accountProLabel: "CutBoard Pro", noBoardsForAutoArrange: "Ajoutez d'abord un panneau, puis Arranger auto. y placera vos pièces.",
-      watermark: "Créé avec CutBoard Free — ducomaison.fr/cutboard"
+      watermark: "Créé avec CutBoard Free — ducomaison.fr/cutboard",
+      accountHeading: "Compte", manageSubBtn: "Gérer l'abonnement",
+      manageSubHint: "Résiliez, passez de mensuel à annuel, mettez à jour votre carte ou consultez vos factures — via la page sécurisée de Stripe.",
+      manageSubLoading: "Ouverture…", manageSubError: "Impossible d'ouvrir le portail de facturation pour le moment — réessayez dans un instant."
     }
   };
   function t(key){ return (I18N[settings.lang] && I18N[settings.lang][key]) || I18N.en[key] || key; }
@@ -1951,10 +1972,28 @@
   document.getElementById("buyMonthlyLink").href = PAYMENT_LINK_MONTHLY;
   document.getElementById("buyYearlyLink").href = PAYMENT_LINK_YEARLY;
   document.getElementById("btnAccount").addEventListener("click", ()=>{
-    if (isPro()) openModal("cloudModal"); else openModal("upgradeModal");
-    document.getElementById("cloudProOnlyNote").style.display = isPro() ? "none" : "";
-    document.getElementById("cloudProArea").style.display = isPro() ? "" : "none";
-    if (isPro()) refreshCloudList();
+    if (isPro()) {
+      document.getElementById("accountStatus").textContent = "";
+      const planLabel = license.plan === "yearly" ? t("yearlyLabel") : t("monthlyLabel");
+      document.getElementById("accountPlanText").textContent = `${t("accountProLabel")} — ${planLabel}`;
+      openModal("accountModal");
+    } else {
+      openModal("upgradeModal");
+    }
+  });
+  document.getElementById("btnAccountClose").addEventListener("click", ()=> closeModal("accountModal"));
+  document.getElementById("btnOpenCloudFromAccount").addEventListener("click", ()=>{
+    closeModal("accountModal");
+    document.getElementById("btnCloud").click();
+  });
+  document.getElementById("btnManageSubscription").addEventListener("click", async ()=>{
+    const statusEl = document.getElementById("accountStatus");
+    statusEl.textContent = t("manageSubLoading");
+    try{
+      const res = await fetch(`${API_BASE}/billing/portal-session`, { headers: { Authorization: `Bearer ${license.token}` } });
+      if(res.ok){ const data = await res.json(); location.href = data.url; }
+      else { statusEl.textContent = t("manageSubError"); }
+    }catch(e){ statusEl.textContent = t("manageSubError"); }
   });
   document.getElementById("btnUpgradeBanner").addEventListener("click", ()=> openModal("upgradeModal"));
   document.getElementById("btnUpgradeClose").addEventListener("click", ()=> closeModal("upgradeModal"));
