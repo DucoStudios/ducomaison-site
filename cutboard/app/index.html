@@ -82,8 +82,23 @@
   #left{
     width:var(--panel-w); flex:none; background:var(--limestone);
     border-right:1px solid var(--line); overflow-y:auto; padding:16px;
+    position:relative; transition: width .15s ease, padding .15s ease;
   }
   #left h2{ font-size:13px; margin:0 0 6px; font-weight:800; }
+  .panelCollapseBtn{
+    position:absolute; top:8px; right:8px; z-index:6;
+    width:24px; height:24px; border-radius:50%; padding:0; line-height:1;
+    background:#fff; border:1.5px solid var(--line); cursor:pointer;
+    display:flex; align-items:center; justify-content:center; font-size:13px; color:var(--ink-2);
+  }
+  .panelCollapseBtn:hover{ background:var(--paper); color:var(--ink); }
+  #rightCollapseBtn{ right:auto; left:8px; }
+  #left.collapsed{ width:34px; padding:8px 4px; }
+  #left.collapsed .panelBody{ display:none; }
+  #left.collapsed #leftCollapseBtn{ position:static; margin:0 auto; }
+  #right.collapsed{ width:34px; padding:8px 4px; }
+  #right.collapsed .panelBody{ display:none; }
+  #right.collapsed #rightCollapseBtn{ position:static; margin:0 auto; }
   #left .hint{ font-size:11.5px; color:var(--ink-2); margin-bottom:10px; line-height:1.4; }
 
   #objList{ margin-top:14px; border-top:1px solid var(--line); padding-top:10px; }
@@ -113,7 +128,7 @@
   #right{
     width:var(--panel-w); flex:none; background:var(--limestone);
     border-left:1px solid var(--line); overflow-y:auto; padding:16px;
-    display:none;
+    display:none; position:relative; transition: width .15s ease, padding .15s ease;
   }
   #right.show{ display:block; }
   #right h2{ font-size:13px; margin:0 0 10px; font-weight:800; }
@@ -203,6 +218,17 @@
       box-shadow:0 0 28px rgba(0,0,0,.3);
     }
     .btnrow{ flex-wrap:wrap; }
+
+    /* The inline collapse toggle is a desktop/tablet thing -- on mobile
+       #left/#right are already an open/closed overlay drawer via
+       #btnMenu, so hide the new buttons and force-override .collapsed
+       (a stale localStorage preference from a wider screen) back to the
+       normal mobile drawer width. Same specificity as the .collapsed
+       rule above (#left.collapsed), so source order inside this same
+       stylesheet is what makes this one win at this viewport width. */
+    #leftCollapseBtn, #rightCollapseBtn{ display:none; }
+    #left.collapsed, #right.collapsed{ width:85vw; max-width:320px; padding:16px; }
+    #left.collapsed .panelBody, #right.collapsed .panelBody{ display:block; }
   }
 
   #printArea{ display:none; }
@@ -254,6 +280,8 @@
 
   <div id="main">
     <div id="left">
+      <button class="panelCollapseBtn" id="leftCollapseBtn" aria-label="Collapse panel" title="Collapse panel">‹</button>
+      <div class="panelBody" id="leftBody">
       <h2 data-i18n="newBoardHeading">New board / sheet</h2>
       <label data-i18n="templateLabel">Template</label>
       <select id="templateSelect">
@@ -293,6 +321,7 @@
         </select>
         <div id="objRows" style="margin-top:8px;"></div>
       </div>
+      </div>
     </div>
 
     <div id="canvasWrap">
@@ -306,6 +335,8 @@
     </div>
 
     <div id="right">
+      <button class="panelCollapseBtn" id="rightCollapseBtn" aria-label="Collapse panel" title="Collapse panel">›</button>
+      <div class="panelBody" id="rightBody">
       <h2 data-i18n="selectedBoardHeading">Selected board</h2>
       <div id="selYield" class="hint" style="display:none;margin:-4px 0 10px;"></div>
       <label data-i18n="nameLabel">Name</label>
@@ -324,6 +355,7 @@
       <div class="btnrow">
         <button class="secondary" id="btnDup" data-i18n="duplicateBtn">Duplicate</button>
         <button class="danger" id="btnDel" data-i18n="deleteBtn">Delete</button>
+      </div>
       </div>
     </div>
   </div>
@@ -483,7 +515,8 @@
       watermark: "Made with CutBoard Free — ducomaison.fr/cutboard",
       accountHeading: "Account", manageSubBtn: "Manage subscription",
       manageSubHint: "Cancel, switch monthly/yearly, update your card, or see invoices — all through Stripe's own secure page.",
-      manageSubLoading: "Opening…", manageSubError: "Could not open the billing portal right now — try again in a moment."
+      manageSubLoading: "Opening…", manageSubError: "Could not open the billing portal right now — try again in a moment.",
+      collapsePanel: "Collapse panel", expandPanel: "Expand panel"
     },
     sv: {
       newBoardHeading: "Ny skiva / bräda", templateLabel: "Mall", templateCustom: "Egen storlek…",
@@ -518,7 +551,8 @@
       watermark: "Skapad med CutBoard Free — ducomaison.fr/cutboard",
       accountHeading: "Konto", manageSubBtn: "Hantera prenumeration",
       manageSubHint: "Avsluta, byt mellan månads-/årsvis, uppdatera ditt kort eller se fakturor — allt via Stripes egen säkra sida.",
-      manageSubLoading: "Öppnar…", manageSubError: "Kunde inte öppna faktureringsportalen just nu — försök igen om en liten stund."
+      manageSubLoading: "Öppnar…", manageSubError: "Kunde inte öppna faktureringsportalen just nu — försök igen om en liten stund.",
+      collapsePanel: "Fäll ihop panelen", expandPanel: "Fäll ut panelen"
     },
     fr: {
       newBoardHeading: "Nouveau panneau", templateLabel: "Modèle", templateCustom: "Taille personnalisée…",
@@ -553,7 +587,8 @@
       watermark: "Créé avec CutBoard Free — ducomaison.fr/cutboard",
       accountHeading: "Compte", manageSubBtn: "Gérer l'abonnement",
       manageSubHint: "Résiliez, passez de mensuel à annuel, mettez à jour votre carte ou consultez vos factures — via la page sécurisée de Stripe.",
-      manageSubLoading: "Ouverture…", manageSubError: "Impossible d'ouvrir le portail de facturation pour le moment — réessayez dans un instant."
+      manageSubLoading: "Ouverture…", manageSubError: "Impossible d'ouvrir le portail de facturation pour le moment — réessayez dans un instant.",
+      collapsePanel: "Réduire le panneau", expandPanel: "Déplier le panneau"
     }
   };
   function t(key){ return (I18N[settings.lang] && I18N[settings.lang][key]) || I18N.en[key] || key; }
@@ -562,6 +597,13 @@
     document.querySelectorAll("[data-i18n]").forEach(el => { el.textContent = t(el.getAttribute("data-i18n")); });
     document.querySelectorAll("[data-i18n-placeholder]").forEach(el => { el.placeholder = t(el.getAttribute("data-i18n-placeholder")); });
     updateUnitLabels();
+    // Panel collapse buttons: textContent is a directional arrow, not
+    // translatable, but title/aria-label are -- refresh them for whatever
+    // collapsed/expanded state each panel is already in.
+    ["left","right"].forEach(side => {
+      const panel = document.getElementById(side);
+      if (panel) setPanelCollapsed(side, panel.classList.contains("collapsed"));
+    });
   }
   function unitAbbrev(){ return settings.units === "in" ? "in" : "mm"; }
   function updateUnitLabels(){
@@ -2136,6 +2178,45 @@
   document.getElementById("btnMenu").addEventListener("click", ()=>{
     document.getElementById("left").classList.toggle("open");
   });
+
+  // ---------- collapsible left/right panels (desktop/tablet) ----------
+  // Separate from the mobile hamburger-drawer above (see the @media
+  // (max-width:860px) override in the CSS): David's testing found the
+  // side panels always eat screen space with no way to reclaim it above
+  // the mobile breakpoint, not just on phones. Persisted per-panel so a
+  // preference survives reloads, but only ever APPLIED above the mobile
+  // breakpoint -- checked at both toggle-time and restore-time, so a
+  // preference set on a wide window never corrupts the mobile drawer.
+  const LS_PANELS = "cutboard_panels_v1";
+  const MOBILE_BREAKPOINT = 860;
+  function loadPanelPrefs(){
+    try { return JSON.parse(localStorage.getItem(LS_PANELS)) || {}; } catch(e) { return {}; }
+  }
+  function savePanelPrefs(prefs){
+    try { localStorage.setItem(LS_PANELS, JSON.stringify(prefs)); } catch(e) {}
+  }
+  function setPanelCollapsed(side, collapsed){
+    const panel = document.getElementById(side);
+    const btn = document.getElementById(side + "CollapseBtn");
+    panel.classList.toggle("collapsed", collapsed);
+    btn.textContent = side === "left" ? (collapsed ? "›" : "‹") : (collapsed ? "‹" : "›");
+    btn.title = collapsed ? t("expandPanel") : t("collapsePanel");
+    btn.setAttribute("aria-label", btn.title);
+  }
+  function togglePanel(side){
+    const collapsed = !document.getElementById(side).classList.contains("collapsed");
+    setPanelCollapsed(side, collapsed);
+    const prefs = loadPanelPrefs();
+    prefs[side] = collapsed;
+    savePanelPrefs(prefs);
+  }
+  document.getElementById("leftCollapseBtn").addEventListener("click", ()=> togglePanel("left"));
+  document.getElementById("rightCollapseBtn").addEventListener("click", ()=> togglePanel("right"));
+  if (window.innerWidth > MOBILE_BREAKPOINT) {
+    const prefs = loadPanelPrefs();
+    if (prefs.left) setPanelCollapsed("left", true);
+    if (prefs.right) setPanelCollapsed("right", true);
+  }
 
   // ---------- close modals on backdrop click ----------
   document.querySelectorAll(".modalOverlay").forEach(overlay => {
