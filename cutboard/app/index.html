@@ -887,6 +887,54 @@
     o.w = newW; o.h = newH; o.x = cx; o.y = cy;
   }
 
+  // ---------- resize by dragging ONE edge (changes only w or only h) ----------
+  // David's explicit ask, 2026-09-08: grab just one side to make a board
+  // longer or wider, instead of only the corners (which always change both
+  // dimensions together). Order: top, right, bottom, left -- same
+  // convention as objCorners' top-left/top-right/bottom-right/bottom-left.
+  function objEdgeMidpoints(o){
+    const rad = o.rot * Math.PI/180;
+    const cos = Math.cos(rad), sin = Math.sin(rad);
+    const hw = o.w/2, hh = o.h/2;
+    const pts = [[0,-hh],[hw,0],[0,hh],[-hw,0]];
+    return pts.map(([dx,dy])=>[ o.x + dx*cos - dy*sin, o.y + dx*sin + dy*cos ]);
+  }
+  function edgeHandleHitTest(o, sx, sy){
+    if(o.kind === "slab") return -1;
+    const pw = o.w * view.zoom * devicePixelRatio;
+    const ph = o.h * view.zoom * devicePixelRatio;
+    if(pw < HANDLE_MIN_RENDER_PX*devicePixelRatio || ph < HANDLE_MIN_RENDER_PX*devicePixelRatio) return -1;
+    const mids = objEdgeMidpoints(o).map(([wx,wy]) => worldToScreen(wx,wy));
+    const thresh = (HANDLE_PX*0.9) * devicePixelRatio;
+    for(let i=0;i<4;i++){
+      const [hx,hy] = mids[i];
+      if(Math.hypot(sx-hx, sy-hy) <= thresh) return i;
+    }
+    return -1;
+  }
+  function resizeByEdge(o, edgeIndex, mx, my){
+    const rad = o.rot * Math.PI/180;
+    const cos = Math.cos(rad), sin = Math.sin(rad);
+    // Fixed anchor = the OPPOSITE edge's midpoint (index+2 mod 4), same
+    // "keep the far side still" principle as resizeByCorner.
+    const oppLocal = [[0, o.h/2], [-o.w/2, 0], [0, -o.h/2], [o.w/2, 0]][edgeIndex];
+    const fixedX = o.x + oppLocal[0]*cos - oppLocal[1]*sin;
+    const fixedY = o.y + oppLocal[0]*sin + oppLocal[1]*cos;
+    const dx = mx - fixedX, dy = my - fixedY;
+    const ldx = dx*cos + dy*sin, ldy = -dx*sin + dy*cos;
+    if(edgeIndex === 0 || edgeIndex === 2){ // top/bottom -> height only
+      const newH = Math.max(2, Math.abs(ldy));
+      o.h = newH;
+      o.x = fixedX - (ldy/2)*sin;
+      o.y = fixedY + (ldy/2)*cos;
+    } else { // left/right -> width only
+      const newW = Math.max(2, Math.abs(ldx));
+      o.w = newW;
+      o.x = fixedX + (ldx/2)*cos;
+      o.y = fixedY + (ldx/2)*sin;
+    }
+  }
+
   // ---------- rotate by dragging a handle above the object ----------
   // Same idea as the corner-resize handles: a freehand way to do the same
   // thing the numeric Rotation field already does, without removing that
@@ -1307,6 +1355,20 @@
           ctx.fillRect(hx-hs/2, hy-hs/2, hs, hs);
           ctx.strokeRect(hx-hs/2, hy-hs/2, hs, hs);
         }
+        // Edge handles: grab just one side to change only that dimension
+        // (width OR height), instead of a corner which always changes
+        // both -- David's explicit ask, 2026-09-08. Drawn as short bars,
+        // oriented along the edge, so they read as "stretch this way"
+        // rather than looking like a fifth corner handle.
+        const barLong = 16 * devicePixelRatio, barShort = 7 * devicePixelRatio;
+        const edgeMids = [[0,-ph/2],[pw/2,0],[0,ph/2],[-pw/2,0]];
+        edgeMids.forEach(([ex,ey], i)=>{
+          const horizontalBar = (i === 0 || i === 2); // top/bottom edges get a wide, short bar
+          const bw = horizontalBar ? barLong : barShort;
+          const bh = horizontalBar ? barShort : barLong;
+          ctx.fillRect(ex-bw/2, ey-bh/2, bw, bh);
+          ctx.strokeRect(ex-bw/2, ey-bh/2, bw, bh);
+        });
         // Rotation handle: a lone dot above the top edge, connected by a
         // thin line -- freehand rotation alongside the exact-degrees field
         // (David's explicit ask, 2026-09-08), same screen-space distance
@@ -1604,6 +1666,7 @@
   let objStart = {x:0,y:0};
   let panStart = {x:0,y:0};
   let resizeCorner = -1;
+  let resizeEdge = -1;
   let dragUndoPending = false; // consumed on the first real pointerMove of a drag, see pointerDown
 
   function evtWorld(e){
@@ -1643,6 +1706,12 @@
         cv.classList.add("dragging");
         return;
       }
+      const ei = edgeHandleHitTest(sel, sx, sy);
+      if(ei >= 0){
+        dragMode = "resizeEdge"; dragObj = sel; resizeEdge = ei; dragUndoPending = true;
+        cv.classList.add("dragging");
+        return;
+      }
     }
     const hit = hitTest(wx,wy);
     if(hit){
@@ -1666,13 +1735,17 @@
     const sx = (clientX - r.left) * devicePixelRatio;
     const sy = (clientY - r.top) * devicePixelRatio;
     const [wx,wy] = screenToWorld(sx,sy);
-    if(dragUndoPending && (dragMode === "resize" || dragMode === "move" || dragMode === "rotate")){ pushUndo(); dragUndoPending = false; }
+    if(dragUndoPending && (dragMode === "resize" || dragMode === "resizeEdge" || dragMode === "move" || dragMode === "rotate")){ pushUndo(); dragUndoPending = false; }
     if(dragMode === "rotate" && dragObj){
       rotateByDrag(dragObj, wx, wy);
       syncSelPanel();
       draw();
     } else if(dragMode === "resize" && dragObj){
       resizeByCorner(dragObj, resizeCorner, wx, wy);
+      syncSelPanel();
+      draw();
+    } else if(dragMode === "resizeEdge" && dragObj){
+      resizeByEdge(dragObj, resizeEdge, wx, wy);
       syncSelPanel();
       draw();
     } else if(dragMode === "move" && dragObj){
@@ -1688,7 +1761,7 @@
     }
   }
   function pointerUp(){
-    if(dragMode==="move" || dragMode==="resize" || dragMode==="rotate") autosave();
+    if(dragMode==="move" || dragMode==="resize" || dragMode==="resizeEdge" || dragMode==="rotate") autosave();
     dragMode = null; dragObj = null;
     cv.classList.remove("dragging");
   }
