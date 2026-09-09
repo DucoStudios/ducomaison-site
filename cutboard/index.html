@@ -99,8 +99,8 @@
   #unitSwitch .knob{ position:absolute; top:2px; left:2px; width:22px; height:22px; border-radius:50%; background:var(--gold); transition:left .15s; }
   #unitSwitch.yearly .knob{ left:26px; }
 
-  .priceGrid{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
-  @media (max-width:820px){ .priceGrid{ grid-template-columns:1fr; max-width:380px; margin:0 auto; } }
+  .priceGrid{ display:grid; grid-template-columns:repeat(2,1fr); gap:20px; max-width:640px; margin:0 auto; }
+  @media (max-width:640px){ .priceGrid{ grid-template-columns:1fr; max-width:380px; } }
   .priceCard{ background:#fff; border:1.5px solid var(--line); border-radius:20px; padding:28px 24px; }
   .priceCard.highlight{ border-color:var(--gold); box-shadow:0 12px 30px rgba(194,96,60,.16); position:relative; }
   .priceCard .tag{ position:absolute; top:-13px; left:50%; transform:translateX(-50%); background:var(--gold); color:#fff;
@@ -292,13 +292,6 @@
             <li>All Free features</li>
           </ul>
           <a class="btn primary" id="proBuyLink" href="https://buy.stripe.com/fZu28q0Oi3bq3Xz0yV53O0a" target="_blank" rel="noopener">Subscribe</a>
-        </div>
-        <div class="priceCard">
-          <h3>Teams &amp; shops</h3>
-          <div class="amt" style="font-size:22px;">Same Pro plan</div>
-          <div class="per">shared per person</div>
-          <p style="font-size:13px;margin:0 0 18px;">Every workshop we've talked to just gets one Pro subscription per person who plans cuts. No separate team tier (yet) — tell us if that's wrong for you.</p>
-          <a class="btn ghost" href="mailto:contact@ducomaison.fr?subject=CutBoard%20for%20teams">Get in touch</a>
         </div>
       </div>
     </div>
