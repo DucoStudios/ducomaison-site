@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>CutBoard — Duco</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%AA%9A%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20x%3D%223%22%20y%3D%225%22%20width%3D%2226%22%20height%3D%2222%22%20rx%3D%223%22%20fill%3D%22none%22%20stroke%3D%22%23241f1a%22%20stroke-width%3D%222.2%22%2F%3E%3Cline%20x1%3D%2218%22%20y1%3D%225%22%20x2%3D%2218%22%20y2%3D%2227%22%20stroke%3D%22%23241f1a%22%20stroke-width%3D%222.2%22%20stroke-dasharray%3D%223%203%22%2F%3E%3Crect%20x%3D%225.5%22%20y%3D%227.5%22%20width%3D%2210%22%20height%3D%2217%22%20rx%3D%221.5%22%20fill%3D%22%23c2603c%22%2F%3E%3C%2Fsvg%3E">
 <style>
   :root{
     --limestone:#f5efe3;
@@ -67,7 +67,8 @@
     border-bottom:1px solid var(--line);
     flex:none;
   }
-  header h1{ font-size:19px; margin:0; color:var(--ink); white-space:nowrap; font-weight:800; }
+  header h1{ font-size:19px; margin:0; color:var(--ink); white-space:nowrap; font-weight:800; display:flex; align-items:center; gap:8px; }
+  header h1 svg{ flex:none; }
   header .proj{ flex:1; max-width:260px; }
   header .proj input{ background:var(--lavender); border:1.5px solid var(--lavender-border); color:var(--ink); }
   header .proj input::placeholder{ color:#8b8fa8; }
@@ -256,7 +257,7 @@
 <div id="app">
   <header>
     <button class="secondary" id="btnMenu" aria-label="Toggle panel">☰</button>
-    <h1>🪚 CutBoard</h1>
+    <h1><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true"><rect x="3" y="5" width="26" height="22" rx="3" fill="none" stroke="#241f1a" stroke-width="2.4"/><line x1="18" y1="5" x2="18" y2="27" stroke="#241f1a" stroke-width="2.4" stroke-dasharray="3 3"/><rect x="5.5" y="7.5" width="10" height="17" rx="1.5" fill="#c2603c"/></svg>CutBoard</h1>
     <div class="proj"><input id="projName" type="text" data-i18n-placeholder="projNamePlaceholder" placeholder="Project name (e.g. Jessica's shutters)"></div>
     <div class="kerf">
       <span data-i18n="sawKerfLabel">Saw kerf</span>
@@ -272,7 +273,7 @@
       <button class="secondary" id="btnExport" data-i18n="exportBtn">Export JSON</button>
       <button class="secondary" id="btnImport" data-i18n="importBtn">Import JSON</button>
       <button class="secondary" id="btnCloud" data-i18n="cloudBtn">My projects</button>
-      <button class="secondary" id="btnSettings" aria-label="Settings">⚙</button>
+      <button class="secondary" id="btnSettings" aria-label="Settings"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
       <button id="btnAccount" data-i18n="upgradeBtn">Upgrade to Pro</button>
     </div>
   </header>
