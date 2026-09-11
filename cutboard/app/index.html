@@ -683,6 +683,10 @@
   // signed license token cached in localStorage and periodically
   // refreshed against that API.
   const API_BASE = "https://portal.ducomaison.fr/api/cutboard";
+  try {
+    const trackBody = new Blob([JSON.stringify({ path: location.pathname })], { type: "application/json" });
+    navigator.sendBeacon(`${API_BASE}/track`, trackBody);
+  } catch(e) {}
   const LS_LICENSE = "cutboard_license_v1";
   const FREE_MAX_BOARDS = 1;
   const FREE_MAX_PIECES = 6;

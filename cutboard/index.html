@@ -343,6 +343,11 @@
 <script>
 (function(){
   "use strict";
+  try {
+    var body = new Blob([JSON.stringify({ path: location.pathname })], { type: "application/json" });
+    navigator.sendBeacon("https://portal.ducomaison.fr/api/cutboard/track", body);
+  } catch(e) {}
+
   document.getElementById("btnMobileNav").addEventListener("click", function(){
     document.getElementById("navLinks").classList.toggle("open");
   });
