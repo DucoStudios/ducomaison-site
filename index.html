@@ -2396,5 +2396,11 @@
   </div>
 </footer>
 </div>
+<script>
+  try {
+    var b = new Blob([JSON.stringify({ path: location.pathname })], { type: "application/json" });
+    navigator.sendBeacon("https://portal.ducomaison.fr/api/cutboard/track", b);
+  } catch(e) {}
+</script>
 </body>
 </html>
