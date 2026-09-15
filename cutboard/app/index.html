@@ -2246,12 +2246,16 @@
     // of looking like Auto-arrange piled it on top of something.
     const unplaced = pieces.filter(p => !p._placed);
     if(unplaced.length){
+      // A gap tied to `kerf` (often just a few mm) read as "touching" the
+      // board at normal zoom -- use a fixed, generous gap instead so the
+      // leftover row reads as clearly set aside, not another cramped shelf.
+      const STAGE_GAP = 150;
       const stageLeft = Math.min(...boards.map(b => b.x - b.w/2));
-      const stageTop = Math.max(...boards.map(b => b.y + b.h/2)) + kerf * 5;
+      const stageTop = Math.max(...boards.map(b => b.y + b.h/2)) + STAGE_GAP;
       let stageX = stageLeft;
       for(const p of unplaced){
         p.x = stageX + p.w/2; p.y = stageTop + p.h/2;
-        stageX += p.w + kerf * 5;
+        stageX += p.w + STAGE_GAP;
       }
     }
 
