@@ -274,6 +274,7 @@
       <button class="secondary" id="btnImport" data-i18n="importBtn">Import JSON</button>
       <button class="secondary" id="btnCloud" data-i18n="cloudBtn">My projects</button>
       <button class="secondary" id="btnSettings" aria-label="Settings"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+      <button class="secondary" id="btnLogin" data-i18n="loginBtn">Log in</button>
       <button id="btnAccount" data-i18n="upgradeBtn">Upgrade to Pro</button>
     </div>
   </header>
@@ -495,7 +496,7 @@
       sortHDesc: "Length, largest → smallest", sortHAsc: "Length, smallest → largest", sortAreaDesc: "Area, largest → smallest",
       projNamePlaceholder: "Project name (e.g. Jessica's shutters)", sawKerfLabel: "Saw kerf",
       autoArrangeBtn: "Auto-arrange", printBtn: "Print", exportBtn: "Export JSON", importBtn: "Import JSON",
-      cloudBtn: "My projects", upgradeBtn: "Upgrade to Pro", selectedBoardHeading: "Selected board",
+      cloudBtn: "My projects", upgradeBtn: "Upgrade to Pro", loginBtn: "Log in", selectedBoardHeading: "Selected board",
       rotationLabel: "Rotation (degrees)", baseBoardShort: "Base board (background)", duplicateBtn: "Duplicate", deleteBtn: "Delete",
       partsListHeading: "Parts list", codeCol: "Code", rotationCol: "Rotation", boardCol: "Board",
       settingsHeading: "Settings", languageLabel: "Language", unitsLabel: "Units", unitsMm: "Millimeters (mm)", unitsIn: "Inches (in)",
@@ -531,7 +532,7 @@
       sortHDesc: "Längd, störst → minst", sortHAsc: "Längd, minst → störst", sortAreaDesc: "Area, störst → minst",
       projNamePlaceholder: "Projektnamn (t.ex. Jessicas luckor)", sawKerfLabel: "Sågspår",
       autoArrangeBtn: "Auto-arrangera", printBtn: "Skriv ut", exportBtn: "Exportera JSON", importBtn: "Importera JSON",
-      cloudBtn: "Mina projekt", upgradeBtn: "Uppgradera till Pro", selectedBoardHeading: "Markerad skiva",
+      cloudBtn: "Mina projekt", upgradeBtn: "Uppgradera till Pro", loginBtn: "Logga in", selectedBoardHeading: "Markerad skiva",
       rotationLabel: "Rotation (grader)", baseBoardShort: "Grundskiva (bakgrund)", duplicateBtn: "Duplicera", deleteBtn: "Ta bort",
       partsListHeading: "Detaljlista", codeCol: "Kod", rotationCol: "Rotation", boardCol: "Skiva",
       settingsHeading: "Inställningar", languageLabel: "Språk", unitsLabel: "Enheter", unitsMm: "Millimeter (mm)", unitsIn: "Tum (in)",
@@ -567,7 +568,7 @@
       sortHDesc: "Longueur, décroissant", sortHAsc: "Longueur, croissant", sortAreaDesc: "Surface, décroissant",
       projNamePlaceholder: "Nom du projet (ex. Volets de Jessica)", sawKerfLabel: "Trait de scie",
       autoArrangeBtn: "Arranger auto.", printBtn: "Imprimer", exportBtn: "Exporter JSON", importBtn: "Importer JSON",
-      cloudBtn: "Mes projets", upgradeBtn: "Passer à Pro", selectedBoardHeading: "Panneau sélectionné",
+      cloudBtn: "Mes projets", upgradeBtn: "Passer à Pro", loginBtn: "Se connecter", selectedBoardHeading: "Panneau sélectionné",
       rotationLabel: "Rotation (degrés)", baseBoardShort: "Panneau de fond", duplicateBtn: "Dupliquer", deleteBtn: "Supprimer",
       partsListHeading: "Liste des pièces", codeCol: "Code", rotationCol: "Rotation", boardCol: "Panneau",
       settingsHeading: "Paramètres", languageLabel: "Langue", unitsLabel: "Unités", unitsMm: "Millimètres (mm)", unitsIn: "Pouces (in)",
@@ -727,6 +728,12 @@
       if (isPro()) { btn.textContent = t("accountProLabel"); btn.classList.add("secondary"); }
       else { btn.textContent = t("upgradeBtn"); btn.classList.remove("secondary"); }
     }
+    // Only a Free visitor needs a way to pull in a license they already
+    // paid for on another device/browser -- once isPro() is true there is
+    // nothing left to log into, so hide it (matches how upgradeBanner
+    // already hides itself for Pro, see below).
+    const loginBtn = document.getElementById("btnLogin");
+    if (loginBtn) loginBtn.hidden = isPro();
     const banner = document.getElementById("upgradeBanner");
     if (banner) banner.classList.toggle("show", !isPro());
     const bannerText = document.getElementById("upgradeBannerText");
@@ -2115,6 +2122,7 @@
       else { statusEl.textContent = t("manageSubError"); }
     }catch(e){ statusEl.textContent = t("manageSubError"); }
   });
+  document.getElementById("btnLogin").addEventListener("click", ()=>{ closeModal("upgradeModal"); openModal("restoreModal"); });
   document.getElementById("btnUpgradeBanner").addEventListener("click", ()=> openModal("upgradeModal"));
   document.getElementById("btnUpgradeClose").addEventListener("click", ()=> closeModal("upgradeModal"));
   document.getElementById("btnShowRestore").addEventListener("click", ()=>{ closeModal("upgradeModal"); openModal("restoreModal"); });
