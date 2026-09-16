@@ -2189,11 +2189,15 @@
   document.getElementById("templateSelect").addEventListener("change", (e)=> applyTemplate(e.target.value));
 
   // ================= Auto-arrange =================
-  // Shelf/guillotine packing: sorts pieces by their longer side, packs
-  // them left-to-right/top-to-bottom onto each axis-aligned, non-slab
-  // board with `kerf` gaps, rotating a piece 90° if that's the only way
-  // it fits. Pieces that fit nowhere are left exactly where they were --
-  // same "unplaced" concept computeAssignments() already tracks for print.
+  // Guillotine free-rectangle packing (best-short-side-fit): each board
+  // keeps a list of free rectangles, starting as the whole board. Placing
+  // a piece splits its chosen free rect into whatever's left to its right
+  // and below it, so leftover space next to a SHORT piece stays available
+  // for later, smaller pieces -- an earlier single-shared-row-height
+  // version wrote off exactly that kind of gap for the rest of the row
+  // (real bug, seen live 2026-09-16: a wide-but-short piece left a large
+  // empty strip under it that nothing was ever tried against, even though
+  // several smaller pieces would have fit there).
   function autoArrange(){
     const boards = objects
       .filter(o => o.isBoard && o.kind !== "slab" && Math.abs(o.rot % 360) < 0.01)
@@ -2201,41 +2205,51 @@
     if(!boards.length){ alert(t("noBoardsForAutoArrange")); return; }
     pushUndo();
     const pieces = objects.filter(o => !o.isBoard).sort((a,b) => Math.max(b.w,b.h) - Math.max(a.w,a.h));
+    const contains = (a,b) => a.x<=b.x+1e-6 && a.y<=b.y+1e-6 && a.x+a.w>=b.x+b.w-1e-6 && a.y+a.h>=b.y+b.h-1e-6;
 
     for(const board of boards){
-      const left = board.x - board.w/2, top = board.y - board.h/2;
-      let cursorX = left, cursorY = top, shelfH = 0;
+      let freeRects = [{ x: board.x - board.w/2, y: board.y - board.h/2, w: board.w, h: board.h }];
       for(const p of pieces){
         if(p._placed) continue;
-        // Try both orientations, first in the current row then (if needed)
-        // a fresh row below it. The old code picked an orientation ONCE,
-        // based only on whether it fit the board's outer bounds -- so a
-        // piece that only fit rotated into what was left of the board
-        // AFTER a shelf-wrap was skipped even though there was real room
-        // for it, and kept its pre-arrange position (often still sitting
-        // on the board from a Duplicate moments earlier), which then
-        // visibly overlapped whatever Auto-arrange packed there instead.
-        // Real bug, seen live 2026-09-15.
-        const candidates = [
-          { fw: p.w, fh: p.h, rotated: false, wrap: false },
-          { fw: p.h, fh: p.w, rotated: true, wrap: false },
-          { fw: p.w, fh: p.h, rotated: false, wrap: true },
-          { fw: p.h, fh: p.w, rotated: true, wrap: true }
-        ];
-        for(const c of candidates){
-          let tryX = cursorX, tryY = cursorY, tryShelfH = shelfH;
-          if(c.wrap){ tryY = cursorY + shelfH + kerf; tryX = left; tryShelfH = 0; }
-          if(tryX + c.fw > left + board.w + 1e-6) continue;
-          if(tryY + c.fh > top + board.h + 1e-6) continue;
-
-          p.rot = c.rotated ? 90 : 0;
-          p.x = tryX + c.fw/2; p.y = tryY + c.fh/2;
-          cursorX = tryX + c.fw + kerf;
-          cursorY = tryY;
-          shelfH = Math.max(tryShelfH, c.fh);
-          p._placed = true;
-          break;
+        // Best-short-side-fit: try both orientations against every free
+        // rect still open on this board, and keep whichever leaves the
+        // tightest leftover margin (ties broken by the smaller free rect,
+        // so bigger free rects stay available for bigger pieces).
+        let best = null;
+        for(const r of freeRects){
+          for(const cand of [{ fw: p.w, fh: p.h, rotated: false }, { fw: p.h, fh: p.w, rotated: true }]){
+            if(cand.fw > r.w + 1e-6 || cand.fh > r.h + 1e-6) continue;
+            const score = Math.min(r.w - cand.fw, r.h - cand.fh);
+            if(!best || score < best.score - 1e-6 || (Math.abs(score - best.score) < 1e-6 && r.w * r.h < best.r.w * best.r.h)){
+              best = { r, fw: cand.fw, fh: cand.fh, rotated: cand.rotated, score };
+            }
+          }
         }
+        if(!best) continue; // doesn't fit in anything left on this board, try the next board
+
+        const { r, fw, fh, rotated } = best;
+        p.rot = rotated ? 90 : 0;
+        p.x = r.x + fw/2; p.y = r.y + fh/2;
+        p._placed = true;
+
+        // Split the used rect into an L of leftover space: a strip to the
+        // right of the piece and a strip below it. Whichever leftover
+        // axis is narrower gets the full-length strip, so splits stay
+        // usable rectangles instead of thin slivers on both sides.
+        freeRects = freeRects.filter(f => f !== r);
+        const rightW = r.w - fw - kerf, bottomH = r.h - fh - kerf;
+        const rectRight = rightW <= bottomH
+          ? { x: r.x + fw + kerf, y: r.y, w: rightW, h: fh }
+          : { x: r.x + fw + kerf, y: r.y, w: rightW, h: r.h };
+        const rectBottom = rightW <= bottomH
+          ? { x: r.x, y: r.y + fh + kerf, w: r.w, h: bottomH }
+          : { x: r.x, y: r.y + fh + kerf, w: fw, h: bottomH };
+        for(const nr of [rectRight, rectBottom]){
+          if(nr.w > 1e-6 && nr.h > 1e-6) freeRects.push(nr);
+        }
+        // Drop any free rect now fully covered by another, so the list
+        // doesn't accumulate redundant candidates as the board fills up.
+        freeRects = freeRects.filter((f, i) => !freeRects.some((g, j) => i !== j && contains(g, f)));
       }
     }
 
