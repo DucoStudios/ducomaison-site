@@ -124,8 +124,155 @@
     <priority>0.7</priority>
   </url>
 
-  <url><loc>https://ducomaison.fr/luckor/</loc><lastmod>2026-09-27</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://ducomaison.fr/checklista/</loc><lastmod>2026-09-27</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://ducomaison.fr/david/</loc><lastmod>2026-09-27</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-
+  <!-- genererat av build-blog.ts: start -->
+  <url>
+    <loc>https://ducomaison.fr/luckor/</loc>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://ducomaison.fr/luckor/" />
+    <xhtml:link rel="alternate" hreflang="nb" href="https://ducomaison.fr/no/skodder/" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://ducomaison.fr/dk/skodder/" />
+    <lastmod>2026-09-27</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://ducomaison.fr/no/skodder/</loc>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://ducomaison.fr/luckor/" />
+    <xhtml:link rel="alternate" hreflang="nb" href="https://ducomaison.fr/no/skodder/" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://ducomaison.fr/dk/skodder/" />
+    <lastmod>2026-09-27</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://ducomaison.fr/dk/skodder/</loc>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://ducomaison.fr/luckor/" />
+    <xhtml:link rel="alternate" hreflang="nb" href="https://ducomaison.fr/no/skodder/" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://ducomaison.fr/dk/skodder/" />
+    <lastmod>2026-09-27</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://ducomaison.fr/david/</loc>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://ducomaison.fr/david/" />
+    <xhtml:link rel="alternate" hreflang="nb" href="https://ducomaison.fr/no/david/" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://ducomaison.fr/dk/david/" />
+    <lastmod>2026-09-27</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://ducomaison.fr/no/david/</loc>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://ducomaison.fr/david/" />
+    <xhtml:link rel="alternate" hreflang="nb" href="https://ducomaison.fr/no/david/" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://ducomaison.fr/dk/david/" />
+    <lastmod>2026-09-27</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://ducomaison.fr/dk/david/</loc>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://ducomaison.fr/david/" />
+    <xhtml:link rel="alternate" hreflang="nb" href="https://ducomaison.fr/no/david/" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://ducomaison.fr/dk/david/" />
+    <lastmod>2026-09-27</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://ducomaison.fr/checklista/</loc>
+    <lastmod>2026-09-27</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://ducomaison.fr/blogg/</loc>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://ducomaison.fr/blogg/" />
+    <xhtml:link rel="alternate" hreflang="nb" href="https://ducomaison.fr/no/blogg/" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://ducomaison.fr/dk/blog/" />
+    <lastmod>2026-09-27</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://ducomaison.fr/no/blogg/</loc>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://ducomaison.fr/blogg/" />
+    <xhtml:link rel="alternate" hreflang="nb" href="https://ducomaison.fr/no/blogg/" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://ducomaison.fr/dk/blog/" />
+    <lastmod>2026-09-27</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://ducomaison.fr/dk/blog/</loc>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://ducomaison.fr/blogg/" />
+    <xhtml:link rel="alternate" hreflang="nb" href="https://ducomaison.fr/no/blogg/" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://ducomaison.fr/dk/blog/" />
+    <lastmod>2026-09-27</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://ducomaison.fr/blogg/franska-fonsterluckor-typer/</loc>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://ducomaison.fr/blogg/franska-fonsterluckor-typer/" />
+    <xhtml:link rel="alternate" hreflang="nb" href="https://ducomaison.fr/no/blogg/franske-skodder-typer/" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://ducomaison.fr/dk/blog/franske-skodder-typer/" />
+    <lastmod>2026-09-27</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://ducomaison.fr/blogg/mala-fonsterluckor-sodra-frankrike/</loc>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://ducomaison.fr/blogg/mala-fonsterluckor-sodra-frankrike/" />
+    <xhtml:link rel="alternate" hreflang="nb" href="https://ducomaison.fr/no/blogg/male-skodder-sor-frankrike/" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://ducomaison.fr/dk/blog/male-skodder-sydfrankrig/" />
+    <lastmod>2026-09-27</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://ducomaison.fr/blogg/renovera-eller-byta-fonsterluckor/</loc>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://ducomaison.fr/blogg/renovera-eller-byta-fonsterluckor/" />
+    <xhtml:link rel="alternate" hreflang="nb" href="https://ducomaison.fr/no/blogg/renovere-eller-bytte-skodder/" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://ducomaison.fr/dk/blog/renovere-eller-udskifte-skodder/" />
+    <lastmod>2026-09-27</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://ducomaison.fr/no/blogg/franske-skodder-typer/</loc>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://ducomaison.fr/blogg/franska-fonsterluckor-typer/" />
+    <xhtml:link rel="alternate" hreflang="nb" href="https://ducomaison.fr/no/blogg/franske-skodder-typer/" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://ducomaison.fr/dk/blog/franske-skodder-typer/" />
+    <lastmod>2026-09-27</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://ducomaison.fr/no/blogg/male-skodder-sor-frankrike/</loc>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://ducomaison.fr/blogg/mala-fonsterluckor-sodra-frankrike/" />
+    <xhtml:link rel="alternate" hreflang="nb" href="https://ducomaison.fr/no/blogg/male-skodder-sor-frankrike/" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://ducomaison.fr/dk/blog/male-skodder-sydfrankrig/" />
+    <lastmod>2026-09-27</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://ducomaison.fr/no/blogg/renovere-eller-bytte-skodder/</loc>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://ducomaison.fr/blogg/renovera-eller-byta-fonsterluckor/" />
+    <xhtml:link rel="alternate" hreflang="nb" href="https://ducomaison.fr/no/blogg/renovere-eller-bytte-skodder/" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://ducomaison.fr/dk/blog/renovere-eller-udskifte-skodder/" />
+    <lastmod>2026-09-27</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://ducomaison.fr/dk/blog/franske-skodder-typer/</loc>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://ducomaison.fr/blogg/franska-fonsterluckor-typer/" />
+    <xhtml:link rel="alternate" hreflang="nb" href="https://ducomaison.fr/no/blogg/franske-skodder-typer/" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://ducomaison.fr/dk/blog/franske-skodder-typer/" />
+    <lastmod>2026-09-27</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://ducomaison.fr/dk/blog/male-skodder-sydfrankrig/</loc>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://ducomaison.fr/blogg/mala-fonsterluckor-sodra-frankrike/" />
+    <xhtml:link rel="alternate" hreflang="nb" href="https://ducomaison.fr/no/blogg/male-skodder-sor-frankrike/" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://ducomaison.fr/dk/blog/male-skodder-sydfrankrig/" />
+    <lastmod>2026-09-27</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://ducomaison.fr/dk/blog/renovere-eller-udskifte-skodder/</loc>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://ducomaison.fr/blogg/renovera-eller-byta-fonsterluckor/" />
+    <xhtml:link rel="alternate" hreflang="nb" href="https://ducomaison.fr/no/blogg/renovere-eller-bytte-skodder/" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://ducomaison.fr/dk/blog/renovere-eller-udskifte-skodder/" />
+    <lastmod>2026-09-27</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <!-- genererat av build-blog.ts: slut -->
 </urlset>
