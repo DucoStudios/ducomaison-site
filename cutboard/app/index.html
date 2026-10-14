@@ -171,6 +171,8 @@
   .cloudFileRow .nm{ flex:1; cursor:pointer; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
   .cloudFileRow .nm:hover{ text-decoration:underline; }
   .cloudFileRow button{ padding:4px 8px; font-size:11px; }
+  .cloudFileRow.current .nm{ font-weight:700; }
+  .cloudFileRow .tag{ font-size:10.5px; color:var(--ink-2); white-space:nowrap; }
   #cloudStatus, #restoreStatus{ font-size:11.5px; color:var(--ink-2); margin-top:8px; min-height:14px; }
 
   .pricingGrid{ display:flex; gap:12px; margin:14px 0; }
@@ -467,10 +469,11 @@
     <h3 data-i18n="cloudHeading">My projects</h3>
     <p id="cloudProOnlyNote" data-i18n="cloudProOnly">Cloud save is a CutBoard Pro feature.</p>
     <div id="cloudProArea" style="display:none;">
-      <div class="btnrow"><button id="btnCloudSave" style="flex:1" data-i18n="saveToCloudBtn">Save this project to the cloud</button></div>
+      <div class="btnrow"><button id="btnCloudSave" style="flex:1" data-i18n="saveToCloudBtn">Save this project to the cloud</button><button class="secondary" id="btnCloudSaveAsNew" style="flex:1;display:none" data-i18n="saveAsNewBtn">Save as new project</button></div>
       <div class="cloudFileList" id="cloudFileList"></div>
     </div>
     <div id="cloudStatus"></div>
+    <div class="btnrow"><button class="secondary" id="btnNewProject" style="flex:1" data-i18n="newProjectBtn">+ New project</button></div>
     <div class="btnrow"><button class="secondary" id="btnCloudClose" style="flex:1" data-i18n="closeBtn">Close</button></div>
   </div>
 </div>
@@ -507,6 +510,7 @@
   // ---------- state ----------
   let objects = [];      // {id,name,w,h,x,y,rot,color,isBoard}
   let selectedId = null;
+  let currentCloudId = null; // cloud project id of the project on the canvas
   let kerf = 3.0;
   let clipboard = [];
   let nextId = 1;
@@ -553,7 +557,7 @@
       freeLimitPieces: "Free plan is limited to 6 pieces. Upgrade to Pro for unlimited pieces.",
       freeLimitFeature: "This is a CutBoard Pro feature.", upgradeBannerText: "You're on the Free plan — limited to 1 board and 6 pieces.",
       restoreSending: "Sending…", restoreSent: "If that email has a CutBoard Pro subscription, check your inbox for an unlock link.",
-      cloudSaving: "Saving…", cloudSaved: "Saved.", cloudLoading: "Loading…", cloudDeleteConfirm: "Delete this cloud project?",
+      cloudSaving: "Saving…", cloudSaved: "Saved.", cloudLoading: "Loading…", cloudDeleteConfirm: "Delete this cloud project?", saveAsNewBtn: "Save as new project", newProjectBtn: "+ New project", openTag: "open", newProjectConfirm: "Start a new, empty project? Changes since your last save will be lost.",
       accountProLabel: "CutBoard Pro", noBoardsForAutoArrange: "Add a board or sheet first, then Auto-arrange will pack your pieces onto it.",
       watermark: "Made with CutBoard Free — ducomaison.fr/cutboard",
       accountHeading: "Account", manageSubBtn: "Manage subscription",
@@ -593,7 +597,7 @@
       freeLimitPieces: "Gratisversionen är begränsad till 6 delar. Uppgradera till Pro för obegränsat antal.",
       freeLimitFeature: "Det här är en CutBoard Pro-funktion.", upgradeBannerText: "Du använder gratisversionen — begränsad till 1 skiva och 6 delar.",
       restoreSending: "Skickar…", restoreSent: "Om den adressen har en CutBoard Pro-prenumeration hittar du en upplåsningslänk i inkorgen.",
-      cloudSaving: "Sparar…", cloudSaved: "Sparat.", cloudLoading: "Laddar…", cloudDeleteConfirm: "Ta bort det här molnprojektet?",
+      cloudSaving: "Sparar…", cloudSaved: "Sparat.", cloudLoading: "Laddar…", cloudDeleteConfirm: "Ta bort det här molnprojektet?", saveAsNewBtn: "Spara som nytt projekt", newProjectBtn: "+ Nytt projekt", openTag: "öppet", newProjectConfirm: "Starta ett nytt, tomt projekt? Ändringar sedan du senast sparade försvinner.",
       accountProLabel: "CutBoard Pro", noBoardsForAutoArrange: "Lägg till en skiva eller bräda först, sedan packar Auto-arrangera dina delar på den.",
       watermark: "Skapad med CutBoard Free — ducomaison.fr/cutboard",
       accountHeading: "Konto", manageSubBtn: "Hantera prenumeration",
@@ -633,7 +637,7 @@
       freeLimitPieces: "La version gratuite est limitée à 6 pièces. Passez à Pro pour un nombre illimité.",
       freeLimitFeature: "Ceci est une fonctionnalité CutBoard Pro.", upgradeBannerText: "Vous utilisez la version gratuite — limitée à 1 panneau et 6 pièces.",
       restoreSending: "Envoi…", restoreSent: "Si cette adresse a un abonnement CutBoard Pro, vous recevrez un lien de déverrouillage.",
-      cloudSaving: "Sauvegarde…", cloudSaved: "Sauvegardé.", cloudLoading: "Chargement…", cloudDeleteConfirm: "Supprimer ce projet cloud ?",
+      cloudSaving: "Sauvegarde…", cloudSaved: "Sauvegardé.", cloudLoading: "Chargement…", cloudDeleteConfirm: "Supprimer ce projet cloud ?", saveAsNewBtn: "Enregistrer comme nouveau projet", newProjectBtn: "+ Nouveau projet", openTag: "ouvert", newProjectConfirm: "Commencer un nouveau projet vide ? Les modifications depuis votre dernière sauvegarde seront perdues.",
       accountProLabel: "CutBoard Pro", noBoardsForAutoArrange: "Ajoutez d'abord un panneau, puis Arranger auto. y placera vos pièces.",
       watermark: "Créé avec CutBoard Free — ducomaison.fr/cutboard",
       accountHeading: "Compte", manageSubBtn: "Gérer l'abonnement",
@@ -805,7 +809,7 @@
   function autosave(){
     try{
       localStorage.setItem(LS_KEY, JSON.stringify({
-        projectName: projNameEl.value, kerf, objects
+        projectName: projNameEl.value, kerf, objects, cloudId: currentCloudId
       }));
     }catch(e){}
   }
@@ -829,6 +833,7 @@
       objects = migrateObjects(data.objects);
       nextId = 1 + objects.reduce((m,o)=>Math.max(m,o.id||0), 0);
       objects.forEach(o=>{ if(o.kind==="slab") loadImageForSlab(o); });
+      currentCloudId = data.cloudId || null;
     }catch(e){}
   }
 
@@ -2160,7 +2165,9 @@
     reader.readAsText(f);
     fileInput.value = "";
   });
-  function loadProjectData(data){
+  function loadProjectData(data, cloudId){
+    currentCloudId = cloudId || null;
+    undoStack = []; redoStack = []; updateUndoRedoButtons();
     projNameEl.value = data.projectName || "";
     kerf = data.kerf || 3.0;
     kerfInput.value = formatLen(kerf);
@@ -2183,6 +2190,7 @@
     openModal("cloudModal");
     document.getElementById("cloudProOnlyNote").style.display = isPro() ? "none" : "";
     document.getElementById("cloudProArea").style.display = isPro() ? "" : "none";
+    updateCloudButtons();
     if (isPro()) refreshCloudList();
   });
   document.getElementById("btnCloudClose").addEventListener("click", ()=> closeModal("cloudModal"));
@@ -2200,7 +2208,7 @@
       } else {
         for(const p of projects){
           const row = document.createElement("div");
-          row.className = "cloudFileRow";
+          row.className = "cloudFileRow" + (p.id === currentCloudId ? " current" : "");
           const d = new Date(p.updated_at);
           const nm = document.createElement("span");
           nm.className = "nm";
@@ -2208,7 +2216,7 @@
           nm.addEventListener("click", async ()=>{
             setCloudStatus(t("cloudLoading"));
             const r = await fetch(`${API_BASE}/projects/${p.id}`, { headers: { Authorization: `Bearer ${license.token}` } });
-            if(r.ok){ const full = await r.json(); loadProjectData(full.data); closeModal("cloudModal"); }
+            if(r.ok){ const full = await r.json(); loadProjectData(full.data, p.id); closeModal("cloudModal"); }
             setCloudStatus("");
           });
           const delBtn = document.createElement("button");
@@ -2217,9 +2225,12 @@
           delBtn.addEventListener("click", async ()=>{
             if(!confirm(t("cloudDeleteConfirm"))) return;
             await fetch(`${API_BASE}/projects/${p.id}`, { method:"DELETE", headers: { Authorization: `Bearer ${license.token}` } });
+            if(p.id === currentCloudId){ currentCloudId = null; autosave(); updateCloudButtons(); }
             refreshCloudList();
           });
-          row.appendChild(nm); row.appendChild(delBtn);
+          row.appendChild(nm);
+          if(p.id === currentCloudId){ const tag = document.createElement("span"); tag.className = "tag"; tag.textContent = t("openTag"); row.appendChild(tag); }
+          row.appendChild(delBtn);
           listEl.appendChild(row);
         }
       }
@@ -2227,27 +2238,36 @@
     }catch(e){ setCloudStatus(""); }
   }
 
-  document.getElementById("btnCloudSave").addEventListener("click", async ()=>{
+  // Which cloud project the project currently on the canvas belongs to.
+  // "Save" updates that row; "Save as new", "New project", Import and
+  // opening another project all point it elsewhere, so saving never
+  // overwrites a different project. Persisted inside the local autosave.
+  function newCloudId(){ return crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(16).slice(2)}`; }
+  function updateCloudButtons(){
+    document.getElementById("btnCloudSaveAsNew").style.display = currentCloudId ? "" : "none";
+  }
+  async function saveToCloud(asNew){
     if(!isPro()) return;
     setCloudStatus(t("cloudSaving"));
     const name = projNameEl.value.trim() || "cutboard-project";
-    const id = (getCurrentCloudId() || (crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(16).slice(2)}`));
+    const id = (!asNew && currentCloudId) || newCloudId();
     try{
       const res = await fetch(`${API_BASE}/projects/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${license.token}` },
         body: JSON.stringify({ name, data: { projectName: projNameEl.value, kerf, objects } })
       });
-      if(res.ok){ setCurrentCloudId(id); setCloudStatus(t("cloudSaved")); refreshCloudList(); }
+      if(res.ok){ currentCloudId = id; autosave(); updateCloudButtons(); setCloudStatus(t("cloudSaved")); refreshCloudList(); }
       else { const err = await res.json().catch(()=>({})); setCloudStatus(err.error || "Error"); }
     }catch(e){ setCloudStatus("Error"); }
+  }
+  document.getElementById("btnCloudSave").addEventListener("click", ()=> saveToCloud(false));
+  document.getElementById("btnCloudSaveAsNew").addEventListener("click", ()=> saveToCloud(true));
+  document.getElementById("btnNewProject").addEventListener("click", ()=>{
+    if(objects.length && !confirm(t("newProjectConfirm"))) return;
+    loadProjectData({ projectName: "", kerf, objects: [] }, null);
+    closeModal("cloudModal");
   });
-  // Remembers which cloud project the CURRENT in-browser project maps to,
-  // so a second "Save" updates the same cloud row instead of creating a
-  // duplicate -- reset whenever a different project is loaded/imported.
-  const LS_CLOUD_ID = "cutboard_cloud_id_v1";
-  function getCurrentCloudId(){ try{ return sessionStorage.getItem(LS_CLOUD_ID); }catch(e){ return null; } }
-  function setCurrentCloudId(id){ try{ sessionStorage.setItem(LS_CLOUD_ID, id); }catch(e){} }
 
   // ================= Settings modal =================
   document.getElementById("btnSettings").addEventListener("click", ()=>{
