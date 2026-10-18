@@ -182,6 +182,15 @@
   .cross-link { font-size: .85rem; opacity: .65; text-decoration: none; color: var(--ink); white-space: nowrap; }
   .cross-link:hover { opacity: 1; text-decoration: underline; }
 
+  /* Menyn städad 2026-10-18 på Davids begäran: ett rent vänsterblock (logga + länkar) och ett högerblock
+     (korslänkar, språk, knapp). Ingen radbrytning i loggan eller länkarna, korslänkarna göms på smalare skärmar. */
+  nav.top .wrap { gap: 28px; }
+  .wordmark { white-space: nowrap; }
+  .navlinks { white-space: nowrap; gap: 24px; margin-right: auto; }
+  .nav-right { display: flex; align-items: center; gap: 18px; white-space: nowrap; }
+  .nav-right .btn { margin-left: 4px; }
+  @media (max-width:1180px) { .cross-link { display: none; } }
+
   @media (max-width:720px) {
     .navlinks {
       display: none;
@@ -1266,14 +1275,16 @@
     <div class="wordmark">Volets <em>France</em></div>
     <div class="navlinks"><a href="#tjanster">Services</a><a href="#process">Processus</a><a href="#pris">Tarifs</a><a
         href="#om">À propos</a><a href="#kontakt">Contact</a></div>
-    <a class="cross-link" href="https://ducomaison.fr/fr/">Surveillance de maison</a>
-    <a class="cross-link" href="https://ducomaison.fr/cutboard/">CutBoard</a>
-    <div class="lang-switch" role="group" aria-label="Langue / Språk / Language">
-      <a href="/volets-france/" aria-label="Svenska" title="Svenska">🇸🇪</a>
-      <span class="lang-current" aria-label="Français" title="Français">🇫🇷</span>
-      <a href="/volets-france/en/" aria-label="English" title="English">🇬🇧</a>
+    <div class="nav-right">
+      <a class="cross-link" href="https://ducomaison.fr/fr/">Surveillance de maison</a>
+      <a class="cross-link" href="https://ducomaison.fr/cutboard/">CutBoard</a>
+      <div class="lang-switch" role="group" aria-label="Langue / Språk / Language">
+        <a href="/volets-france/" aria-label="Svenska" title="Svenska">🇸🇪</a>
+        <span class="lang-current" aria-label="Français" title="Français">🇫🇷</span>
+        <a href="/volets-france/en/" aria-label="English" title="English">🇬🇧</a>
+      </div>
+      <a class="btn btn-primary" href="#kontakt">Réserver une visite</a>
     </div>
-    <a class="btn btn-primary" href="#kontakt">Réserver une visite</a>
   </div>
 </nav>
 

@@ -182,6 +182,15 @@
   .cross-link { font-size: .85rem; opacity: .65; text-decoration: none; color: var(--ink); white-space: nowrap; }
   .cross-link:hover { opacity: 1; text-decoration: underline; }
 
+  /* Menyn städad 2026-10-18 på Davids begäran: ett rent vänsterblock (logga + länkar) och ett högerblock
+     (korslänkar, språk, knapp). Ingen radbrytning i loggan eller länkarna, korslänkarna göms på smalare skärmar. */
+  nav.top .wrap { gap: 28px; }
+  .wordmark { white-space: nowrap; }
+  .navlinks { white-space: nowrap; gap: 24px; margin-right: auto; }
+  .nav-right { display: flex; align-items: center; gap: 18px; white-space: nowrap; }
+  .nav-right .btn { margin-left: 4px; }
+  @media (max-width:1180px) { .cross-link { display: none; } }
+
   @media (max-width:720px) {
     .navlinks {
       display: none;
@@ -1266,14 +1275,16 @@
     <div class="wordmark">Volets <em>France</em></div>
     <div class="navlinks"><a href="#tjanster">Services</a><a href="#process">Process</a><a href="#pris">Pricing</a><a
         href="#om">About</a><a href="#kontakt">Contact</a></div>
-    <a class="cross-link" href="https://ducomaison.fr/en/">Home watching</a>
-    <a class="cross-link" href="https://ducomaison.fr/cutboard/">CutBoard</a>
-    <div class="lang-switch" role="group" aria-label="Language / Språk / Langue">
-      <a href="/volets-france/" aria-label="Svenska" title="Svenska">🇸🇪</a>
-      <a href="/volets-france/fr/" aria-label="Français" title="Français">🇫🇷</a>
-      <span class="lang-current" aria-label="English" title="English">🇬🇧</span>
+    <div class="nav-right">
+      <a class="cross-link" href="https://ducomaison.fr/en/">Home watching</a>
+      <a class="cross-link" href="https://ducomaison.fr/cutboard/">CutBoard</a>
+      <div class="lang-switch" role="group" aria-label="Language / Språk / Langue">
+        <a href="/volets-france/" aria-label="Svenska" title="Svenska">🇸🇪</a>
+        <a href="/volets-france/fr/" aria-label="Français" title="Français">🇫🇷</a>
+        <span class="lang-current" aria-label="English" title="English">🇬🇧</span>
+      </div>
+      <a class="btn btn-primary" href="#kontakt">Book a site visit</a>
     </div>
-    <a class="btn btn-primary" href="#kontakt">Book a site visit</a>
   </div>
 </nav>
 
