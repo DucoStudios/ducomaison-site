@@ -448,7 +448,7 @@
     </ul>
     <p style="margin-top:12px;font-size:11.5px;">
       <span data-i18n="alreadySubscribed">Already subscribed?</span>
-      <button class="upgradeLink" id="btnShowRestore" data-i18n="restorePurchase">Restore purchase</button>
+      <button class="upgradeLink" id="btnShowRestore" data-i18n="restorePurchase">Log in</button>
     </p>
     <div class="btnrow"><button class="secondary" id="btnUpgradeClose" style="flex:1" data-i18n="closeBtn">Close</button></div>
   </div>
@@ -456,10 +456,10 @@
 
 <div id="restoreModal" class="modalOverlay">
   <div class="modalBox">
-    <h3 data-i18n="restoreHeading">Restore purchase</h3>
-    <p data-i18n="restoreIntro">Enter the email you subscribed with — we'll send you an unlock link.</p>
+    <h3 data-i18n="restoreHeading">Log in</h3>
+    <p data-i18n="restoreIntro">Enter the email you subscribed with and we'll send you a login link.</p>
     <input id="restoreEmail" type="text" placeholder="you@example.com">
-    <div class="btnrow"><button id="btnRestoreSend" style="flex:1" data-i18n="sendLinkBtn">Send unlock link</button></div>
+    <div class="btnrow"><button id="btnRestoreSend" style="flex:1" data-i18n="sendLinkBtn">Send login link</button></div>
     <div id="restoreStatus"></div>
     <div class="btnrow"><button class="secondary" id="btnRestoreClose" style="flex:1" data-i18n="closeBtn">Close</button></div>
   </div>
@@ -551,13 +551,14 @@
       monthlyLabel: "Monthly", perMonth: "per month", subscribeBtn: "Subscribe", yearlyLabel: "Yearly", perYear: "per year",
       yearlySave: "Save 38%", featUnlimited: "Unlimited boards and pieces", featAutoArrange: "Auto-arrange to minimize waste",
       featExport: "Print and export without limits", featCloud: "Cloud save, access from any device",
-      alreadySubscribed: "Already subscribed?", restorePurchase: "Restore purchase", restoreHeading: "Restore purchase",
-      restoreIntro: "Enter the email you subscribed with — we'll send you an unlock link.", sendLinkBtn: "Send unlock link",
+      alreadySubscribed: "Already subscribed?", restorePurchase: "Log in", restoreHeading: "Log in",
+      restoreIntro: "Enter the email you subscribed with and we'll send you a login link.", sendLinkBtn: "Send login link",
+      unlockOk: "You're logged in. CutBoard Pro is unlocked on this device.", unlockFail: "This login link has expired or was already used. Request a new one.", unlockInactive: "You're logged in, but there is no active CutBoard Pro subscription on this email.",
       cloudHeading: "My projects", cloudProOnly: "Cloud save is a CutBoard Pro feature.", saveToCloudBtn: "Save this project to the cloud",
       freeLimitBoards: "Free plan is limited to 1 board. Upgrade to Pro for unlimited boards.",
       freeLimitPieces: "Free plan is limited to 6 pieces. Upgrade to Pro for unlimited pieces.",
       freeLimitFeature: "This is a CutBoard Pro feature.", upgradeBannerText: "You're on the Free plan — limited to 1 board and 6 pieces.",
-      restoreSending: "Sending…", restoreSent: "If that email has a CutBoard Pro subscription, check your inbox for an unlock link.",
+      restoreSending: "Sending…", restoreSent: "If that email has CutBoard Pro, a login link is on its way. Check your inbox and spam folder.",
       cloudSaving: "Saving…", cloudSaved: "Saved.", cloudLoading: "Loading…", cloudDeleteConfirm: "Delete this cloud project?", saveAsNewBtn: "Save as new project", newProjectBtn: "+ New project", openTag: "open", newProjectConfirm: "Start a new, empty project? Changes since your last save will be lost.",
       accountProLabel: "CutBoard Pro", noBoardsForAutoArrange: "Add a board or sheet first, then Auto-arrange will pack your pieces onto it.",
       watermark: "Made with CutBoard Free — ducomaison.fr/cutboard",
@@ -591,13 +592,14 @@
       monthlyLabel: "Månadsvis", perMonth: "per månad", subscribeBtn: "Prenumerera", yearlyLabel: "Årsvis", perYear: "per år",
       yearlySave: "Spara 38%", featUnlimited: "Obegränsat antal skivor och delar", featAutoArrange: "Auto-arrangera för minimalt spill",
       featExport: "Skriv ut och exportera utan begränsning", featCloud: "Molnlagring, åtkomst från alla enheter",
-      alreadySubscribed: "Redan prenumerant?", restorePurchase: "Återställ köp", restoreHeading: "Återställ köp",
-      restoreIntro: "Ange e-postadressen du prenumererade med — vi skickar en upplåsningslänk.", sendLinkBtn: "Skicka upplåsningslänk",
+      alreadySubscribed: "Redan prenumerant?", restorePurchase: "Logga in", restoreHeading: "Logga in",
+      restoreIntro: "Ange e-postadressen du prenumererar med så skickar vi en inloggningslänk.", sendLinkBtn: "Skicka inloggningslänk",
+      unlockOk: "Du är inloggad. CutBoard Pro är upplåst på den här enheten.", unlockFail: "Inloggningslänken har gått ut eller redan använts. Begär en ny.", unlockInactive: "Du är inloggad, men e-postadressen har ingen aktiv CutBoard Pro-prenumeration.",
       cloudHeading: "Mina projekt", cloudProOnly: "Molnlagring är en CutBoard Pro-funktion.", saveToCloudBtn: "Spara detta projekt i molnet",
       freeLimitBoards: "Gratisversionen är begränsad till 1 skiva. Uppgradera till Pro för obegränsat antal.",
       freeLimitPieces: "Gratisversionen är begränsad till 6 delar. Uppgradera till Pro för obegränsat antal.",
       freeLimitFeature: "Det här är en CutBoard Pro-funktion.", upgradeBannerText: "Du använder gratisversionen — begränsad till 1 skiva och 6 delar.",
-      restoreSending: "Skickar…", restoreSent: "Om den adressen har en CutBoard Pro-prenumeration hittar du en upplåsningslänk i inkorgen.",
+      restoreSending: "Skickar…", restoreSent: "Om adressen har CutBoard Pro är en inloggningslänk på väg. Kolla inkorgen och skräpposten.",
       cloudSaving: "Sparar…", cloudSaved: "Sparat.", cloudLoading: "Laddar…", cloudDeleteConfirm: "Ta bort det här molnprojektet?", saveAsNewBtn: "Spara som nytt projekt", newProjectBtn: "+ Nytt projekt", openTag: "öppet", newProjectConfirm: "Starta ett nytt, tomt projekt? Ändringar sedan du senast sparade försvinner.",
       accountProLabel: "CutBoard Pro", noBoardsForAutoArrange: "Lägg till en skiva eller bräda först, sedan packar Auto-arrangera dina delar på den.",
       watermark: "Skapad med CutBoard Free — ducomaison.fr/cutboard",
@@ -631,13 +633,14 @@
       monthlyLabel: "Mensuel", perMonth: "par mois", subscribeBtn: "S'abonner", yearlyLabel: "Annuel", perYear: "par an",
       yearlySave: "Économisez 38%", featUnlimited: "Panneaux et pièces illimités", featAutoArrange: "Arrangement auto. pour minimiser les chutes",
       featExport: "Impression et export illimités", featCloud: "Sauvegarde cloud, accès depuis n'importe quel appareil",
-      alreadySubscribed: "Déjà abonné ?", restorePurchase: "Restaurer l'achat", restoreHeading: "Restaurer l'achat",
-      restoreIntro: "Indiquez l'adresse e-mail utilisée pour l'abonnement — nous vous enverrons un lien de déverrouillage.", sendLinkBtn: "Envoyer le lien",
+      alreadySubscribed: "Déjà abonné ?", restorePurchase: "Se connecter", restoreHeading: "Se connecter",
+      restoreIntro: "Indiquez l'adresse e-mail de votre abonnement, nous vous enverrons un lien de connexion.", sendLinkBtn: "Envoyer le lien",
+      unlockOk: "Vous êtes connecté. CutBoard Pro est débloqué sur cet appareil.", unlockFail: "Ce lien de connexion a expiré ou a déjà été utilisé. Demandez-en un nouveau.", unlockInactive: "Vous êtes connecté, mais cette adresse n'a pas d'abonnement CutBoard Pro actif.",
       cloudHeading: "Mes projets", cloudProOnly: "La sauvegarde cloud est une fonctionnalité CutBoard Pro.", saveToCloudBtn: "Sauvegarder ce projet dans le cloud",
       freeLimitBoards: "La version gratuite est limitée à 1 panneau. Passez à Pro pour un nombre illimité.",
       freeLimitPieces: "La version gratuite est limitée à 6 pièces. Passez à Pro pour un nombre illimité.",
       freeLimitFeature: "Ceci est une fonctionnalité CutBoard Pro.", upgradeBannerText: "Vous utilisez la version gratuite — limitée à 1 panneau et 6 pièces.",
-      restoreSending: "Envoi…", restoreSent: "Si cette adresse a un abonnement CutBoard Pro, vous recevrez un lien de déverrouillage.",
+      restoreSending: "Envoi…", restoreSent: "Si cette adresse a CutBoard Pro, un lien de connexion arrive. Vérifiez votre boîte de réception et vos spams.",
       cloudSaving: "Sauvegarde…", cloudSaved: "Sauvegardé.", cloudLoading: "Chargement…", cloudDeleteConfirm: "Supprimer ce projet cloud ?", saveAsNewBtn: "Enregistrer comme nouveau projet", newProjectBtn: "+ Nouveau projet", openTag: "ouvert", newProjectConfirm: "Commencer un nouveau projet vide ? Les modifications depuis votre dernière sauvegarde seront perdues.",
       accountProLabel: "CutBoard Pro", noBoardsForAutoArrange: "Ajoutez d'abord un panneau, puis Arranger auto. y placera vos pièces.",
       watermark: "Créé avec CutBoard Free — ducomaison.fr/cutboard",
@@ -2548,8 +2551,14 @@
   });
 
   // ---------- license bootstrap from a Stripe redirect or unlock email ----------
+  let unlockMsg = null;
   async function bootstrapLicenseFromUrl(){
     const params = new URLSearchParams(location.search);
+    if(params.get("login")){
+      params.delete("login");
+      history.replaceState(null, "", location.pathname + (params.toString() ? `?${params}` : ""));
+      if(!isPro()) openModal("restoreModal");
+    }
     const sessionId = params.get("checkout_success") ? params.get("session_id") : null;
     const unlockToken = params.get("unlock");
     if(sessionId){
@@ -2568,8 +2577,11 @@
         if(res.ok){
           const data = await res.json();
           if(data.license) saveLicense({ token: data.license, email: null, plan: data.plan, status: data.status });
+          unlockMsg = data.status === "active" ? "unlockOk" : "unlockInactive";
+        } else {
+          unlockMsg = "unlockFail";
         }
-      }catch(e){}
+      }catch(e){ unlockMsg = "unlockFail"; }
       params.delete("unlock");
       history.replaceState(null, "", location.pathname + (params.toString() ? `?${params}` : ""));
     }
@@ -2598,7 +2610,9 @@
   resizeCanvas();
   renderObjList();
   syncSelPanel();
-  bootstrapLicenseFromUrl().then(()=> refreshLicense());
+  bootstrapLicenseFromUrl().then(()=> refreshLicense()).then(()=>{
+    if(unlockMsg){ updateAccountUI(); setTimeout(()=> alert(t(unlockMsg)), 50); if(unlockMsg === "unlockFail") openModal("restoreModal"); }
+  });
 })();
 </script>
 </body>
