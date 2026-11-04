@@ -347,7 +347,7 @@
 
       <div id="objList">
         <h2 data-i18n="objectsHeading">Objects</h2>
-        <div class="hint" data-i18n="objectsHint">Click to select, drag to move — the list below expands with full edit fields. Drag the gold corners to resize. Ctrl/Cmd+C / V to copy.</div>
+        <div class="hint" data-i18n="objectsHint">Click to select, drag to move — the list below expands with full edit fields. Drag the gold corners to resize. Shift-drag a box (or Shift-click) to select several. Ctrl/Cmd+C / V to copy.</div>
         <label data-i18n="sortByLabel">Sort by</label>
         <select id="sortSelect">
           <option value="name" data-i18n="sortName">Name (A–Z)</option>
@@ -511,6 +511,17 @@
   // ---------- state ----------
   let objects = [];      // {id,name,w,h,x,y,rot,color,isBoard}
   let selectedId = null;
+  // Multi-selection (Shift-click / Shift-drag a box). When it holds 2+ ids those are all selected;
+  // selectedId stays the "primary" one so the edit panel still has something to show.
+  const multiIds = new Set();
+  let marquee = null;
+  const isSel = id => id === selectedId || multiIds.has(id);
+  const selIds = () => multiIds.size > 1 ? [...multiIds] : (selectedId ? [selectedId] : []);
+  function setSelection(ids){
+    multiIds.clear();
+    selectedId = ids.length ? ids[ids.length-1] : null;
+    if(ids.length > 1) ids.forEach(id => multiIds.add(id));
+  }
   let currentCloudId = null; // cloud project id of the project on the canvas
   let kerf = 3.0;
   let clipboard = [];
@@ -537,7 +548,7 @@
       notchWidthLabel: "Notch width (mm)", notchHeightLabel: "Notch height (mm)", notchTooBigWarning: "The notch must be smaller than the outer width and length.",
       slabIsBoardHint: "Base board (uncheck to trace a free-form piece instead of a whole sheet)",
       choosePhotoBtn: "Choose photo…", objectsHeading: "Objects",
-      objectsHint: "Click to select, drag to move — the list below expands with full edit fields. Drag the gold corners to resize. Ctrl/Cmd+C / V to copy.",
+      objectsHint: "Click to select, drag to move — the list below expands with full edit fields. Drag the gold corners to resize. Shift-drag a box (or Shift-click) to select several. Ctrl/Cmd+C / V to copy.",
       sortByLabel: "Sort by", sortName: "Name (A–Z)", sortWDesc: "Width, largest → smallest", sortWAsc: "Width, smallest → largest",
       sortHDesc: "Length, largest → smallest", sortHAsc: "Length, smallest → largest", sortAreaDesc: "Area, largest → smallest",
       projNamePlaceholder: "Project name (e.g. Jessica's shutters)", sawKerfLabel: "Saw kerf",
@@ -578,7 +589,7 @@
       notchWidthLabel: "Urtag bredd (mm)", notchHeightLabel: "Urtag längd (mm)", notchTooBigWarning: "Urtaget måste vara mindre än den yttre bredden och längden.",
       slabIsBoardHint: "Grundskiva (avmarkera för att spåra en fristående DEL istället för en hel skiva)",
       choosePhotoBtn: "Välj foto…", objectsHeading: "Objekt",
-      objectsHint: "Klicka för att markera, dra för att flytta — listan nedan expanderas med fullständiga redigeringsfält. Dra de gyllene hörnen för att ändra storlek. Ctrl/Cmd+C / V för att kopiera.",
+      objectsHint: "Klicka för att markera, dra för att flytta — listan nedan expanderas med fullständiga redigeringsfält. Dra de gyllene hörnen för att ändra storlek. Shift-dra en ruta (eller Shift-klicka) för att markera flera. Ctrl/Cmd+C / V för att kopiera.",
       sortByLabel: "Sortera efter", sortName: "Namn (A–Ö)", sortWDesc: "Bredd, störst → minst", sortWAsc: "Bredd, minst → störst",
       sortHDesc: "Längd, störst → minst", sortHAsc: "Längd, minst → störst", sortAreaDesc: "Area, störst → minst",
       projNamePlaceholder: "Projektnamn (t.ex. Jessicas luckor)", sawKerfLabel: "Sågspår",
@@ -619,7 +630,7 @@
       notchWidthLabel: "Largeur de l'encoche (mm)", notchHeightLabel: "Longueur de l'encoche (mm)", notchTooBigWarning: "L'encoche doit être plus petite que la largeur et la longueur extérieures.",
       slabIsBoardHint: "Panneau de fond (décochez pour tracer une pièce libre au lieu d'un panneau entier)",
       choosePhotoBtn: "Choisir une photo…", objectsHeading: "Objets",
-      objectsHint: "Cliquez pour sélectionner, glissez pour déplacer — la liste ci-dessous s'ouvre avec tous les champs. Faites glisser les coins dorés pour redimensionner. Ctrl/Cmd+C / V pour copier.",
+      objectsHint: "Cliquez pour sélectionner, glissez pour déplacer — la liste ci-dessous s'ouvre avec tous les champs. Faites glisser les coins dorés pour redimensionner. Maj + glisser un cadre (ou Maj + clic) pour en sélectionner plusieurs. Ctrl/Cmd+C / V pour copier.",
       sortByLabel: "Trier par", sortName: "Nom (A–Z)", sortWDesc: "Largeur, décroissant", sortWAsc: "Largeur, croissant",
       sortHDesc: "Longueur, décroissant", sortHAsc: "Longueur, croissant", sortAreaDesc: "Surface, décroissant",
       projNamePlaceholder: "Nom du projet (ex. Volets de Jessica)", sawKerfLabel: "Trait de scie",
@@ -722,7 +733,7 @@
     redoStack.push(snapshotObjects());
     objects = undoStack.pop();
     for (const o of objects) if (o.kind === "slab") loadImageForSlab(o);
-    selectedId = null; expandedId = null;
+    selectedId = null; multiIds.clear(); expandedId = null;
     updateUndoRedoButtons(); renderObjList(); syncSelPanel(); draw(); autosave();
   }
   function doRedo(){
@@ -730,7 +741,7 @@
     undoStack.push(snapshotObjects());
     objects = redoStack.pop();
     for (const o of objects) if (o.kind === "slab") loadImageForSlab(o);
-    selectedId = null; expandedId = null;
+    selectedId = null; multiIds.clear(); expandedId = null;
     updateUndoRedoButtons(); renderObjList(); syncSelPanel(); draw(); autosave();
   }
 
@@ -879,7 +890,7 @@
 
   // ---------- helpers ----------
   function uid(){ return nextId++; }
-  function getSel(){ return objects.find(o=>o.id===selectedId) || null; }
+  function getSel(){ return objects.find(o=>isSel(o.id)) || null; }
   function palette(){
     return ["#c9b88a","#8aa9a5","#d19a3d","#34515e","#a35b4a","#6f8f4a","#b56e93","#5c6bc0"];
   }
@@ -1126,7 +1137,7 @@
           outline: null, cracks: []
         };
         objects.push(o);
-        selectedId = o.id; expandedId = o.id;
+        selectedId = o.id; multiIds.clear(); expandedId = o.id;
         loadImageForSlab(o);
         renderObjList(); syncSelPanel(); draw(); autosave();
         alert("Slab added at a placeholder size (1mm per photo pixel). Select it and use \"Calibrate scale\" before trusting any measurement.");
@@ -1413,7 +1424,7 @@
             if(i===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
           });
           ctx.closePath();
-          ctx.lineWidth = (o.id===selectedId ? 3 : 2) * devicePixelRatio;
+          ctx.lineWidth = (isSel(o.id) ? 3 : 2) * devicePixelRatio;
           ctx.strokeStyle = "#c98a2e";
           ctx.stroke();
         } else {
@@ -1436,7 +1447,7 @@
           ctx.strokeStyle = "#c0392b";
           ctx.stroke();
         }
-        if(o.id===selectedId){
+        if(isSel(o.id)){
           ctx.lineWidth = 3*devicePixelRatio;
           ctx.strokeStyle = "#c98a2e";
           ctx.setLineDash([4*devicePixelRatio,4*devicePixelRatio]);
@@ -1448,8 +1459,8 @@
         ctx.beginPath();
         ctx.ellipse(0, 0, pw/2, ph/2, 0, 0, Math.PI*2);
         ctx.fill();
-        ctx.lineWidth = (isOverlap ? 3 : (o.id===selectedId ? 2.5 : 2)) * devicePixelRatio;
-        ctx.strokeStyle = isOverlap ? "#c0392b" : ((o.id===selectedId) ? "#c98a2e" : "#1c1b17");
+        ctx.lineWidth = (isOverlap ? 3 : (isSel(o.id) ? 2.5 : 2)) * devicePixelRatio;
+        ctx.strokeStyle = isOverlap ? "#c0392b" : ((isSel(o.id)) ? "#c98a2e" : "#1c1b17");
         if(isOverlap) ctx.setLineDash([6*devicePixelRatio, 4*devicePixelRatio]);
         else if(o.isBoard) ctx.setLineDash([9*devicePixelRatio, 6*devicePixelRatio]);
         ctx.stroke();
@@ -1462,8 +1473,8 @@
         ctx.closePath();
         ctx.fillStyle = isOverlap ? "#e0433955" : (o.color + "3d");
         ctx.fill();
-        ctx.lineWidth = (isOverlap ? 3 : (o.id===selectedId ? 2.5 : 2)) * devicePixelRatio;
-        ctx.strokeStyle = isOverlap ? "#c0392b" : ((o.id===selectedId) ? "#c98a2e" : "#1c1b17");
+        ctx.lineWidth = (isOverlap ? 3 : (isSel(o.id) ? 2.5 : 2)) * devicePixelRatio;
+        ctx.strokeStyle = isOverlap ? "#c0392b" : ((isSel(o.id)) ? "#c98a2e" : "#1c1b17");
         if(isOverlap) ctx.setLineDash([6*devicePixelRatio, 4*devicePixelRatio]);
         else if(o.isBoard) ctx.setLineDash([9*devicePixelRatio, 6*devicePixelRatio]);
         ctx.stroke();
@@ -1471,15 +1482,15 @@
       } else {
         ctx.fillStyle = isOverlap ? "#e0433955" : (o.color + "3d");
         ctx.fillRect(-pw/2, -ph/2, pw, ph);
-        ctx.lineWidth = (isOverlap ? 3 : (o.id===selectedId ? 2.5 : 2)) * devicePixelRatio;
-        ctx.strokeStyle = isOverlap ? "#c0392b" : ((o.id===selectedId) ? "#c98a2e" : "#1c1b17");
+        ctx.lineWidth = (isOverlap ? 3 : (isSel(o.id) ? 2.5 : 2)) * devicePixelRatio;
+        ctx.strokeStyle = isOverlap ? "#c0392b" : ((isSel(o.id)) ? "#c98a2e" : "#1c1b17");
         if(isOverlap) ctx.setLineDash([6*devicePixelRatio, 4*devicePixelRatio]);
         else if(o.isBoard) ctx.setLineDash([9*devicePixelRatio, 6*devicePixelRatio]);
         ctx.strokeRect(-pw/2, -ph/2, pw, ph);
         ctx.setLineDash([]);
       }
 
-      if(o.id===selectedId && pw >= HANDLE_MIN_RENDER_PX*devicePixelRatio && ph >= HANDLE_MIN_RENDER_PX*devicePixelRatio && o.kind !== "slab"){
+      if(isSel(o.id) && multiIds.size < 2 && pw >= HANDLE_MIN_RENDER_PX*devicePixelRatio && ph >= HANDLE_MIN_RENDER_PX*devicePixelRatio && o.kind !== "slab"){
         const hs = HANDLE_PX * devicePixelRatio;
         ctx.fillStyle = "#ffffff";
         ctx.lineWidth = 1.5 * devicePixelRatio;
@@ -1560,6 +1571,16 @@
     }
     ctx.restore();
 
+    if(marquee){
+      const x = Math.min(marquee.a[0], marquee.b[0]), y = Math.min(marquee.a[1], marquee.b[1]);
+      const w = Math.abs(marquee.b[0]-marquee.a[0]), h = Math.abs(marquee.b[1]-marquee.a[1]);
+      ctx.save();
+      ctx.fillStyle = "rgba(201,138,46,.10)"; ctx.fillRect(x,y,w,h);
+      ctx.strokeStyle = "#c98a2e"; ctx.lineWidth = 1.5*devicePixelRatio;
+      ctx.setLineDash([6*devicePixelRatio,4*devicePixelRatio]); ctx.strokeRect(x,y,w,h);
+      ctx.restore();
+    }
+
     const overlapCount = overlapping.size + slabIssues.size;
     zoomHud.textContent = `Zoom ${(view.zoom*100).toFixed(0)}% · Saw kerf ${formatLen(kerf)}${unitAbbrev()} · Objects ${objects.length}` +
       (overlapCount ? ` · ⚠ ${overlapCount} overlapping / off-slab` : " · No overlaps");
@@ -1592,7 +1613,7 @@
       wrap.className = "objRowWrap";
 
       const row = document.createElement("div");
-      row.className = "objRow" + (o.id===selectedId ? " selected" : "");
+      row.className = "objRow" + (isSel(o.id) ? " selected" : "");
       const warn = overlapping.has(o.id) ? `<span title="Overlaps another object" style="color:#c0392b;font-weight:700;">⚠</span>` : "";
       const boardTag = o.isBoard ? `<span title="Base board" style="opacity:.55;font-size:11px;">▦</span>` : "";
       const isOpen = expandedId === o.id;
@@ -1601,8 +1622,9 @@
         <span class="swatch" style="background:${o.color}"></span>
         ${boardTag}<span class="nm">${escapeHtml(o.name||"(unnamed)")}</span>
         <span class="dims">${formatLen(o.w)}×${formatLen(o.h)}</span> ${rowYield != null ? yieldTagHtml(rowYield) : ""} ${warn}`;
-      row.addEventListener("click", ()=>{
-        selectedId = o.id;
+      row.addEventListener("click", (e)=>{
+        if(e.shiftKey){ toggleSel(o.id); syncSelPanel(); renderObjList(); draw(); return; }
+        selectedId = o.id; multiIds.clear();
         expandedId = (expandedId === o.id) ? null : o.id;
         syncSelPanel(); renderObjList(); draw();
       });
@@ -1749,7 +1771,7 @@
     };
     if(extra) Object.assign(o, extra);
     objects.push(o);
-    selectedId = o.id;
+    selectedId = o.id; multiIds.clear();
     renderObjList(); syncSelPanel(); draw(); autosave();
     return o;
   }
@@ -1783,7 +1805,7 @@
     copy.x = o.x + (dx===undefined?30:dx);
     copy.y = o.y + (dy===undefined?30:dy);
     objects.push(copy);
-    selectedId = copy.id;
+    selectedId = copy.id; multiIds.clear();
     if(copy.kind === "slab") loadImageForSlab(copy);
     renderObjList(); syncSelPanel(); draw(); autosave();
     return copy;
@@ -1796,14 +1818,37 @@
     newName.value = "";
   });
 
+  function toggleSel(id){
+    const ids = selIds();
+    setSelection(ids.includes(id) ? ids.filter(x => x !== id) : ids.concat(id));
+  }
+  // Copies several objects in one undo step and selects the copies.
+  function duplicateMany(list, dx, dy){
+    if(!list.length) return;
+    if(list.length === 1){ duplicateObject(list[0], dx, dy); return; }
+    pushUndo();
+    const ids = [];
+    for(const o of list){
+      if (!checkFreeLimits(!!o.isBoard)) break;
+      const copy = JSON.parse(JSON.stringify(o));
+      copy.id = uid(); copy.name = o.name + " (copy)";
+      copy.x = o.x + (dx===undefined?30:dx); copy.y = o.y + (dy===undefined?30:dy);
+      objects.push(copy); ids.push(copy.id);
+      if(copy.kind === "slab") loadImageForSlab(copy);
+    }
+    setSelection(ids);
+    renderObjList(); syncSelPanel(); draw(); autosave();
+  }
+  const selObjects = () => selIds().map(id => objects.find(o => o.id === id)).filter(Boolean);
   document.getElementById("btnDup").addEventListener("click", ()=>{
-    duplicateObject(getSel());
+    duplicateMany(selObjects());
   });
   document.getElementById("btnDel").addEventListener("click", ()=>{
     if(!selectedId) return;
     pushUndo();
-    objects = objects.filter(o=>o.id!==selectedId);
-    selectedId = null;
+    const del = new Set(selIds()); multiIds.clear();
+    objects = objects.filter(o=>!del.has(o.id));
+    selectedId = null; multiIds.clear();
     renderObjList(); syncSelPanel(); draw(); autosave();
   });
 
@@ -1866,7 +1911,7 @@
   }
 
   // shared pointer logic used by both mouse and single-finger touch input
-  function pointerDown(clientX, clientY){
+  function pointerDown(clientX, clientY, shift){
     document.getElementById("left").classList.remove("open"); // get the drawer out of the way on phones
     const r = cv.getBoundingClientRect();
     const sx = (clientX - r.left) * devicePixelRatio;
@@ -1878,7 +1923,13 @@
       draw();
       return;
     }
-    const sel = getSel();
+    const sel = multiIds.size > 1 ? null : getSel();
+    if(shift){
+      const h = hitTest(wx,wy);
+      if(h){ toggleSel(h.id); syncSelPanel(); renderObjList(); draw(); return; }
+      dragMode = "marquee"; marquee = { a:[sx,sy], b:[sx,sy] };
+      return;
+    }
     if(sel){
       if(rotateHandleHitTest(sel, sx, sy)){
         dragMode = "rotate"; dragObj = sel; dragUndoPending = true;
@@ -1899,15 +1950,22 @@
       }
     }
     const hit = hitTest(wx,wy);
+    if(hit && multiIds.size > 1 && multiIds.has(hit.id)){
+      dragMode = "moveMulti"; dragObj = hit; dragUndoPending = true;
+      dragStart = {x:wx,y:wy};
+      objStart = {x:hit.x, y:hit.y, all: selObjects().map(o => ({o, x:o.x, y:o.y}))};
+      cv.classList.add("dragging");
+      return;
+    }
     if(hit){
-      selectedId = hit.id;
+      selectedId = hit.id; multiIds.clear();
       expandedId = hit.id;
       dragMode = "move"; dragObj = hit; dragUndoPending = true;
       dragStart = {x:wx,y:wy};
       objStart = {x:hit.x, y:hit.y};
       cv.classList.add("dragging");
     } else {
-      selectedId = null;
+      selectedId = null; multiIds.clear();
       dragMode = "pan";
       panStart = {x:clientX, y:clientY};
       objStart = {x:view.panX, y:view.panY};
@@ -1920,7 +1978,7 @@
     const sx = (clientX - r.left) * devicePixelRatio;
     const sy = (clientY - r.top) * devicePixelRatio;
     const [wx,wy] = screenToWorld(sx,sy);
-    if(dragUndoPending && (dragMode === "resize" || dragMode === "resizeEdge" || dragMode === "move" || dragMode === "rotate")){ pushUndo(); dragUndoPending = false; }
+    if(dragUndoPending && (dragMode === "resize" || dragMode === "resizeEdge" || dragMode === "move" || dragMode === "moveMulti" || dragMode === "rotate")){ pushUndo(); dragUndoPending = false; }
     if(dragMode === "rotate" && dragObj){
       rotateByDrag(dragObj, wx, wy);
       syncSelPanel();
@@ -1939,6 +1997,15 @@
       const snap = snapAgainstOthers(dragObj, nx, ny);
       dragObj.x = snap.x; dragObj.y = snap.y;
       draw();
+    } else if(dragMode === "moveMulti" && dragObj){
+      // snap the grabbed object, then move the rest by the same amount
+      const snap = snapAgainstOthers(dragObj, objStart.x + (wx - dragStart.x), objStart.y + (wy - dragStart.y));
+      const dx = snap.x - objStart.x, dy = snap.y - objStart.y;
+      for(const r of objStart.all){ r.o.x = r.x + dx; r.o.y = r.y + dy; }
+      draw();
+    } else if(dragMode === "marquee" && marquee){
+      marquee.b = [sx,sy];
+      draw();
     } else if(dragMode === "pan"){
       view.panX = objStart.x + (clientX - panStart.x)/devicePixelRatio;
       view.panY = objStart.y + (clientY - panStart.y)/devicePixelRatio;
@@ -1946,12 +2013,21 @@
     }
   }
   function pointerUp(){
-    if(dragMode==="move" || dragMode==="resize" || dragMode==="resizeEdge" || dragMode==="rotate") autosave();
+    if(dragMode === "marquee" && marquee){
+      // the box selects the objects lying completely inside it
+      const [ax,ay] = screenToWorld(marquee.a[0], marquee.a[1]), [bx,by] = screenToWorld(marquee.b[0], marquee.b[1]);
+      const x0 = Math.min(ax,bx), x1 = Math.max(ax,bx), y0 = Math.min(ay,by), y1 = Math.max(ay,by);
+      const inside = objects.filter(o => objCorners(o).every(([cx,cy]) => cx>=x0 && cx<=x1 && cy>=y0 && cy<=y1)).map(o => o.id);
+      setSelection(inside); marquee = null;
+      syncSelPanel(); renderObjList();
+    }
+    if(dragMode==="move" || dragMode==="moveMulti" || dragMode==="resize" || dragMode==="resizeEdge" || dragMode==="rotate") autosave();
     dragMode = null; dragObj = null;
     cv.classList.remove("dragging");
+    draw();
   }
 
-  cv.addEventListener("mousedown", (e)=> pointerDown(e.clientX, e.clientY));
+  cv.addEventListener("mousedown", (e)=> pointerDown(e.clientX, e.clientY, e.shiftKey));
   window.addEventListener("mousemove", (e)=> pointerMove(e.clientX, e.clientY));
   window.addEventListener("mouseup", pointerUp);
 
@@ -2053,13 +2129,14 @@
     if(tag==="INPUT" || tag==="TEXTAREA") return;
     if(e.key==="Escape"){
       if(activeMode){ endMode(); return; }
+      if(multiIds.size){ multiIds.clear(); syncSelPanel(); renderObjList(); draw(); }
       document.querySelectorAll(".modalOverlay.show").forEach(m => m.classList.remove("show"));
       return;
     }
     if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==="c"){
-      const o = getSel(); if(o) clipboard = [JSON.parse(JSON.stringify(o))];
+      const list = selObjects(); if(list.length) clipboard = list.map(o => JSON.parse(JSON.stringify(o)));
     } else if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==="v"){
-      for(const c of clipboard){ duplicateObject(c); }
+      duplicateMany(clipboard);
     } else if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==="z" && e.shiftKey){
       e.preventDefault(); doRedo();
     } else if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==="z"){
@@ -2178,7 +2255,7 @@
     objects = migrateObjects(data.objects);
     nextId = 1 + objects.reduce((m,o)=>Math.max(m,o.id||0), 0);
     objects.forEach(o=>{ if(o.kind==="slab") loadImageForSlab(o); });
-    selectedId = null;
+    selectedId = null; multiIds.clear();
     renderObjList(); syncSelPanel(); draw(); autosave();
   }
 
