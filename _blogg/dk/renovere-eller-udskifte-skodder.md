@@ -41,7 +41,7 @@ En ny skodde bygges i samme profil som den gamle, i nyt kvalitetstræ, og hænge
 
 ## Hvad koster det?
 
-Som pejlemærke koster et renoveret skoddepar fra ca. 800 € og et nyt fra ca. 1 400 € i arbejdsløn, eksklusive moms og materialer. Skodder til døre er større og koster mere. Den præcise pris afhænger af størrelse og stand og fastsættes efter billeder eller et besøg.
+Som pejlemærke koster et renoveret skoddepar fra ca. 640 € og et nyt fra ca. 1 120 € i arbejdsløn, eksklusive moms og materialer. Skodder til døre er større og koster mere. Den præcise pris afhænger af størrelse og stand og fastsættes efter billeder eller et besøg.
 
 ## Vinteren er det rigtige tidspunkt
 

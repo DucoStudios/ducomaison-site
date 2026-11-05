@@ -41,7 +41,7 @@ En ny skodde bygges i samme profil som den gamle, i nytt kvalitetstre, og henges
 
 ## Hva koster det?
 
-Som en pekepinn koster et renovert skoddepar fra ca. 800 € og et nytt fra ca. 1 400 € i arbeid, eksklusive moms og materialer. Skodder til dører er større og koster mer. Nøyaktig pris avhenger av størrelse og tilstand, og avgjøres etter bilder eller et besøk.
+Som en pekepinn koster et renovert skoddepar fra ca. 640 € og et nytt fra ca. 1 120 € i arbeid, eksklusive moms og materialer. Skodder til dører er større og koster mer. Nøyaktig pris avhenger av størrelse og tilstand, og avgjøres etter bilder eller et besøk.
 
 ## Vinteren er riktig tid
 

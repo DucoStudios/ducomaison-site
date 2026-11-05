@@ -41,7 +41,7 @@ En ny lucka byggs i samma profil som den gamla, i nytt kvalitetsträ, och hängs
 
 ## Vad kostar det?
 
-Som riktmärke kostar ett renoverat luckpar från ca 800 € och ett nytillverkat från ca 1 400 € i arbete, exklusive moms och material. Luckdörrar är större och kostar mer. Exakt pris beror på storlek och skick, och avgörs efter bilder eller ett besök.
+Som riktmärke kostar ett renoverat luckpar från ca 640 € och ett nytillverkat från ca 1 120 € i arbete, exklusive moms och material. Luckdörrar är större och kostar mer. Exakt pris beror på storlek och skick, och avgörs efter bilder eller ett besök.
 
 ## Vintern är rätt tid
 
