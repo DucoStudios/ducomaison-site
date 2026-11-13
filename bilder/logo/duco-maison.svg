@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 110"><g transform="translate(5,5)"><g transform="scale(1)">
+<rect x="0" y="0" width="100" height="100" rx="22" fill="#4a6b78"/>
+<g fill="#efe8da">
+<rect x="17" y="17" width="29" height="66" rx="3"/>
+<rect x="54" y="17" width="29" height="66" rx="3"/>
+</g>
+<g stroke="#4a6b78" stroke-width="3" stroke-linecap="round">
+<path d="M23 30h17M23 40h17M23 50h17M23 60h17M23 70h17"/>
+<path d="M60 30h17M60 40h17M60 50h17M60 60h17M60 70h17"/>
+</g>
+</g>
+</g>
+<text x="125" y="72" font-family="Iowan Old Style, Palatino Linotype, Palatino, Georgia, serif" font-size="60" font-weight="600" fill="#2b2a24" letter-spacing="0.5">Duco <tspan font-style="italic" fill="#4a6b78">Maison</tspan></text>
+<text x="127" y="98" font-family="Iowan Old Style, Palatino Linotype, Palatino, Georgia, serif" font-size="13" letter-spacing="4" fill="#6b675c">FÖNSTERLUCKOR · LANGUEDOC</text></svg>
